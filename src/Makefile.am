@@ -1,0 +1,39 @@
+lib_LTLIBRARIES = libqUtilities.la
+
+qt_sources = \
+	QMessage.cc \
+	QMessageClient.cc \
+	QMessageClientList.cc \
+	miLogFile.cc \
+	miMessage.cc \
+	miSliderWidget.cc \
+	miTimeSpinBox.cc \
+	qbLoginDialog.cc \
+	qbLoginInfo.cc \
+	qtClientButton.cc \
+	qtClientDialog.cc
+
+nodist_libqUtilities_la_SOURCES = \
+	$(qt_sources:.cc=_moc.cc)
+
+libqUtilities_la_SOURCES = \
+	$(qt_sources)
+
+libqUtilities_la_CXXFLAGS = ${puSQL_CFLAGS} ${puTools_CFLAGS} ${QT_CXXFLAGS}
+libqUtilities_la_LDFLAGS = ${puSQL_LIBS} ${puTools_LIBS} ${QT_LIBS} \
+	${VERSION_INFO}
+
+CLEANFILES = $(qt_sources:.cc=_moc.cc)
+
+# This rule lets GNU make create any moc_*.cpp from the equivalent *.h
+%_moc.cc: $(top_srcdir)/include/%.h
+	${QT_MOC} $< -o $@
+
+# I have not yet found a good way to do this:
+LANGUAGES = $(top_srcdir)/lang/qUtilities_no.ts
+
+languages:
+	${QT_LUPDATE} -verbose $(qt_sources) -ts $(LANGUAGES)
+
+INSTALL=install -p # tells install to preserve timestamp
+DEFAULT_INCLUDES=-I${srcdir}/../include
