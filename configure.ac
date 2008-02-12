@@ -29,14 +29,14 @@ export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$prefix/lib/pkgconfig
 
 # Check for the puTools library.
 PKG_CHECK_MODULES([puTools], [putools])
-METNO_CHECK_LIB([putools], [main], , , , [$puTools_LIBS], 
+METNO_CHECK_LIB([puTools], [main], , , , [$puTools_LIBS], 
                 [the puTools package])
 METNO_CHECK_HEADERS([puTools/miString.h puTools/miTime puTools/miDate], , , ,
 		    [$puTools_CFLAGS], [the puTools package])
 
 # Check for the puSQL library.
 PKG_CHECK_MODULES([puSQL], [pusql])
-METNO_CHECK_LIB([pusql], [main], , , , [$puSQL_LIBS], [the puSQL package])
+METNO_CHECK_LIB([puSQL], [main], , , , [$puSQL_LIBS], [the puSQL package])
 METNO_CHECK_HEADERS([puSQL/puSQLgate.h], , , , [$puSQL_CFLAGS], 
                     [the puSQL package])
 
