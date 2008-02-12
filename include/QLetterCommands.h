@@ -47,7 +47,7 @@ namespace qmstrings{
   const miString showtext            = "showtext";
   const miString enableshowtext      = "enableshowtext";
   const miString textrequest         = "textrequest";
-  const miString selectposition      = "selectposition";
+  const miString selectposition     = "selectposition";
   const miString settime             = "settime";
   const miString remove              = "remove";
   const miString removeclient        = "removeclient";
@@ -77,7 +77,6 @@ namespace qmstrings{
   const miString sendkey             = "sendkey";
   const miString editmode            = "editmode";
   const miString printclicked        = "printclicked";
-  const miString executeobject       = "executeobject";
 
   const int default_id = -1000;
   const int all = -1;

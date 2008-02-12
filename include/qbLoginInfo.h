@@ -36,9 +36,11 @@
    at Tue Feb  5 16:10:30 2002 */
 
 #include <qwidget.h>
-#include <qframe.h>
+#include <q3frame.h>
 #include <qlabel.h>
 #include <qlayout.h>
+//Added by qt3to4:
+#include <Q3HBoxLayout>
 
 #include <puTools/miString.h>
 
@@ -52,7 +54,7 @@ using namespace std;
 class qbLoginInfo : public QWidget {
   Q_OBJECT
 private:
-  QHBoxLayout* top_hlayout; ///< top layout
+  Q3HBoxLayout* top_hlayout; ///< top layout
   QLabel* databaselabel;
   QLabel* hostlabel;
   QLabel* userlabel;

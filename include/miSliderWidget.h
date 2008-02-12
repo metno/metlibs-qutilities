@@ -38,7 +38,7 @@ private:
 
 public:
   miSliderWidget(float minV,  float maxV, float stepV, float Val,
-		 Orientation orientation, miString descript,
+		 Qt::Orientation orientation, miString descript,
 		 miString unit, bool usetracking, QWidget* p, const char * name = 0);
 
   float value();

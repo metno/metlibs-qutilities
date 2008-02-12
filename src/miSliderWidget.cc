@@ -1,9 +1,12 @@
 #include <miSliderWidget.h>
 #include <qlayout.h>
+//Added by qt3to4:
+#include <Q3HBoxLayout>
+#include <QLabel>
 
 miSliderWidget::miSliderWidget(float minV, float maxV,
 			       float stepV,float Val, 
-			       Orientation orientation,
+			       Qt::Orientation orientation,
 			       miString descript,miString unit,
 			       bool usetracking,
 			       QWidget* p, const char * name)
@@ -13,7 +16,7 @@ miSliderWidget::miSliderWidget(float minV, float maxV,
   if ( stepValue <= 0.0 )
     stepValue = 0.1;
 
-  QHBoxLayout * hl =  new QHBoxLayout(this, 2,2, "hl"); 
+  Q3HBoxLayout * hl =  new Q3HBoxLayout(this, 2,2, "hl"); 
   orientation= Qt::Horizontal;
   
   desclabel= new QLabel(descript.c_str(),this);
@@ -35,7 +38,7 @@ miSliderWidget::miSliderWidget(float minV, float maxV,
 		       iValue, orientation,this);
   slider->setTracking(false);
   slider->setLineStep(istepValue);
-  slider->setTickmarks(QSlider::Below);
+  slider->setTickmarks(QSlider::TicksBelow);
   slider->setTickInterval(tickinterval);
 
   connect(slider,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int)));

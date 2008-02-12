@@ -22,7 +22,7 @@ AC_LANG_PUSH(C++)
 AC_CXX_HAVE_STD
 AC_CXX_HAVE_STL
 
-BNV_HAVE_QT			# Check for QT.
+HAVE_QT4_CHECK			# Check for QT.
 
 # Make sure pkg-config also considers $prefix/lib/pkgconfig.
 export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$prefix/lib/pkgconfig

@@ -1,17 +1,14 @@
 lib_LTLIBRARIES = libqUtilities.la
 
 qt_sources = \
-	QMessage.cc \
-	QMessageClient.cc \
-	QMessageClientList.cc \
+    ClientButton.cc \
+    CoClient.cc \
 	miLogFile.cc \
 	miMessage.cc \
 	miSliderWidget.cc \
 	miTimeSpinBox.cc \
 	qbLoginDialog.cc \
-	qbLoginInfo.cc \
-	qtClientButton.cc \
-	qtClientDialog.cc
+	qbLoginInfo.cc
 
 nodist_libqUtilities_la_SOURCES = \
 	$(qt_sources:.cc=_moc.cc)
@@ -19,7 +16,8 @@ nodist_libqUtilities_la_SOURCES = \
 libqUtilities_la_SOURCES = \
 	$(qt_sources)
 
-libqUtilities_la_CXXFLAGS = ${puSQL_CFLAGS} ${puTools_CFLAGS} ${QT_CXXFLAGS}
+libqUtilities_la_CXXFLAGS = ${puSQL_CFLAGS} ${puTools_CFLAGS} ${QT_CFLAGS} \
+    -DQT3_SUPPORT
 libqUtilities_la_LDFLAGS = ${puSQL_LIBS} ${puTools_LIBS} ${QT_LIBS} \
 	${VERSION_INFO}
 

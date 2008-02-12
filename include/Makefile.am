@@ -1,18 +1,15 @@
 pkg_includedir = ${prefix}/include/${PACKAGE_NAME}
 
 pkg_include_HEADERS = \
+    ClientButton.h \
+    CoClient.h \
 	QLetterCommands.h \
-	QMessage.h \
-	QMessageClient.h \
-	QMessageClientList.h \
 	miLogFile.h \
 	miMessage.h \
 	miSliderWidget.h \
 	miTimeSpinBox.h \
 	qbLoginDialog.h \
 	qbLoginInfo.h \
-	qtClientButton.h \
-	qtClientDialog.h \
 	circle_green.xpm \
 	circle_red.xpm \
 	circle_yellow.xpm \

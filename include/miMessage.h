@@ -32,7 +32,7 @@
 #define _miMessage_h
 
 
-/* Created by met.no/FoU/PU 
+/* Created by DNMI/FoU/PU: k.roysland@dnmi.no
    at Tue Mar  5 10:20:47 2002 */
 
 #include <puTools/miString.h>
