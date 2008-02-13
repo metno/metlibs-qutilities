@@ -25,7 +25,7 @@ CLEANFILES = $(qt_sources:.cc=_moc.cc)
 
 # This rule lets GNU make create any moc_*.cpp from the equivalent *.h
 %_moc.cc: $(top_srcdir)/include/%.h
-	${QT_MOC} $< -o $@
+	${MOC} $< -o $@
 
 # I have not yet found a good way to do this:
 LANGUAGES = $(top_srcdir)/lang/qUtilities_no.ts
