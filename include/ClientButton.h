@@ -32,14 +32,22 @@
 #ifndef _CLIENTBUTTON
 #define _CLIENTBUTTON
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif	/* HAVE_CONFIG_H */
+
 // Qt-includes
 #include <qwidget.h>
 #include <qpushbutton.h>
 
+#ifdef HAVE_LOG4CXX		/* Defined in config.h */
 #include <log4cxx/logger.h>
 #include <log4cxx/propertyconfigurator.h>
 #include <log4cxx/basicconfigurator.h>
 #include <log4cxx/level.h>
+#else  /* ! HAVE_LOG4CXX */
+#include <miLogger/logger.h>
+#endif /* HAVE_LOG4CXX */
 
 #include <puTools/miString.h>
 #include "CoClient.h"
@@ -52,7 +60,9 @@ class ClientButton : public QPushButton {
 	Q_OBJECT
 
 protected:
+#ifdef HAVE_LOG4CXX		/* Defined in config.h */
 	log4cxx::LoggerPtr logger;
+#endif
   
 private:
 	bool uselabel;

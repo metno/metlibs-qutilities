@@ -30,6 +30,11 @@
 #ifndef _COCLIENT
 #define _COCLIENT
 
+
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif	/* HAVE_CONFIG_H */
+
 // Qt-includes
 #include <qapplication.h>
 #include <qstring.h>
@@ -40,10 +45,14 @@
 #include <vector>
 #include <map>
 
+#ifdef HAVE_LOG4CXX		/* Defined in config.h */
 #include <log4cxx/logger.h>
 #include <log4cxx/propertyconfigurator.h>
 #include <log4cxx/basicconfigurator.h>
 #include <log4cxx/level.h>
+#else  /* ! HAVE_LOG4CXX */
+#include <miLogger/logger.h>
+#endif /* HAVE_LOG4CXX */
 
 #include "miMessage.h"
 
@@ -53,7 +62,9 @@ class CoClient : public QDialog {
 	Q_OBJECT
 
 protected:
+#ifdef HAVE_LOG4CXX
     log4cxx::LoggerPtr logger;
+#endif  
 
 public:
 	/**

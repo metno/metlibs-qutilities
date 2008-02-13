@@ -46,7 +46,9 @@
 CoClient::CoClient(QWidget* parent, const char *name, const char *h,
 		const char *sc, const char *lf, quint16 p) :
 	QDialog(parent) {
+#ifdef HAVE_LOG4CXX
 	logger = log4cxx::Logger::getLogger("coclient.CoClient"); ///< LOG4CXX init
+#endif	// HAVE_LOG4CXX
 
 	port = qmstrings::port;
 	clientType = name;
