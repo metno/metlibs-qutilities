@@ -45,7 +45,7 @@
 #include <log4cxx/basicconfigurator.h>
 #include <log4cxx/level.h>
 
-#include <miMessage.h>
+#include "miMessage.h"
 
 using namespace std;
 

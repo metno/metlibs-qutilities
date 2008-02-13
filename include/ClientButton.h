@@ -42,7 +42,7 @@
 #include <log4cxx/level.h>
 
 #include <puTools/miString.h>
-#include <CoClient.h>
+#include "CoClient.h"
 
 using namespace std; 
 
