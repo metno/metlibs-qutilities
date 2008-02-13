@@ -68,7 +68,7 @@ CoClient::CoClient(QWidget* parent, const char *name, const char *h,
 	// connection to server closed
 	connect(tcpSocket, SIGNAL(disconnected()), this, SLOT(connectionClosed()));
 	// socket error
-	connect(tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(socketError(QAbstractSocket::SocketError e)));
+	connect(tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(socketError(QAbstractSocket::SocketError)));
 
 #ifdef _DEBUG
 	connect(tcpSocket, SIGNAL(bytesWritten(qint64)), this, SLOT(printBytesWritten(qint64)));
