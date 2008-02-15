@@ -16,10 +16,11 @@ nodist_libqUtilities_la_SOURCES = \
 libqUtilities_la_SOURCES = \
 	$(qt_sources)
 
-libqUtilities_la_CXXFLAGS = ${puSQL_CFLAGS} ${puTools_CFLAGS} ${QT_CFLAGS} \
-    -DQT3_SUPPORT
-libqUtilities_la_LDFLAGS = ${puSQL_LIBS} ${puTools_LIBS} ${QT_LIBS} \
-	${VERSION_INFO}
+libqUtilities_la_CXXFLAGS = ${puSQL_CFLAGS} ${puTools_CFLAGS}  ${miLogger_CFLAGS} \
+    ${QT_CFLAGS} -DQT3_SUPPORT ${LOG4CXX_CPPFLAGS} 
+
+libqUtilities_la_LDFLAGS = ${puSQL_LIBS} ${puTools_LIBS}  ${miLogger_LIBS} \
+    ${QT_LIBS} 	${LOG4CXX_LIBS} ${VERSION_INFO}
 
 CLEANFILES = $(qt_sources:.cc=_moc.cc)
 

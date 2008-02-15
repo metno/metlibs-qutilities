@@ -22,6 +22,8 @@ AC_LANG_PUSH(C++)
 AC_CXX_HAVE_STD
 AC_CXX_HAVE_STL
 
+METNO_HAVE_LOG4CXX
+
 HAVE_QT4_CHECK			# Check for QT.
 
 # Make sure pkg-config also considers $prefix/lib/pkgconfig.
