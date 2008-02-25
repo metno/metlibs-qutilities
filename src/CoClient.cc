@@ -43,8 +43,6 @@
 #include <QLetterCommands.h>
 #include <CoClient.h>
 
-#define _DEBUG
-
 CoClient::CoClient(QWidget* parent, const char *name, const char *h,
 		const char *sc, const char *lf, quint16 p) :
 	QDialog(parent) {
@@ -232,7 +230,6 @@ bool CoClient::sendMessage(miMessage &msg, const char* sep) {
 
 		out.device()->seek(0);
 		out << (quint32)(block.size() - sizeof(quint32));
-		cerr << "sizeof block written: " << (block.size() - sizeof(quint32)) << endl; ///< DEBUG
 
 		tcpSocket->write(block);
 		tcpSocket->waitForBytesWritten();
