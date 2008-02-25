@@ -105,7 +105,7 @@ private:
 	miString clientType;
 	miString lockFile, serverCommand, host;
 
-	quint16 blockSize;
+	quint32 blockSize;
 	quint16 port;
 	QProcess *server;
 

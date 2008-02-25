@@ -43,6 +43,8 @@
 #include <QLetterCommands.h>
 #include <CoClient.h>
 
+#define _DEBUG
+
 CoClient::CoClient(QWidget* parent, const char *name, const char *h,
 		const char *sc, const char *lf, quint16 p) :
 	QDialog(parent) {
@@ -198,7 +200,7 @@ bool CoClient::sendMessage(miMessage &msg, const char* sep) {
 		map<int, string>::iterator it;
 		it = clients.begin();
 		if(msg.to != 0) ///< if the message is for the server, do not do anything
-			msg.to = (int)it->first;
+			msg.to = -1;//(int)it->first;
 
 #ifdef _DEBUG
 		cout << "miMessage in CoClient::sendMessage() (SEND)"<< endl;
@@ -210,7 +212,7 @@ bool CoClient::sendMessage(miMessage &msg, const char* sep) {
 		out.setVersion(QDataStream::Qt_4_0);
 
 		// send message to server
-		out << (quint16)0;
+		out << (quint32)0;
 
 		out << msg.to;
 		// msg.from is set by server-side socket
@@ -221,14 +223,19 @@ bool CoClient::sendMessage(miMessage &msg, const char* sep) {
 		out << QString(msg.clientType.cStr());
 		out << QString(msg.co.cStr());
 		out << msg.data.size(); // NOT A FIELD IN MIMESSAGE (TEMP ONLY)
-		for (int i = 0; i < msg.data.size(); i++)
+#ifdef _DEBUG
+		cout << "Size of data in last sent msg: " << msg.data.size() << endl;
+#endif
+		for (int i = 0; i < msg.data.size(); i++) {
 			out << QString(msg.data[i].cStr());
+		}
 
 		out.device()->seek(0);
-		out << (quint16)(block.size() - sizeof(quint16));
+		out << (quint32)(block.size() - sizeof(quint32));
+		cerr << "sizeof block written: " << (block.size() - sizeof(quint32)) << endl; ///< DEBUG
 
 		tcpSocket->write(block);
-		tcpSocket->flush();
+		tcpSocket->waitForBytesWritten();
 		return true;
 	} else {
 		LOG4CXX_ERROR(logger, "Error sending message");
