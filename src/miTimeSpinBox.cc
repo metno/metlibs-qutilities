@@ -29,29 +29,34 @@
 
 
 #include <miTimeSpinBox.h>
-#include <q3frame.h>
-#include <qlineedit.h>
-//Added by qt3to4:
-#include <Q3HBoxLayout>
-#include <Q3VBoxLayout>
+
+#include <QFrame>
+#include <QLineEdit>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
 #include <QLabel>
 
 miSpinBox::miSpinBox( int mi, int ma, int st, QWidget* p, const char* n )
-    : QSpinBox(mi,ma,st,p,n) 
+    : QAbstractSpinBox(p) 
 {
-  lineEdit()->setReadOnly(true);
+	max = ma;
+	min = mi;
+	
+	lineEdit()->setReadOnly(true);
 }
 
-void miSpinBox::stepUp()
+void miSpinBox::stepBy(int steps)
 {
-  emit newValue( value() + singleStep() );
+	//value += steps;
+  emit newValue( value + steps );
 }
 
-void miSpinBox::stepDown()
+void miSpinBox::setValue(int value)
 {
-  emit newValue( value() - singleStep() );
+	cerr << "setting value of a spinbox to " << value << endl;
+	cerr << "________________________________________" << endl; ///< DEBUG
+  this->value = value;
 }
-
 
 // MITIMESPINBOX
 
@@ -70,12 +75,12 @@ miTimeSpinBox::miTimeSpinBox( const char* name,QWidget* parent,
 		  miutil::miDate::English );
   
 
-  Q3VBoxLayout* topvl = new Q3VBoxLayout(this,1,1, "topvl");
-  Q3Frame*      frame = new Q3Frame( this, "mframe" );
-  frame->setFrameStyle( Q3Frame::Sunken | Q3Frame::Panel );
+  QVBoxLayout* topvl = new QVBoxLayout(this,1,1, "topvl");
+  QFrame*      frame = new QFrame( this, "mframe" );
+  frame->setFrameStyle( QFrame::Sunken | QFrame::Panel );
   topvl->addWidget( frame, 0 );
 
-  Q3HBoxLayout* hlayout = new Q3HBoxLayout(frame, 2, 2, "mainlayout");
+  QHBoxLayout* hlayout = new QHBoxLayout(frame, 2, 2, "mainlayout");
    
 
   dayname     = NULL;
@@ -147,7 +152,7 @@ miTimeSpinBox::miTimeSpinBox( const char* name,QWidget* parent,
   hlayout->setResizeMode(QLayout::SetFixedSize);
   
   setTime( max  );
-
+  cerr << "???????????????" << endl; ///< DEBUG
 
   resetWeekdayName();
   checkMaxThisMonth();
