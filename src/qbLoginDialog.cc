@@ -29,13 +29,14 @@
 
 
 #include <qbLoginDialog.h>
-#include <qradiobutton.h>
-//Added by qt3to4:
-#include <Q3HBoxLayout>
-#include <Q3GridLayout>
-#include <Q3Frame>
+
+#include <QRadioButton>
+#include <QHBoxLayout>
+#include <QGridLayout>
+#include <QFrame>
 #include <QLabel>
-#include <Q3VBoxLayout>
+#include <QVBoxLayout>
+#include <QGroupBox>
 
 qbLoginDialog::qbLoginDialog(puSQLgate* g, QWidget* parent)
   : QDialog( parent, "login", true ), gate(g),
@@ -75,45 +76,52 @@ void qbLoginDialog::makeWidget()
   oper_color = QColor(181,211,72);
   test_color = QColor(255, 89, 0);
 
-  top_vlayout = new Q3VBoxLayout(this, 10, 10, "top_vlayout");
+  top_vlayout = new QVBoxLayout(this, 10, 10, "top_vlayout");
 
-  ff = new Q3Frame( this, "loginframe" );
-  ff->setFrameStyle( Q3Frame::Sunken | Q3Frame::Panel );
+  ff = new QFrame( this, "loginframe" );
+  ff->setFrameStyle( QFrame::Sunken | QFrame::Panel );
   ff->setLineWidth( 1 );
   top_vlayout->addWidget( ff, 0 );
 
-  f_vlayout=  new Q3VBoxLayout(ff, 10, 10, "f_vlayout");
+  f_vlayout=  new QVBoxLayout(ff, 10, 10, "f_vlayout");
 
-  topframe= new Q3Frame( ff, "topframe" );
-  topframe->setFrameStyle( Q3Frame::Panel | Q3Frame::Raised );
+  topframe= new QFrame( ff, "topframe" );
+  topframe->setFrameStyle( QFrame::Panel | QFrame::Raised );
+  topframe->setAutoFillBackground(true);
   topframe->setBackgroundColor( oper_color );
   
   // Create a layout manager for the label
-  h_hlayout = new Q3HBoxLayout(topframe,2,0, "h_hlayout");
+  h_hlayout = new QHBoxLayout(topframe,2,0, "h_hlayout");
   label= new QLabel(title_.cStr(), topframe,"label");
   label->setFont(QFont( "Helvetica", 14, QFont::Normal, true ));
   label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
   label->setPalette( QPalette( oper_color ) );
   h_hlayout->addWidget(label,0);
   
-  gtestoper= new Q3ButtonGroup(2,Qt::Horizontal,topframe);
+  gtestoper= new QButtonGroup(topframe);
   gtestoper->setExclusive(true);
-  gtestoper->setRadioButtonExclusive(true);
-  gtestoper->setFrameStyle(Q3Frame::NoFrame);
-  gtestoper->setBackgroundColor( oper_color );
-  connect(gtestoper,SIGNAL(clicked(int)),this,SLOT(testoperChanged(int)));
+  connect(gtestoper,SIGNAL(buttonClicked(int)),this,SLOT(testoperChanged(int)));
   
-  QPushButton*  b_oper= new QPushButton(oper_label.cStr(),gtestoper);
-  QPushButton*  b_test= new QPushButton(test_label.cStr(),gtestoper);
+  QPushButton*  b_oper= new QPushButton(oper_label.cStr());
+  QPushButton*  b_test= new QPushButton(test_label.cStr());
   b_oper->setToggleButton(true);
   b_test->setToggleButton(true);
+  gtestoper->addButton(b_oper, 0);
+  gtestoper->addButton(b_test, 1);
+  
+  QGroupBox* opertest_box = new QGroupBox(topframe);
+  opertest_box->setFlat(true);
+  QHBoxLayout *hbox = new QHBoxLayout;
+  hbox->addWidget(b_oper);
+  hbox->addWidget(b_test);
+  opertest_box->setLayout(hbox);
 
-  h_hlayout->addWidget(gtestoper,0);
+  h_hlayout->addWidget(opertest_box, 0);
   
   f_vlayout->addWidget(topframe, 0);
 
   // gridlayout for the input-fields
-  Q3GridLayout* glayout = new Q3GridLayout(3,2,5,"loglayout");
+  QGridLayout* glayout = new QGridLayout(3,2,5,"loglayout");
   
   int startwidget= 0;
   QLabel* server= new QLabel(tr("Database server:"), ff,"server"); 
@@ -121,7 +129,7 @@ void qbLoginDialog::makeWidget()
   QLabel* name=   new QLabel(tr("Username:"), ff,"name"); 
   QLabel* pwd=    new QLabel(tr("Password:"), ff,"pwd");
   dbserver=       new QLineEdit(ff,"dbserver");
-  dbserver->setMinimumWidth(200);
+  dbserver->setMinimumWidth(100);
   if (host.length()>0){
     dbserver->setText(host.c_str());
     startwidget=1;
@@ -154,7 +162,7 @@ void qbLoginDialog::makeWidget()
   warnings= new QLabel(ff);
   warnings->setTextFormat(Qt::RichText);
   warnings->setMinimumHeight(45);
-  warnings->setFrameStyle(Q3Frame::Box | Q3Frame::Raised);
+  warnings->setFrameStyle(QFrame::Box | QFrame::Raised);
   f_vlayout->addWidget(warnings,10);
 
   okb= new QPushButton(tr("Log in"),ff, "okb");
@@ -168,7 +176,7 @@ void qbLoginDialog::makeWidget()
   }
 
   // buttons layout
-  b_hlayout = new Q3HBoxLayout(20, "b_hlayout");
+  b_hlayout = new QHBoxLayout(20, "b_hlayout");
   b_hlayout->addWidget(okb, 10);
   if (hasOffline) b_hlayout->addWidget(offlineb, 10);
   b_hlayout->addWidget(quitb, 10);
@@ -201,14 +209,14 @@ void qbLoginDialog::testoperChanged(int b)
     setInfo(oper_host,oper_user,oper_base,oper_port);
     topframe->setBackgroundColor( oper_color );
     label->setPalette( QPalette( oper_color ) );
-    gtestoper->setBackgroundColor( oper_color );
+    //gtestoper->setBackgroundColor( oper_color );
     inTest= false;
 
   } else {
     setInfo(test_host,test_user,test_base,test_port);
     topframe->setBackgroundColor( test_color );
     label->setPalette( QPalette( test_color ) );
-    gtestoper->setBackgroundColor( test_color );
+    //gtestoper->setBackgroundColor( test_color );
     inTest= hasTest;
   }
 }

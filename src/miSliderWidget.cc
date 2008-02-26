@@ -1,7 +1,7 @@
 #include <miSliderWidget.h>
-#include <qlayout.h>
-//Added by qt3to4:
-#include <Q3HBoxLayout>
+
+#include <QLayout>
+#include <QHBoxLayout>
 #include <QLabel>
 
 miSliderWidget::miSliderWidget(float minV, float maxV,
@@ -16,7 +16,7 @@ miSliderWidget::miSliderWidget(float minV, float maxV,
   if ( stepValue <= 0.0 )
     stepValue = 0.1;
 
-  Q3HBoxLayout * hl =  new Q3HBoxLayout(this, 2,2, "hl"); 
+  QHBoxLayout * hl =  new QHBoxLayout(this, 2,2, "hl"); 
   orientation= Qt::Horizontal;
   
   desclabel= new QLabel(descript.c_str(),this);

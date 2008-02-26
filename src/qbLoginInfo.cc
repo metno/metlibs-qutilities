@@ -30,9 +30,9 @@
 
 #include <qbLoginInfo.h>
 #include <qpixmap.h>
-//Added by qt3to4:
+
 #include <QLabel>
-#include <Q3HBoxLayout>
+#include <QHBoxLayout>
 
 #include <circle_green.xpm>
 #include <circle_red.xpm>
@@ -40,7 +40,7 @@
 qbLoginInfo::qbLoginInfo(QWidget* parent)
   : QWidget(parent,"LoginInfo")
 {
-  top_hlayout= new Q3HBoxLayout(this, 0, 4);
+  top_hlayout= new QHBoxLayout(this, 0, 4);
   
   databaselabel= new QLabel(this);
   userlabel    = new QLabel(this);

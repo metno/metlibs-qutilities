@@ -37,16 +37,16 @@
 
 // QLineEdit(port) added by JS/ 07-2002
 
-#include <qdialog.h>
-#include <qpushbutton.h>
-#include <q3frame.h>
-#include <qlabel.h>
-#include <qlineedit.h>
-#include <qlayout.h>
-#include <q3buttongroup.h>
-//Added by qt3to4:
-#include <Q3HBoxLayout>
-#include <Q3VBoxLayout>
+#include <QDialog>
+#include <QPushButton>
+#include <QFrame>
+#include <QLabel>
+#include <QLineEdit>
+#include <QLayout>
+#include <QButtonGroup>
+
+#include <QHBoxLayout>
+#include <QVBoxLayout>
 
 #include <puSQL/puSQLgate.h>
 #include <puTools/miString.h>
@@ -92,14 +92,14 @@ private:
   bool hasOffline;
   bool isoffline;
  
-  Q3VBoxLayout*   top_vlayout; ///< top layout
-  Q3VBoxLayout*   f_vlayout;   ///< frame  layout
-  Q3HBoxLayout*   h_hlayout;   ///< header layout
-  Q3HBoxLayout*   b_hlayout;   ///< buttons layout
-  Q3Frame* topframe;           ///< frame for label etc.
+  QVBoxLayout*   top_vlayout; ///< top layout
+  QVBoxLayout*   f_vlayout;   ///< frame  layout
+  QHBoxLayout*   h_hlayout;   ///< header layout
+  QHBoxLayout*   b_hlayout;   ///< buttons layout
+  QFrame* topframe;           ///< frame for label etc.
   QLabel* label;              ///< top label
-  Q3ButtonGroup* gtestoper;    ///< test/operational button group
-  Q3Frame *ff;                 ///< main frame
+  QButtonGroup* gtestoper;    ///< test/operational button group
+  QFrame *ff;                 ///< main frame
 
   QLineEdit* portnumber;
   QLineEdit* dbserver;

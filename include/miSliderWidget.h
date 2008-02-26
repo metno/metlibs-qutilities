@@ -12,9 +12,9 @@
     ------------------------------------
 */
 
-#include <qwidget.h>
-#include <qslider.h>
-#include <qlabel.h>
+#include <QWidget>
+#include <QSlider>
+#include <QLabel>
 
 #include <puTools/miString.h>
 
