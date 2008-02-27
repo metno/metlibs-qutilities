@@ -292,7 +292,7 @@ bool miLogFile::write( miString f )
 void miLogFile::logSizeAndPos(QWidget* w,miString name)
 {
   if(!w)             return;  
-  if(!name.exists()) name=w->name();
+  if(!name.exists()) name=w->objectName().toStdString();
   if(!name.exists()) return;
 
 
@@ -304,7 +304,7 @@ void miLogFile::logSizeAndPos(QWidget* w,miString name)
 void miLogFile::restoreSizeAndPos(QWidget* w,miString name)
 {
   if(!w)             return;
-  if(!name.exists()) name=w->name();
+  if(!name.exists()) name=w->objectName().toStdString();
   if(!name.exists()) return;
 
   if(hasSize(name)) 
@@ -316,7 +316,7 @@ void miLogFile::restoreSizeAndPos(QWidget* w,miString name)
 void miLogFile::logVisibility(QWidget* w,miString name)
 {
   if(!w)             return;  
-  if(!name.exists()) name=w->name();
+  if(!name.exists()) name=w->objectName().toStdString();
   if(!name.exists()) return;
   
   name+="IsVisible";
@@ -327,7 +327,7 @@ void miLogFile::logVisibility(QWidget* w,miString name)
 void miLogFile::restoreVisibility(QWidget* w,miString name)
 {
   if(!w)             return;  
-  if(!name.exists()) name=w->name();
+  if(!name.exists()) name=w->objectName().toStdString();
   if(!name.exists()) return;
   name+="IsVisible";
 

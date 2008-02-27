@@ -65,7 +65,7 @@ miTimeSpinBox::miTimeSpinBox( const char* name,QWidget* parent,
 			      miutil::miString title,
 			      miTimeSpinBox::Dayname dname, 
 			      miTimeSpinBox::DisplayUntil displayuntil)
-  : QWidget(parent,name)
+  : QWidget(parent)
 { 
   min=miutil::miTime(1900,1,1,0,0,0);
   max=miutil::miTime::nowTime();
@@ -75,12 +75,15 @@ miTimeSpinBox::miTimeSpinBox( const char* name,QWidget* parent,
 		  miutil::miDate::English );
   
 
-  QVBoxLayout* topvl = new QVBoxLayout(this,1,1, "topvl");
-  QFrame*      frame = new QFrame( this, "mframe" );
+  QVBoxLayout* topvl = new QVBoxLayout(this);
+  topvl->setObjectName("topvl");
+  QFrame*      frame = new QFrame(this);
+  frame->setObjectName("mframe");
   frame->setFrameStyle( QFrame::Sunken | QFrame::Panel );
   topvl->addWidget( frame, 0 );
 
-  QHBoxLayout* hlayout = new QHBoxLayout(frame, 2, 2, "mainlayout");
+  QHBoxLayout* hlayout = new QHBoxLayout(frame);
+  hlayout->setObjectName("mainlayout");
    
 
   dayname     = NULL;
@@ -94,12 +97,14 @@ miTimeSpinBox::miTimeSpinBox( const char* name,QWidget* parent,
 
 
   if(title.exists()) {
-    tit = new QLabel(title.cStr(),frame,"name");
+    tit = new QLabel(title.cStr(),frame);
+    tit->setObjectName("name");
     hlayout->addWidget(tit, 4);
   }
 
   if(dname != NONAME) {
-    dayname = new QLabel("    ",frame,"weekday");
+    dayname = new QLabel("    ",frame);
+    dayname->setObjectName("weekday");
     hlayout->addWidget(dayname, 4);
   }
 
@@ -124,7 +129,8 @@ miTimeSpinBox::miTimeSpinBox( const char* name,QWidget* parent,
 
   if(displayuntil <= HOUR ) {
     hour          = new miSpinBox(-1,24  ,1,frame,"spinhour" );
-    QLabel* delim = new QLabel(" : ",frame,"delimiter");
+    QLabel* delim = new QLabel(" : ",frame);
+    delim->setObjectName("delimiter");
 
     connect(hour,   SIGNAL(newValue(int)),this,SLOT(changeHour(int)  ));
 
@@ -149,7 +155,7 @@ miTimeSpinBox::miTimeSpinBox( const char* name,QWidget* parent,
     hlayout->addWidget(second,1);
   }
       
-  hlayout->setResizeMode(QLayout::SetFixedSize);
+  hlayout->setSizeConstraint(QLayout::SetFixedSize);
   
   setTime( max  );
   cerr << "???????????????" << endl; ///< DEBUG
@@ -399,9 +405,13 @@ void miTimeSpinBox::resetWeekdayName()
   miutil::miString t = ref.format("%a ",daynamelang );
   dayname->setText(t.cStr());
     
-  
-  if(weekday == 0 || weekday == 6)
-    dayname->setPaletteForegroundColor (Qt::red);
-  else
-    dayname->setPaletteForegroundColor (Qt::black);
+  if(weekday == 0 || weekday == 6) {
+  	QPalette qp;
+  	qp.setColor(QPalette::WindowText, Qt::red);
+    dayname->setPalette(qp);
+  } else {
+  	QPalette qp;
+  	qp.setColor(QPalette::WindowText, Qt::black);
+    dayname->setPalette(qp);
+  }
 }

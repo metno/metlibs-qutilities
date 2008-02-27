@@ -105,6 +105,10 @@ private:
   void resetWeekdayName();
 
 public:
+	/**
+	 * Constructor.
+	 * @deprecated title is no longer in use.
+	 */
   miTimeSpinBox(const char *name,QWidget *parent, miutil::miString title="", 
 		miTimeSpinBox::Dayname      = miTimeSpinBox::NONAME,
 		miTimeSpinBox::DisplayUntil = miTimeSpinBox::MINUTE );

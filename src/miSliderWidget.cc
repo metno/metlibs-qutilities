@@ -10,13 +10,16 @@ miSliderWidget::miSliderWidget(float minV, float maxV,
 			       miString descript,miString unit,
 			       bool usetracking,
 			       QWidget* p, const char * name)
-  : QWidget(p,name),
+  : QWidget(p),
     minValue(minV), maxValue(maxV), stepValue(stepV), Value(Val), tracking(usetracking)
 {
+	setObjectName(name);
+	
   if ( stepValue <= 0.0 )
     stepValue = 0.1;
 
-  QHBoxLayout * hl =  new QHBoxLayout(this, 2,2, "hl"); 
+  QHBoxLayout * hl =  new QHBoxLayout(this);
+  hl->setObjectName("hl");
   orientation= Qt::Horizontal;
   
   desclabel= new QLabel(descript.c_str(),this);
@@ -33,13 +36,16 @@ miSliderWidget::miSliderWidget(float minV, float maxV,
   while ( ((imaxValue-iminValue)/tickinterval) > 40 ){
     tickinterval*= 10;
   }
-
-  slider = new QSlider(iminValue, imaxValue, istepValue*5,
-		       iValue, orientation,this);
+  
+  slider = new QSlider(orientation, this);
   slider->setTracking(false);
-  slider->setLineStep(istepValue);
-  slider->setTickmarks(QSlider::TicksBelow);
+  slider->setSingleStep(istepValue);
+  slider->setPageStep(istepValue*5);
+  slider->setTickPosition(QSlider::TicksBelow);
   slider->setTickInterval(tickinterval);
+  slider->setMinimum(iminValue);
+  slider->setMaximum(imaxValue);
+  slider->setSliderPosition(iValue);
 
   connect(slider,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int)));
   connect(slider,SIGNAL(sliderReleased()),this,SIGNAL(sliderReleased()));

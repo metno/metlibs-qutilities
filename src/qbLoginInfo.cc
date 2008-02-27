@@ -38,9 +38,10 @@
 #include <circle_red.xpm>
 
 qbLoginInfo::qbLoginInfo(QWidget* parent)
-  : QWidget(parent,"LoginInfo")
+  : QWidget(parent)
 {
-  top_hlayout= new QHBoxLayout(this, 0, 4);
+	setObjectName("LoginInfo");
+  top_hlayout= new QHBoxLayout(this);
   
   databaselabel= new QLabel(this);
   userlabel    = new QLabel(this);

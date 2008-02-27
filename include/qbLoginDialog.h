@@ -112,6 +112,8 @@ private:
 
   QLabel* warnings;
   
+  QPushButton *b_oper;
+  QPushButton *b_test;
   QPushButton *okb;
   QPushButton *quitb;
   QPushButton *offlineb;

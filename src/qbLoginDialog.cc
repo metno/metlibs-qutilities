@@ -39,9 +39,11 @@
 #include <QGroupBox>
 
 qbLoginDialog::qbLoginDialog(puSQLgate* g, QWidget* parent)
-  : QDialog( parent, "login", true ), gate(g),
+  : QDialog(parent), gate(g),
     port(0), loggedin(false), inTest(false)
 {
+	setObjectName("login");
+	setModal(true);
   makeWidget();
 }
 
@@ -60,7 +62,7 @@ qbLoginDialog::qbLoginDialog(puSQLgate* g,
 			     miString testlabel,
 			     bool     hastest,
 			     bool hasoffline)
-  : QDialog( parent, "login", true ), gate(g),title_(title),
+  : QDialog(parent), gate(g),title_(title),
     host(h), user(u), base(b), port(p),
     oper_host(h), oper_user(u), oper_base(b), oper_port(p),
     test_host(th), test_user(tu), test_base(tb), test_port(tp),
@@ -68,6 +70,8 @@ qbLoginDialog::qbLoginDialog(puSQLgate* g,
     test_label(testlabel), hasTest(hastest), hasOffline(hasoffline),
     isoffline(false)
 {
+	setObjectName("login");
+	setModal(true);
   makeWidget();
 }
   
@@ -76,23 +80,29 @@ void qbLoginDialog::makeWidget()
   oper_color = QColor(181,211,72);
   test_color = QColor(255, 89, 0);
 
-  top_vlayout = new QVBoxLayout(this, 10, 10, "top_vlayout");
+  top_vlayout = new QVBoxLayout(this);
+  top_vlayout->setObjectName("top_vlayout");
 
-  ff = new QFrame( this, "loginframe" );
+  ff = new QFrame(this);
+  ff->setObjectName("loginframe");
   ff->setFrameStyle( QFrame::Sunken | QFrame::Panel );
   ff->setLineWidth( 1 );
   top_vlayout->addWidget( ff, 0 );
 
-  f_vlayout=  new QVBoxLayout(ff, 10, 10, "f_vlayout");
+  f_vlayout=  new QVBoxLayout(ff);
+  f_vlayout->setObjectName("f_vlayout");
 
-  topframe= new QFrame( ff, "topframe" );
+  topframe= new QFrame(ff);
+  topframe->setObjectName("topframe");
   topframe->setFrameStyle( QFrame::Panel | QFrame::Raised );
   topframe->setAutoFillBackground(true);
-  topframe->setBackgroundColor( oper_color );
+  topframe->setPalette( oper_color );
   
   // Create a layout manager for the label
-  h_hlayout = new QHBoxLayout(topframe,2,0, "h_hlayout");
-  label= new QLabel(title_.cStr(), topframe,"label");
+  h_hlayout = new QHBoxLayout(topframe);
+  h_hlayout->setObjectName("h_hlayout");
+  label= new QLabel(title_.cStr(), topframe);
+  label->setObjectName("label");
   label->setFont(QFont( "Helvetica", 14, QFont::Normal, true ));
   label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
   label->setPalette( QPalette( oper_color ) );
@@ -102,10 +112,8 @@ void qbLoginDialog::makeWidget()
   gtestoper->setExclusive(true);
   connect(gtestoper,SIGNAL(buttonClicked(int)),this,SLOT(testoperChanged(int)));
   
-  QPushButton*  b_oper= new QPushButton(oper_label.cStr());
-  QPushButton*  b_test= new QPushButton(test_label.cStr());
-  b_oper->setToggleButton(true);
-  b_test->setToggleButton(true);
+  b_oper= new QPushButton(oper_label.cStr());
+  b_test= new QPushButton(test_label.cStr());
   gtestoper->addButton(b_oper, 0);
   gtestoper->addButton(b_test, 1);
   
@@ -121,30 +129,39 @@ void qbLoginDialog::makeWidget()
   f_vlayout->addWidget(topframe, 0);
 
   // gridlayout for the input-fields
-  QGridLayout* glayout = new QGridLayout(3,2,5,"loglayout");
+  QGridLayout* glayout = new QGridLayout();
+  glayout->setObjectName("loglayout");
   
   int startwidget= 0;
-  QLabel* server= new QLabel(tr("Database server:"), ff,"server"); 
-  QLabel* portn = new QLabel(tr("Database port:"),ff,"portn");
-  QLabel* name=   new QLabel(tr("Username:"), ff,"name"); 
-  QLabel* pwd=    new QLabel(tr("Password:"), ff,"pwd");
-  dbserver=       new QLineEdit(ff,"dbserver");
+  QLabel* server= new QLabel(tr("Database server:"), ff);
+  server->setObjectName("server");
+  QLabel* portn = new QLabel(tr("Database port:"),ff);
+  portn->setObjectName("portn");
+  QLabel* name=   new QLabel(tr("Username:"), ff);
+  name->setObjectName("name");
+  QLabel* pwd=    new QLabel(tr("Password:"), ff);
+  pwd->setObjectName("pwd");
+  dbserver=       new QLineEdit(ff);
+  dbserver->setObjectName("dbserver");
   dbserver->setMinimumWidth(100);
   if (host.length()>0){
     dbserver->setText(host.c_str());
     startwidget=1;
   }
-  portnumber  = new QLineEdit(ff,"portnum");
+  portnumber  = new QLineEdit(ff);
+  portnumber->setObjectName("portnum");
   if(port > 0 ) {
     QString tmp;
     portnumber->setText(tmp.setNum(port));
   }
-  username  = new QLineEdit(ff,"username");
+  username  = new QLineEdit(ff);
+  username->setObjectName("username");
   if (user.length()>0){
     username->setText(user.c_str());
     startwidget= 2;
   }
-  passwd  = new QLineEdit(ff,"passwd");
+  passwd  = new QLineEdit(ff);
+  passwd->setObjectName("passwd");
   passwd->setEchoMode(QLineEdit::Password);
 
   glayout->addWidget(server, 1,1);
@@ -165,18 +182,22 @@ void qbLoginDialog::makeWidget()
   warnings->setFrameStyle(QFrame::Box | QFrame::Raised);
   f_vlayout->addWidget(warnings,10);
 
-  okb= new QPushButton(tr("Log in"),ff, "okb");
+  okb= new QPushButton(tr("Log in"),ff);
+  okb->setObjectName("okb");
   okb->setDefault(true);
   connect(okb, SIGNAL(clicked()), SLOT(okPushed()));
-  quitb= new QPushButton(tr("Cancel"),ff, "quitb");
+  quitb= new QPushButton(tr("Cancel"),ff);
+  okb->setObjectName("quitb");
   connect(quitb, SIGNAL(clicked()), SLOT(cancelPushed()));
   if (hasOffline){
-    offlineb= new QPushButton(tr("Offline"),ff, "offlineb");
+    offlineb= new QPushButton(tr("Offline"),ff);
+    offlineb->setObjectName("offlineb");
     connect(offlineb, SIGNAL(clicked()), SLOT(offlinePushed()));
   }
 
   // buttons layout
-  b_hlayout = new QHBoxLayout(20, "b_hlayout");
+  b_hlayout = new QHBoxLayout();
+  b_hlayout->setObjectName("b_hlayout");
   b_hlayout->addWidget(okb, 10);
   if (hasOffline) b_hlayout->addWidget(offlineb, 10);
   b_hlayout->addWidget(quitb, 10);
@@ -186,7 +207,6 @@ void qbLoginDialog::makeWidget()
   // Start the geometry management
   f_vlayout->activate();
   top_vlayout->activate();
-  top_vlayout->freeze();
 
   if (startwidget==0){
     dbserver->end(true);
@@ -199,7 +219,7 @@ void qbLoginDialog::makeWidget()
     passwd->setFocus();
   }
   
-  b_oper->setOn(true);
+  b_oper->setDown(true);
 }
 
 
@@ -207,14 +227,18 @@ void qbLoginDialog::testoperChanged(int b)
 {
   if (b == 0){
     setInfo(oper_host,oper_user,oper_base,oper_port);
-    topframe->setBackgroundColor( oper_color );
+    b_oper->setDown(true);
+    b_test->setDown(false);
+    topframe->setPalette( oper_color );
     label->setPalette( QPalette( oper_color ) );
     //gtestoper->setBackgroundColor( oper_color );
     inTest= false;
 
   } else {
     setInfo(test_host,test_user,test_base,test_port);
-    topframe->setBackgroundColor( test_color );
+    b_test->setDown(true);
+    b_oper->setDown(false);
+    topframe->setPalette( test_color );
     label->setPalette( QPalette( test_color ) );
     //gtestoper->setBackgroundColor( test_color );
     inTest= hasTest;
@@ -245,10 +269,10 @@ void qbLoginDialog::okPushed()
     cerr << tr("qbLoginDialog WARNING: NO GATE!").toStdString() << endl;
     return;
   }
-  host= dbserver->text().latin1();
-  user= username->text().latin1();
-  pass= passwd->text().latin1();
-  port= atoi(portnumber->text().latin1());
+  host= dbserver->text().toStdString();
+  user= username->text().toStdString();
+  pass= passwd->text().toStdString();
+  port= atoi(portnumber->text().toStdString().c_str());
 
   puSQLwarning w;
   isoffline= false;
@@ -257,7 +281,7 @@ void qbLoginDialog::okPushed()
     loggedin= true;
     warnings->clear();
     emit loginReport();
-    hide();
+    setVisible(false);
   } else {
     loggedin= false;
     warnings->setText(w.w2str().cStr());
@@ -269,14 +293,14 @@ void qbLoginDialog::offlinePushed()
   loggedin= false;
   isoffline=true;
   emit loginReport();
-  hide();
+  setVisible(false);
 }
 
 
 void qbLoginDialog::cancelPushed()
 {
   emit loginReport();
-  hide();
+  setVisible(false);
 }
 
 void qbLoginDialog::reject()
