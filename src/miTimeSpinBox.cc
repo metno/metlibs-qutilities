@@ -37,25 +37,11 @@
 #include <QLabel>
 
 miSpinBox::miSpinBox( int mi, int ma, int st, QWidget* p, const char* n )
-    : QAbstractSpinBox(p) 
+    : QSpinBox(p) 
 {
-	max = ma;
-	min = mi;
-	
+	setRange(mi, ma);
+	setSingleStep(st);
 	lineEdit()->setReadOnly(true);
-}
-
-void miSpinBox::stepBy(int steps)
-{
-	//value += steps;
-  emit newValue( value + steps );
-}
-
-void miSpinBox::setValue(int value)
-{
-	cerr << "setting value of a spinbox to " << value << endl;
-	cerr << "________________________________________" << endl; ///< DEBUG
-  this->value = value;
 }
 
 // MITIMESPINBOX
@@ -115,9 +101,9 @@ miTimeSpinBox::miTimeSpinBox( const char* name,QWidget* parent,
   day      = new miSpinBox(0 ,32  ,1,frame,"spinday"  );
   
  
-  connect(year,   SIGNAL(newValue(int)),this,SLOT(changeYear(int)  ));
-  connect(month,  SIGNAL(newValue(int)),this,SLOT(changeMonth(int) ));
-  connect(day,    SIGNAL(newValue(int)),this,SLOT(changeDay(int)   ));
+  connect(year,   SIGNAL(valueChanged(QString)),this,SLOT(changeYear(QString)  ));
+  connect(month,  SIGNAL(valueChanged(QString)),this,SLOT(changeMonth(QString) ));
+  connect(day,    SIGNAL(valueChanged(QString)),this,SLOT(changeDay(QString)   ));
 
   hlayout->addWidget(year,  2);
   hlayout->addWidget(month, 1);
@@ -132,7 +118,7 @@ miTimeSpinBox::miTimeSpinBox( const char* name,QWidget* parent,
     QLabel* delim = new QLabel(" : ",frame);
     delim->setObjectName("delimiter");
 
-    connect(hour,   SIGNAL(newValue(int)),this,SLOT(changeHour(int)  ));
+    connect(hour,   SIGNAL(valueChanged(QString)),this,SLOT(changeHour(QString)  ));
 
     hlayout->addWidget(delim, 1);
     hlayout->addWidget(hour,  1);
@@ -141,7 +127,7 @@ miTimeSpinBox::miTimeSpinBox( const char* name,QWidget* parent,
   if(displayuntil <= MINUTE) {
     minute = new miSpinBox(-1,60  ,1,frame,"spinmin"  );
 
-    connect(minute, SIGNAL(newValue(int)),this,SLOT(changeMinute(int)));
+    connect(minute, SIGNAL(valueChanged(QString)),this,SLOT(changeMinute(QString)));
 
     hlayout->addWidget(minute,1);
   }
@@ -150,7 +136,7 @@ miTimeSpinBox::miTimeSpinBox( const char* name,QWidget* parent,
   if(displayuntil == SECOND) {
     second = new miSpinBox(-1,60  ,1,frame,"spinsec"  );
 
-    connect(second, SIGNAL(newValue(int)),this,SLOT(changeSecond(int)));
+    connect(second, SIGNAL(valueChanged(QString)),this,SLOT(changeSecond(QString)));
 
     hlayout->addWidget(second,1);
   }
@@ -158,7 +144,6 @@ miTimeSpinBox::miTimeSpinBox( const char* name,QWidget* parent,
   hlayout->setSizeConstraint(QLayout::SetFixedSize);
   
   setTime( max  );
-  cerr << "???????????????" << endl; ///< DEBUG
 
   resetWeekdayName();
   checkMaxThisMonth();
@@ -181,23 +166,37 @@ void miTimeSpinBox::setTime(const miutil::miTime& t)
   m  = 0;
   s  = 0;
 
-  year->setValue(  yy );  
+  year->blockSignals(true);
+  year->setValue(  yy );
+  year->blockSignals(false);
+  
+  month->blockSignals(true);
   month->setValue( mm );
+  month->blockSignals(false);
+  
+  day->blockSignals(true);
   day->setValue(   dd );
+  day->blockSignals(false);
   
   if(hour) {
-    h = t.hour(); 
+    h = t.hour();
+    hour->blockSignals(true);
     hour->setValue(h);
+    hour->blockSignals(false);
   }
 
   if(minute) {
-    m  = t.min();  
+    m  = t.min();
+    minute->blockSignals(true);
     minute->setValue(m);
+    minute->blockSignals(false);
   }
 
   if(second) {
     s=t.sec();
+    second->blockSignals(true);
     second->setValue(s);
+    second->blockSignals(false);
   }
 
 
@@ -245,9 +244,10 @@ bool miTimeSpinBox::checkMin()
 
 // SECOND
 
-void miTimeSpinBox::changeSecond(int v)
+void miTimeSpinBox::changeSecond(QString v)
 {
-  newSecond(v);
+	bool ok;
+  newSecond(v.toInt(&ok, 10));
   changeTime();
 }
 
@@ -267,9 +267,10 @@ void miTimeSpinBox::newSecond(int v )
 
 // MINUTE
 
-void miTimeSpinBox::changeMinute(int v)
+void miTimeSpinBox::changeMinute(QString v)
 {
-  newMinute(v);
+	bool ok;
+  newMinute(v.toInt(&ok, 10));
   changeTime();
 }
 
@@ -289,12 +290,12 @@ void miTimeSpinBox::newMinute(int v )
 
 // HOUR
 
-void miTimeSpinBox::changeHour(int v)
+void miTimeSpinBox::changeHour(QString v)
 {
-  newHour(v);
+	bool ok;
+  newHour(v.toInt(&ok, 10));
   changeTime();
 }
-
 
 void miTimeSpinBox::newHour(int v )
 {
@@ -312,10 +313,10 @@ void miTimeSpinBox::newHour(int v )
 
 // DAY
 
-
-void miTimeSpinBox::changeDay(int v)
+void miTimeSpinBox::changeDay(QString v)
 {
-  newDay(v);
+	bool ok;
+  newDay(v.toInt(&ok, 10));
   changeTime();
 }
 
@@ -335,12 +336,12 @@ void miTimeSpinBox::newDay( int v)
 
 // MONTH
 
-void miTimeSpinBox::changeMonth(int v)
+void miTimeSpinBox::changeMonth(QString v)
 {
-  newMonth(v);
+	bool ok;
+  newMonth(v.toInt(&ok, 10));
   changeTime();
 }
-
 
 void miTimeSpinBox::newMonth(int v)
 {
@@ -359,13 +360,13 @@ void miTimeSpinBox::newMonth(int v)
 
 // YEAR
 
-void miTimeSpinBox::changeYear(int v )
+void miTimeSpinBox::changeYear(QString v )
 {
-  yy = v;
+	bool ok;
+  yy = v.toInt(&ok, 10);
   checkMaxThisMonth();
   changeTime();
 }
-
 
 // TIME
 

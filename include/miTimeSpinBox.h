@@ -38,33 +38,21 @@
 #include <puTools/miDate>
 #include <puTools/miString>
 
-#include <QAbstractSpinBox>
+#include <QSpinBox>
 #include <QLayout>
 #include <QLabel>
 
 using namespace std; 
 
-class miSpinBox : public QAbstractSpinBox {
+class miSpinBox : public QSpinBox {
   Q_OBJECT
-private:
-	int max;
-	int min;
-	
-	int value;
 	
 public:
 	/**
 	 * Constructor.
-	 * @deprecated The st and n arguments are deprecated after porting to Qt4. 
+	 * @deprecated n is deprecated after porting to Qt4. 
 	 */
   miSpinBox( int mi, int ma, int st=1, QWidget* p=0, const char* n=0 );
-  
-  void stepBy(int steps);
-  
-  void setValue(int value);
-
-signals:
-  void newValue(int);
 };
 
 
@@ -127,13 +115,13 @@ public slots:
   void setTime(const miutil::miTime&);
   void setDate(const miutil::miDate&);
   void changeTime();
-
-  void changeYear(int);
-  void changeMonth(int);
-  void changeDay(int);
-  void changeHour(int);
-  void changeMinute(int);
-  void changeSecond(int);
+  
+  void changeYear(QString v);
+  void changeMonth(QString v);
+  void changeDay(QString v);
+  void changeHour(QString v);
+  void changeMinute(QString v);
+  void changeSecond(QString v);
   
   void setMax(const miutil::miTime&);
   void setMin(const miutil::miTime&);
