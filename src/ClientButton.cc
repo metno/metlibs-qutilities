@@ -43,8 +43,6 @@ ClientButton::ClientButton(const QString & name, const QString & server,
 	QPushButton(name, parent) {
 #ifdef  HAVE_LOG4CXX
 	logger = log4cxx::Logger::getLogger("coclient.ClientButton"); ///< LOG4CXX init
-	//log4cxx::PropertyConfigurator::configure("log4cxx.properties");
-	log4cxx::BasicConfigurator::configure();
 #endif // HAVE_LOG4CXX
 
 	uselabel = false;
