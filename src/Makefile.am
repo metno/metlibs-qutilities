@@ -7,6 +7,7 @@ qt_sources = \
 	miMessage.cc \
 	miSliderWidget.cc \
 	miTimeSpinBox.cc \
+	qtHelpDialog.cc \
 	qbLoginDialog.cc \
 	qbLoginInfo.cc
 

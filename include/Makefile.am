@@ -8,6 +8,7 @@ pkg_include_HEADERS = \
 	miMessage.h \
 	miSliderWidget.h \
 	miTimeSpinBox.h \
+	qtHelpDialog.h \
 	qbLoginDialog.h \
 	qbLoginInfo.h \
 	circle_green.xpm \
