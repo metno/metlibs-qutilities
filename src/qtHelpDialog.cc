@@ -219,11 +219,22 @@ void HelpDialog::setSource( const miString& source ){
   QDir dir( helpPath().c_str() );
   QStringList paths( dir.absolutePath() );
   tb->setSearchPaths( paths );
-  //cerr << "Setting search path=" <<  dir.absolutePath().latin1() << endl;
-
   tb->setSource( QString(source.c_str()) );
   tb->update();
+
   return;
+}
+
+
+void HelpDialog::showsource( const miString& source, const miString tag ){
+
+  setSource(source);
+  
+  if(tag.exists())
+    tb->scrollToAnchor( QString(tag.cStr()) );
+  
+  show();
+
 }
 
 

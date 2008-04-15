@@ -43,6 +43,7 @@ public:
 
 public slots:
   void showdoc(const int doc, const miString tag ="");
+  void showsource( const miString& source, const miString tag ="");
 
 private slots:
   void hideHelp();
