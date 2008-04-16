@@ -18,9 +18,14 @@ miSliderWidget::miSliderWidget(float minV, float maxV,
   if ( stepValue <= 0.0 )
     stepValue = 0.1;
 
-  QHBoxLayout * hl =  new QHBoxLayout(this);
+  QBoxLayout * hl;
+  if(orientation==Qt::Horizontal) 
+    hl =  new QBoxLayout(QBoxLayout::LeftToRight,this);
+  else
+    hl =  new QBoxLayout(QBoxLayout::BottomToTop,this);
+  
   hl->setObjectName("hl");
-  orientation= Qt::Horizontal;
+
   
   desclabel= new QLabel(descript.c_str(),this);
   hl->addWidget(desclabel);
