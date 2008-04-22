@@ -80,7 +80,7 @@ namespace qmstrings{
 
   const int default_id = -1000;
   const int all = -1;
-  const int port = 4243;
+  const int port = 19444;
 };
 #endif
 
