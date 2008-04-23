@@ -33,7 +33,8 @@ private:
   float stepValue;
   float Value;
   bool tracking;
-
+  miString parname;
+  
   float fValue(int v);
 
 public:
@@ -42,6 +43,7 @@ public:
 		 miString unit, bool usetracking, QWidget* p, const char * name = 0);
 
   float value();
+  void  setValue(float v);
 
 public slots:
   void valueChanged(int v);
@@ -49,6 +51,7 @@ public slots:
 
 signals:
   void valueChanged(float);
+  void valueChangedForPar(float,miString);
   void sliderReleased();
 };
 

@@ -21,12 +21,13 @@ miSliderWidget::miSliderWidget(float minV, float maxV,
   QBoxLayout * hl;
   if(orientation==Qt::Horizontal) 
     hl =  new QBoxLayout(QBoxLayout::LeftToRight,this);
-  else
+  else {
     hl =  new QBoxLayout(QBoxLayout::BottomToTop,this);
-  
+    hl->setAlignment(Qt::AlignHCenter);
+  }
   hl->setObjectName("hl");
 
-  
+  parname=descript;
   desclabel= new QLabel(descript.c_str(),this);
   hl->addWidget(desclabel);
   
@@ -60,7 +61,9 @@ miSliderWidget::miSliderWidget(float minV, float maxV,
 
   vallabel= new QLabel("",this);
   vallabel->setNum(Value);
-  vallabel->setFixedWidth(50);
+  
+  if(orientation==Qt::Horizontal)
+    vallabel->setFixedWidth(50);  
   
   hl->addWidget(vallabel);
 }
@@ -70,6 +73,20 @@ float miSliderWidget::fValue(int v)
   return (minValue + roundf(v*stepValue*100)/100);
 }
 
+void miSliderWidget::setValue(float v) 
+{
+  if(v<minValue || v > maxValue)
+    return;
+  Value=v;
+  
+  int ivalue = static_cast<int>((Value - minValue)/stepValue);
+
+  vallabel->setNum(Value);
+  slider->setSliderPosition(ivalue);
+} 
+
+
+
 void miSliderWidget::valueChanged(int v)
 {
 //   cerr << "valueChanged" << endl;
@@ -77,6 +94,7 @@ void miSliderWidget::valueChanged(int v)
   vallabel->setNum(Value);
 
   emit valueChanged(Value);
+  emit valueChangedForPar(Value,parname);
 }
 
 void miSliderWidget::sliderMoved(int v)
@@ -84,7 +102,10 @@ void miSliderWidget::sliderMoved(int v)
 //   cerr << "sliderMoved" << endl;
   Value = fValue(v);
   vallabel->setNum(Value);
-  if (tracking) emit valueChanged(Value);
+  if (tracking){
+    emit valueChanged(Value);
+    emit valueChangedForPar(Value,parname);
+  }
 }
 
 float miSliderWidget::value()
