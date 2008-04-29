@@ -284,4 +284,6 @@ void CoClient::socketError(QAbstractSocket::SocketError e) {
 	}
 
 	LOG4CXX_INFO(logger, "coserver started");
+	
+	tcpSocket->connectToHost(QString(host.cStr()), port);
 }
