@@ -108,6 +108,8 @@ private:
 	quint32 blockSize;
 	quint16 port;
 	QProcess *server;
+	
+	bool noCoserver4;
 
 	vector<miMessage> inbox;
 	map<int, string> clients;

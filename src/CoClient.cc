@@ -60,6 +60,8 @@ CoClient::CoClient(QWidget* parent, const char *name, const char *h,
 	blockSize = 0;
 
 	tcpSocket = new QTcpSocket(this);
+	
+	noCoserver4 = false;
 
 	// connected to coserver
 	connect(tcpSocket, SIGNAL(connected()), this, SLOT(sendType()));
@@ -88,6 +90,7 @@ void CoClient::connectionClosed() {
 }
 
 void CoClient::connectToServer() {
+	noCoserver4 = false;
 	tcpSocket->connectToHost(QString(host.cStr()), port);
 }
 
@@ -191,15 +194,25 @@ void CoClient::sendType() {
 }
 
 bool CoClient::sendMessage(miMessage &msg, const char* sep) {
+	bool hasReciever = false;
+	
 	if (tcpSocket->state() == QTcpSocket::ConnectedState) {
-		// UGLY HACK 
-		// that only supports two connected clients at a time (since
-		// clients then only will contain one other client)
 		map<int, string>::iterator it;
-		it = clients.begin();
-		if(msg.to != 0) ///< if the message is for the server, do not do anything
-			msg.to = -1;//(int)it->first;
+		if(msg.to != 0 && msg.to != -1) { ///< if the message is for the server or is a broadcast, do not do anything
+			
+			for(it = clients.begin(); it != clients.end(); ++it) {
+				if((int)it->first == msg.to) {
+					hasReciever = true;
+					break;
+				}
+			}
+			
+		}
 
+		/// if msg does not contain a valid receiver address, broadcast it to all clients
+		if(!hasReciever)
+			msg.to = -1;
+		
 #ifdef _DEBUG
 		cout << "miMessage in CoClient::sendMessage() (SEND)"<< endl;
 		cout << msg.content() << endl;
@@ -263,6 +276,9 @@ void CoClient::slotWriteStandardError() {
 }
 
 void CoClient::socketError(QAbstractSocket::SocketError e) {
+	/// try this only once
+	if(noCoserver4) return;
+	
 	LOG4CXX_INFO(logger, "Starting coserver...");
 
 	server = new QProcess();
@@ -278,8 +294,9 @@ void CoClient::socketError(QAbstractSocket::SocketError e) {
 	sleep(1);
 
 	if (server->state() == QProcess::NotRunning) {
-		LOG4CXX_ERROR(logger, "Couldn't start server");
+		LOG4CXX_ERROR(logger, "Couldn't start server. Make sure the path of coserver4 is correctly set in the setup of your client, and try again.");
 		server->kill();
+		noCoserver4 = true;
 		return;
 	}
 

@@ -88,7 +88,10 @@ void ClientButton::setLabel(miString name) {
 		setText("");
 	} else if (uselabel ) {
 		setIcon(QPixmap(conn_xpm));
-		setText(name.c_str());
+		
+		/// not useful anymore.. needs refactoring
+		setText("");
+		//setText(name.c_str());
 	}
 }
 
