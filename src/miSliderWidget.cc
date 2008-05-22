@@ -62,8 +62,8 @@ miSliderWidget::miSliderWidget(float minV, float maxV,
   vallabel= new QLabel("",this);
   vallabel->setNum(Value);
   
-  if(orientation==Qt::Horizontal)
-    vallabel->setFixedWidth(50);  
+//  if(orientation==Qt::Horizontal)
+//    vallabel->setFixedWidth(30);  
   
   hl->addWidget(vallabel);
 }
