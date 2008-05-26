@@ -3,18 +3,25 @@
 #include <QLayout>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QDoubleValidator>
+#include <QShortcut>
 
 miSliderWidget::miSliderWidget(float minV, float maxV,
 			       float stepV,float Val, 
 			       Qt::Orientation orientation,
 			       miString descript,miString unit,
 			       bool usetracking,
-			       QWidget* p, const char * name)
+			       QWidget* p, const char * name,
+			       bool editf, bool btns)
   : QWidget(p),
-    minValue(minV), maxValue(maxV), stepValue(stepV), Value(Val), tracking(usetracking)
+    minValue(minV), maxValue(maxV), stepValue(stepV), Value(Val), tracking(usetracking),
+    editfield(editf), buttons(btns), valedit(0), vallabel(0)
 {
-	setObjectName(name);
-	
+  
+  editfield=true;
+
+  setObjectName(name);
+  
   if ( stepValue <= 0.0 )
     stepValue = 0.1;
 
@@ -26,6 +33,7 @@ miSliderWidget::miSliderWidget(float minV, float maxV,
     hl->setAlignment(Qt::AlignHCenter);
   }
   hl->setObjectName("hl");
+  //hl->setSpacing(1);
 
   parname=descript;
   desclabel= new QLabel(descript.c_str(),this);
@@ -59,13 +67,38 @@ miSliderWidget::miSliderWidget(float minV, float maxV,
   hl->addWidget(slider,1);
   desclabel->setBuddy(slider);
 
-  vallabel= new QLabel("",this);
-  vallabel->setNum(Value);
+  if ( editfield ){
+    valedit = new QLineEdit(this);
+    valedit->setMaximumWidth(50);
+    float steplog = logf(stepValue );
+    int decimals = ( steplog < 0.0 ? 1 : 0 );
+    valedit->setValidator ( new QDoubleValidator(minValue,maxValue,decimals,this) );
+    connect(valedit,SIGNAL(editingFinished()),this,SLOT(editingFinished())); 
+    QShortcut *scut = new QShortcut(QKeySequence(tr("Ctrl+A")),valedit,
+				    0,0,Qt::WidgetShortcut);
+    connect(scut,SIGNAL(activated()),this,SLOT(editingFinished()) );
+
+    hl->addWidget(valedit,2);
+
+  } else {
+    vallabel= new QLabel("",this);
+    hl->addWidget(vallabel,2);
+  }
+  writeValue(Value);
   
 //  if(orientation==Qt::Horizontal)
 //    vallabel->setFixedWidth(30);  
-  
-  hl->addWidget(vallabel);
+}
+
+void miSliderWidget::editingFinished()
+{
+  cerr << "void miSliderWidget::editingFinished():" <<  valedit->text().toStdString() << endl;
+  if ( valedit && valedit->hasAcceptableInput()){
+    float v = valedit->text().toFloat();
+    setValue(v);
+    emit valueChanged(Value);
+    emit valueChangedForPar(Value,parname);
+  }
 }
 
 float miSliderWidget::fValue(int v)
@@ -77,21 +110,33 @@ void miSliderWidget::setValue(float v)
 {
   if(v<minValue || v > maxValue)
     return;
+
   Value=v;
   
   int ivalue = static_cast<int>((Value - minValue)/stepValue);
 
-  vallabel->setNum(Value);
+  writeValue(Value);
   slider->setSliderPosition(ivalue);
 } 
 
 
+void miSliderWidget::writeValue(float V)
+{
+  if ( editfield ){
+    ostringstream ost;
+    ost << V;
+    if (valedit) valedit->setText(ost.str().c_str());
+  } else {
+    if (vallabel) vallabel->setNum(V);
+  }
+}
 
 void miSliderWidget::valueChanged(int v)
 {
 //   cerr << "valueChanged" << endl;
   Value = fValue(v);
-  vallabel->setNum(Value);
+  
+  writeValue(Value);
 
   emit valueChanged(Value);
   emit valueChangedForPar(Value,parname);
@@ -101,7 +146,7 @@ void miSliderWidget::sliderMoved(int v)
 {
 //   cerr << "sliderMoved" << endl;
   Value = fValue(v);
-  vallabel->setNum(Value);
+  writeValue(Value);
   if (tracking){
     emit valueChanged(Value);
     emit valueChangedForPar(Value,parname);

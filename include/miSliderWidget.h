@@ -15,6 +15,7 @@
 #include <QWidget>
 #include <QSlider>
 #include <QLabel>
+#include <QLineEdit>
 
 #include <puTools/miString.h>
 
@@ -23,9 +24,10 @@ using namespace std;
 class miSliderWidget : public QWidget {
   Q_OBJECT
 private:
-  QLabel * desclabel;
+  QLabel  * desclabel;
   QSlider * slider;
-  QLabel * vallabel;
+  QLabel  * vallabel;
+  QLineEdit * valedit;
 
   int nsteps;
   float minValue;
@@ -34,13 +36,17 @@ private:
   float Value;
   bool tracking;
   miString parname;
+  bool editfield;
+  bool buttons;
   
   float fValue(int v);
+  void writeValue(float V);
 
 public:
   miSliderWidget(float minV,  float maxV, float stepV, float Val,
 		 Qt::Orientation orientation, miString descript,
-		 miString unit, bool usetracking, QWidget* p, const char * name = 0);
+		 miString unit, bool usetracking, QWidget* p, const char * name = 0,
+		 bool editf=false, bool btns=false);
 
   float value();
   void  setValue(float v);
@@ -48,6 +54,7 @@ public:
 public slots:
   void valueChanged(int v);
   void sliderMoved(int v);
+  void editingFinished();
 
 signals:
   void valueChanged(float);
