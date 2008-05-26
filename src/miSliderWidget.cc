@@ -69,9 +69,19 @@ miSliderWidget::miSliderWidget(float minV, float maxV,
 
   if ( editfield ){
     valedit = new QLineEdit(this);
-    valedit->setMaximumWidth(50);
-    float steplog = logf(stepValue );
+    // find necessary size of lineedit
+    float maxlog = (fabsf(maxValue) > 1 ? log10f(fabsf(maxValue)) : 1);
+    float minlog = (fabsf(minValue) > 1 ? log10f(fabsf(minValue)) : 1);
+    if ( maxValue < 0.0 ) maxlog+= 1;
+    if ( minValue < 0.0 ) minlog+= 1;
+    float steplog = log10f(stepValue );
     int decimals = ( steplog < 0.0 ? 1 : 0 );
+    if ( decimals > 0 ){
+      maxlog+= (decimals+1);
+      minlog+= (decimals+1);
+    }
+    int maxchars = static_cast<int>(fmaxf(minlog,maxlog)) + 1;
+    valedit->setMaximumWidth(11*maxchars);
     valedit->setValidator ( new QDoubleValidator(minValue,maxValue,decimals,this) );
     connect(valedit,SIGNAL(editingFinished()),this,SLOT(editingFinished())); 
     QShortcut *scut = new QShortcut(QKeySequence(tr("Ctrl+A")),valedit,
@@ -92,7 +102,7 @@ miSliderWidget::miSliderWidget(float minV, float maxV,
 
 void miSliderWidget::editingFinished()
 {
-  cerr << "void miSliderWidget::editingFinished():" <<  valedit->text().toStdString() << endl;
+//   cerr << "void miSliderWidget::editingFinished():" <<  valedit->text().toStdString() << endl;
   if ( valedit && valedit->hasAcceptableInput()){
     float v = valedit->text().toFloat();
     setValue(v);
