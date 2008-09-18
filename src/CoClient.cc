@@ -227,18 +227,18 @@ bool CoClient::sendMessage(miMessage &msg, const char* sep) {
 
 		out << msg.to;
 		// msg.from is set by server-side socket
-		out << msg.command.cStr();
-		out << msg.description.cStr();
-		out << msg.commondesc.cStr();
-		out << msg.common.cStr();
-		out << msg.clientType.cStr();
-		out << msg.co.cStr();
-		out << quint32(msg.data.size()); // NOT A FIELD IN MIMESSAGE (TEMP ONLY)
+		out << QString(msg.command.cStr());
+		out << QString(msg.description.cStr());
+		out << QString(msg.commondesc.cStr());
+		out << QString(msg.common.cStr());
+		out << QString(msg.clientType.cStr());
+		out << QString(msg.co.cStr());
+		out << msg.data.size(); // NOT A FIELD IN MIMESSAGE (TEMP ONLY)
 #ifdef _DEBUG
 		cout << "Size of data in last sent msg: " << msg.data.size() << endl;
 #endif
 		for (int i = 0; i < msg.data.size(); i++) {
-			out << msg.data[i].cStr();
+			out << QString(msg.data[i].cStr());
 		}
 
 		out.device()->seek(0);
