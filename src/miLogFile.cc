@@ -1,6 +1,6 @@
 /*
   libqUtilities - Diverse Qt-classes and coserver base
-  
+
   $Id$
 
   Copyright (C) 2006 met.no
@@ -11,7 +11,7 @@
   0313 OSLO
   NORWAY
   email: diana@met.no
-  
+
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
   License as published by the Free Software Foundation; either
@@ -21,11 +21,11 @@
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   Lesser General Public License for more details.
-  
+
   You should have received a copy of the GNU Lesser General Public
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-*/
+ */
 
 
 /*!
@@ -36,7 +36,7 @@
     $Revision$
     at $Date$
     ------------------------------------
-*/
+ */
 
 
 #include <miLogFile.h>
@@ -44,6 +44,7 @@
 map<miString,miLogFile::xy >  miLogFile::pos;
 map<miString,miLogFile::xy >  miLogFile::size;
 map<miString,miString >       miLogFile::tokens;
+map<miString,miString>        miLogFile::sections;
 miString                      miLogFile::filename="unnamed.log";
 int                           miLogFile::xmax    = 1280;
 int                           miLogFile::ymax    = 1024;
@@ -58,8 +59,8 @@ bool miLogFile::hasSize(miString key) const
 {
   if(!size.count(key))
     return false;
-  
-  xy s = size[key];  
+
+  xy s = size[key];
   return (s.x<=xmax && s.y<=ymax);
 }
 
@@ -158,90 +159,105 @@ int miLogFile::intToken(miString key) const
 }
 
 
+
+
 bool miLogFile::read( miString f )
 {
   if(f.exists())
     filename=f;
- 
+
   ifstream log(filename.cStr());
-   
+
   if(!log) {
     cerr << "could not open log file: " << filename << endl;
     return false;
   }
 
-  miString         key,tok;
   miString         line;
-  vector<miString> words;
-
-  miString section;
+  vector<miString> lines;
 
   while(log) {
     getline(log,line);
+    lines.push_back(line);
+  }
+  return readStrings(lines);
+}
+
+bool miLogFile::readStrings(vector<miString> lines,miString section)
+{
+  miString         line;
+  miString         key,tok;
+  vector<miString> words;
+
+  for (int i = 0; i < lines.size(); ++i) {
+    line=lines[i];
     if(line.contains("#"))
       continue;
     if(line.contains("==="))
       continue;
-    
+
     line.trim();
     if(!line.exists())
       continue;
-    
+
     int c = line.find_first_of(" ",0);
     if(c > line.size())
       continue;
     int k = line.length() -  c;
-    
+
     key =  line.substr(0,c);
     tok =  line.substr(c,k);
     tok.trim();
-    
+
     if(!tok.exists())
       continue;
-    
+
+    if(section.exists())
+      sections[key]=section;
+
+
     if(key.contains(".size")) {
       key.replace(".size","");
-      
+
       words = tok.split();
-      
-      if(words.size() < 2) 
-	continue;
-     
+
+      if(words.size() < 2)
+        continue;
+
       if ( !words[0].isNumber() || !words[1].isNumber() )
-	continue;
-    
+        continue;
+
       int sx = atoi(words[0].cStr());
       int sy = atoi(words[1].cStr());
- 
+
       if( sx > 20 && sy > 20 )
-	size[key] = xy(sx,sy);
+        size[key] = xy(sx,sy);
 
       continue;
     }
-    
+
 
     if(key.contains(".pos")) {
       key.replace(".pos","");
       words = tok.split();
-      
-      if(words.size() < 2) 
-	continue;
-      
+
+      if(words.size() < 2)
+        continue;
+
       if ( !words[0].isNumber() || !words[1].isNumber() )
-	continue;
-      
+        continue;
+
       int px = atoi(words[0].cStr());
       int py = atoi(words[1].cStr());
- 
+
       if(px > 0 && py > 0 )
-	pos[key] = xy(px,py);
+        pos[key] = xy(px,py);
       continue;
-      
+
     }
 
     tokens[key] = tok;
   }
-
 
   return true;
 }
@@ -260,45 +276,58 @@ bool miLogFile::write( miString f )
     cerr << "could not open log file: " << filename << endl;
     return false;
   }
+  log << "# automatically generated file. DO NOT EDIT!\n\n";
+  log << writeString();
+  return true;
+}
 
 
+miString  miLogFile::writeString(miString section)
+{
+  ostringstream log;
+  miString key;
   map<miString,xy>::iterator       ipos  = pos.begin();
   map<miString,xy>::iterator       isize = size.begin();
   map<miString,miString>::iterator itok  = tokens.begin();
 
-  log << "# automatically generated file. DO NOT EDIT!\n\n";
 
+  for (;isize!=size.end();isize++) {
+    key=isize->first + ".size";
+    if(section.exists() && sections[key] != section)
+        continue;
+    log <<  key << " " << isize->second.x << " " << isize->second.y << endl;
+  }
 
-  for(;isize!=size.end();isize++)
-    log << isize->first    << ".size " 
-	<< isize->second.x << " "
-	<< isize->second.y << endl;
+  log << "===========================" << endl;
+
+  for (;ipos!=pos.end();ipos++) {
+    key=ipos->first + ".pos";
+    if(section.exists() && sections[key] != section)
+      continue;
+    log << key << " "  << ipos->second.x << " " << ipos->second.y << endl;
+  }
 
   log << "===========================" << endl;
 
-  for(;ipos!=pos.end();ipos++)
-    log << ipos->first    << ".pos " 
-	<< ipos->second.x << " "
-	<< ipos->second.y << endl;
-
-  log << "===========================" << endl;
-  
-  for(;itok!=tokens.end();itok++)
-    log << itok->first    << " " << itok->second << endl;
-
-  return false;
+  for (;itok!=tokens.end();itok++) {
+    key=itok->first;
+    if(section.exists() && sections[key] != section)
+      continue;
+    log << key  << " " << itok->second << endl;
+  }
+  return log.str();
 }
 
 void miLogFile::logSizeAndPos(QWidget* w,miString name)
 {
-  if(!w)             return;  
+  if(!w)             return;
   if(!name.exists()) name=w->objectName().toStdString();
   if(!name.exists()) return;
 
 
   addSize(name, w->width(), w->height());
   addPos( name, w->x(),     w->y()     );
-  
+
 }
 
 void miLogFile::restoreSizeAndPos(QWidget* w,miString name)
@@ -307,32 +336,32 @@ void miLogFile::restoreSizeAndPos(QWidget* w,miString name)
   if(!name.exists()) name=w->objectName().toStdString();
   if(!name.exists()) return;
 
-  if(hasSize(name)) 
-    w->resize(sizex(name),sizey(name));    
-  if(hasPos("JoinDialog")) 
+  if(hasSize(name))
+    w->resize(sizex(name),sizey(name));
+  if(hasPos("JoinDialog"))
     w->move(posx(name),posy(name));
 }
 
 void miLogFile::logVisibility(QWidget* w,miString name)
 {
-  if(!w)             return;  
+  if(!w)             return;
   if(!name.exists()) name=w->objectName().toStdString();
   if(!name.exists()) return;
-  
+
   name+="IsVisible";
   addToken(name,w->isVisible());
-  
+
 }
 
 void miLogFile::restoreVisibility(QWidget* w,miString name)
 {
-  if(!w)             return;  
+  if(!w)             return;
   if(!name.exists()) name=w->objectName().toStdString();
   if(!name.exists()) return;
   name+="IsVisible";
 
   if(hasBooleanToken(name)) {
-    if(booleanToken(name)) 
+    if(booleanToken(name))
       w->show();
     else
       w->hide();

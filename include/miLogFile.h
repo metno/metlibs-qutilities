@@ -1,6 +1,6 @@
 /*
   libqUtilities - Diverse Qt-classes and coserver base
-  
+
   $Id$
 
   Copyright (C) 2006 met.no
@@ -11,7 +11,7 @@
   0313 OSLO
   NORWAY
   email: diana@met.no
-  
+
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
   License as published by the Free Software Foundation; either
@@ -21,7 +21,7 @@
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   Lesser General Public License for more details.
-  
+
   You should have received a copy of the GNU Lesser General Public
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -48,14 +48,14 @@
 
 #include <qwidget.h>
 
-using namespace std; 
+using namespace std;
 
 class miLogFile {
 private:
 
-  typedef struct xy { 
-    int x; 
-    int y; 
+  typedef struct xy {
+    int x;
+    int y;
     xy() : x(0) , y(0) {}
     xy(int x_,int y_) : x(x_) , y(y_) {}
   } xy;
@@ -64,7 +64,7 @@ private:
   static map<miString,xy>       pos;
   static map<miString,xy>       size;
   static map<miString,miString> tokens;
-  
+  static map<miString,miString> sections; // which section for each key
   static miString               filename;
   static int                    xmax;
   static int                    ymax;
@@ -79,7 +79,7 @@ public:
 
   int sizex( miString key);
   int sizey( miString key);
-  
+
   miString token(        miString key ) const;
   bool     booleanToken( miString key ) const;
   int      intToken(     miString key ) const;
@@ -95,7 +95,10 @@ public:
   void addToken( miString key, miString token);
   void addToken( miString key, bool token);
   void addToken( miString key, int  token);
-  
+
+
+  bool      readStrings(vector<miString> lines,miString section="");
+  miString  writeString(miString section="");
 
   bool read(  miString fname="" ); /// none == filenname
   bool write( miString fname="" ); /// none == filenname
