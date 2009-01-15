@@ -98,27 +98,37 @@ void miLogFile::addPos( miString key,int x,int y)
 {
   if(x > 0 && y > 0 )
     pos[key] = xy(x,y);
+  if(section.exists())
+    sections[key+".pos"] = section;
 }
 
 void miLogFile::addSize(miString key,int x,int y)
 {
   if (x>20 && y>20 )
     size[key] = xy(x,y);
+  if(section.exists())
+    sections[key+".size"] = section;
 }
 
 void miLogFile::addToken(miString key,miString tok )
 {
   tokens[key] = tok;
+  if(section.exists())
+      sections[key] = section;
 }
 
 void miLogFile::addToken(miString key,bool tok )
 {
   tokens[key] = (tok ? "TRUE" : "FALSE");
+  if(section.exists())
+      sections[key] = section;
 }
 
 void miLogFile::addToken(miString key,int token )
 {
   tokens[key] = miString(token);
+  if(section.exists())
+       sections[key] = section;
 }
 
 
@@ -338,7 +348,7 @@ void miLogFile::restoreSizeAndPos(QWidget* w,miString name)
 
   if(hasSize(name))
     w->resize(sizex(name),sizey(name));
-  if(hasPos("JoinDialog"))
+  if(hasPos(name))
     w->move(posx(name),posy(name));
 }
 

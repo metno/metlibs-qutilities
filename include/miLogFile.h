@@ -69,10 +69,12 @@ private:
   static int                    xmax;
   static int                    ymax;
 
-
+  miString section;  // current section of a single instance
 public:
   miLogFile() {}
   miLogFile(miString f)  { read(f);}
+
+  void setSection(miString s) { section=s;}
 
   int posx(  miString key);
   int posy(  miString key);
