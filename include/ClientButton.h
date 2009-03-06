@@ -126,6 +126,9 @@ public slots:
   	 * when connected.
   	 */
   	void connected();
+  	
+  	void unableToConnect();
+  	
 
 signals:
   	void receivedMessage(miMessage &);

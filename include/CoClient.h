@@ -110,6 +110,7 @@ private:
 	QProcess *server;
 	
 	bool noCoserver4;
+	int nrOfAttempts;
 
 	vector<miMessage> inbox;
 	map<int, string> clients;
@@ -120,12 +121,25 @@ private:
 	 * @param msg Message containing client info
 	 */
 	void editClients(miMessage msg);
-  
+
+  	/**
+  	 * Read port from file. File has to be located in ~/.diana/diana.port and only contain the port number.
+  	 */	
+  	int readPortFromFile();
+  	
+  	/**
+  	 * Parses /etc/services and extracts portnumber based on username. (env variable USER) 
+  	 * Format in /etc/services
+  	 * diana-<username>    <port>/tcp    # comment
+  	 */
+  	int readPortFromFile_Services();
+	
 signals:
   	void receivedMessage(miMessage &);
   	void addressListChanged();
   	void connected();
   	void newClient(miString);
+  	void unableToConnect();
   
 private slots:
 	/**
@@ -165,6 +179,10 @@ private slots:
   	 * @param written The number of bytes written to socket
   	 */
   	void printBytesWritten(qint64 written);
+  	
+
+  	
+  	
 };
 
 #endif

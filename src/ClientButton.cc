@@ -35,19 +35,20 @@
 
 #include <conn.xpm>
 #include <disconn.xpm>
+#include <unconn.xpm>
 #include <miMessage.h>
 #include <ClientButton.h>
 
 ClientButton::ClientButton(const QString & name, const QString & server,
 		QWidget * parent) :
-	QPushButton(name, parent) {
+	QPushButton(name, parent) {	
 #ifdef  HAVE_LOG4CXX
 	logger = log4cxx::Logger::getLogger("coclient.ClientButton"); ///< LOG4CXX init
 #endif // HAVE_LOG4CXX
 
 	uselabel = false;
 	setIcon(QPixmap(disconn_xpm));
-	setToolTip("Frakoblet");
+	setToolTip("Disconnected");
 	setText("");
 
 	string sc = server.toStdString();
@@ -58,17 +59,24 @@ ClientButton::ClientButton(const QString & name, const QString & server,
 
 	connect(coclient, SIGNAL(newClient(miString)), SLOT(setLabel(miString)));
 	connect(coclient, SIGNAL(connected()), SLOT(connected()));
+	connect(coclient, SIGNAL(unableToConnect()), SLOT(unableToConnect()));
 	connect(coclient, SIGNAL(receivedMessage(miMessage&)), SIGNAL(receivedMessage(miMessage&)));
 	connect(coclient, SIGNAL(addressListChanged()), SIGNAL(addressListChanged()));
 }
 
 void ClientButton::connectToServer() {
+	
+	cerr << "ClientButton::connectToServer()" << endl;
+	
 	if (coclient->notConnected()) {
-		coclient->connectToServer();
-		setToolTip("Kobler til...");
+		cerr << "ClientButton::connectToServer(): notConnected" << endl;
+		setToolTip("Connecting...");
+		coclient->connectToServer();				
+						
 	} else {
+		cerr << "ClientButton::connectToServer(): connected" << endl;
 		coclient->disconnectFromServer();
-		setToolTip("Frakoblet");
+		setToolTip("Disconnected");
 		setLabel("noClient");
 		emit connectionClosed();
 	}
@@ -76,7 +84,13 @@ void ClientButton::connectToServer() {
 
 void ClientButton::connected() {
 	setIcon(QPixmap(conn_xpm));
-	setToolTip("Tilkoblet");
+	setToolTip("Connected");
+}
+
+void ClientButton::unableToConnect() {
+	cerr << "ClientButton::disconnected()" << endl;
+	setLabel("portBusy");
+	setToolTip("Unable to connect");
 }
 
 void ClientButton::setLabel(miString name) {
@@ -86,6 +100,9 @@ void ClientButton::setLabel(miString name) {
 	} else if (name == "myself") {
 		setIcon(QPixmap(conn_xpm));
 		setText("");
+	} else if (name == "portBusy") {
+		setIcon(QPixmap(unconn_xpm));
+		setText("");		
 	} else if (uselabel ) {
 		setIcon(QPixmap(conn_xpm));
 		
