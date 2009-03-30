@@ -1,28 +1,28 @@
 /**
  * coclient - coserver client file
  * @author Martin Lilleeng Sætra <martinls@met.no>
- * 
+ *
  * $Id: CoClient.cc 3 2007-09-28 10:40:54Z martinls $
- * 
+ *
  * Copyright (C) 2007 met.no
- * 
+ *
  * Contact information:
  * Norwegian Meteorological Institute
  * Box 43 Blindern
  * 0313 OSLO
  * NORWAY
  * email: diana@met.no
- *  
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -54,19 +54,19 @@ CoClient::CoClient(QWidget* parent, const char *name, const char *h,
 #endif	// HAVE_LOG4CXX
 
 	nrOfAttempts = 0;
-	
+
 	/*
 	 * Uncomment this and comment the one below to read from etc/services instead of ~/.diana/diana.port
-	  		
+
 	if ((readPortFromFile_Services() > 0) || (port == 0)) {
 		port = qmstrings::port;
 	}
 	*/
-	
-	if ((readPortFromFile() > 0) || (port == 0)) {  	
+
+	if ((readPortFromFile() > 0) || (port == 0)) {
 		port = qmstrings::port;
 	}
-	
+
 	clientType = name;
 
 	lockFile = lf;
@@ -76,7 +76,7 @@ CoClient::CoClient(QWidget* parent, const char *name, const char *h,
 	blockSize = 0;
 
 	tcpSocket = new QTcpSocket(this);
-	
+
 	noCoserver4 = false;
 
 	// connected to coserver
@@ -97,47 +97,49 @@ int CoClient::readPortFromFile() {
 	#ifdef _DEBUG
 		cerr << "CoClient::readPortFromFile()" << endl;
 	#endif
-	
+
 	miString homePath = miString(getenv("HOME"));
-	
+
 	#ifdef _DEBUG
 		cerr << "homePath: " << homePath << endl;
 	#endif
-	
+
 	FILE *pfile;
 	char fileContent[10];
-			
-	pfile = fopen(miString(homePath + "/.diana/diana.port").cStr(), "r");
+
+	pfile = fopen(miString(homePath + "/.coserver.port").cStr(), "r");
 	if (pfile == NULL) {
+#ifdef _DEBUG
 		cerr << "Could not read file " << endl;
+#endif
 		return 1;
-	} else {		
+	} else {
 		fgets(fileContent, 10, pfile);
 		puts(fileContent);
 		fclose(pfile);
 		port = miString(fileContent).toInt(0);
-		
+
 		#ifdef _DEBUG
 			cerr << "Port: " << port << " read from file." << endl;
 		#endif
-	}		
-	return 0;	
+	}
+	return 0;
 }
 
 // etc/services: diana-<username>		<port>/tcp		# comment
 int CoClient::readPortFromFile_Services() {
-	
+
 	#ifdef _DEBUG
 		cerr << "CoClient::readPortFromFile_Services()" << endl;
 	#endif
-		
+
 	miString filename = "/etc/services";
 	miString line;
 	vector <miString> tokens;
 	ifstream file(filename.cStr());
 	miString user = miString(getenv("USER"));
 	int port = 0;
-	
+
 	if (!file.is_open()) {
 		cerr << "Could not open file: " << filename << endl;
 		return 1;
@@ -146,8 +148,8 @@ int CoClient::readPortFromFile_Services() {
 			if (line.size() && line.at(0) != '#' && line.at(0) != '\n' && line.at(0) != ' ') {
 				line.replace("\t", " ");
 				line.replace("/", " ");
-				tokens = line.split(" ", true);				
-				if ((tokens.size() > 0)  && (tokens[1].size() > 0) && (tokens[0].contains("-")) && 
+				tokens = line.split(" ", true);
+				if ((tokens.size() > 0)  && (tokens[1].size() > 0) && (tokens[0].contains("-")) &&
 						(user == tokens[0].split("-", true)[1])) {
 							this->port = tokens[1].toInt(0);
 						}
@@ -177,7 +179,7 @@ void CoClient::connectToServer() {
 	noCoserver4 = false;
 	#ifdef _DEBUG
 		cerr << "Connecting to port: " << port << endl;
-	#endif	
+	#endif
 	tcpSocket->connectToHost(QString(host.cStr()), port);
 }
 
@@ -282,24 +284,24 @@ void CoClient::sendType() {
 
 bool CoClient::sendMessage(miMessage &msg, const char* sep) {
 	bool hasReciever = false;
-	
+
 	if (tcpSocket->state() == QTcpSocket::ConnectedState) {
 		map<int, string>::iterator it;
 		if(msg.to != 0 && msg.to != -1) { ///< if the message is for the server or is a broadcast, do not do anything
-			
+
 			for(it = clients.begin(); it != clients.end(); ++it) {
 				if((int)it->first == msg.to) {
 					hasReciever = true;
 					break;
 				}
 			}
-			
+
 		}
 
 		/// if msg does not contain a valid receiver address, broadcast it to all clients
 		if(!hasReciever)
 			msg.to = -1;
-		
+
 #ifdef _DEBUG
 		cout << "miMessage in CoClient::sendMessage() (SEND)"<< endl;
 		cout << msg.content() << endl;
@@ -366,74 +368,74 @@ void CoClient::socketError(QAbstractSocket::SocketError e) {
 	/// try this only once
 	if(noCoserver4) return;
 
-	if (nrOfAttempts < 2) {	
-	
+	if (nrOfAttempts < 2) {
+
 		#ifdef _DEBUG
 			cerr << "Starting coserver..." << endl;
-		#endif	
-		
+		#endif
+
 		LOG4CXX_INFO(logger, "Starting coserver...");
-		
+
 		server = new QProcess();
 		QString cmd = QString(serverCommand.cStr());
-		
+
 		QStringList args = QStringList("-d"); ///< -d for dynamicMode
-		
+
 		cerr << "Before reading file..." << endl;
-		
-		if (readPortFromFile() == 0) {				
+
+		if (readPortFromFile() == 0) {
 			args << "-p" << miString(port).cStr();
 		} else {
 			cerr << "Could not read port from file." << endl;
 		}
-		
+
 		cerr << "After reading file..." << endl;
-		
+
 		connect(server, SIGNAL(readyReadStandardOutput()), SLOT(checkServer()));
 		connect(server, SIGNAL(readyReadStandardError()), SLOT(slotWriteStandardError()));
-		
+
 		server->start(cmd, args);
-		
+
 		// make sure that coserver has time to start before checking its state
 		server->waitForStarted();
 		sleep(1);
-		
+
 		if (server->state() != QProcess::Running) {
 			LOG4CXX_ERROR(logger, "Couldn't start server. Make sure the path of coserver4 is correctly set in the setup of your client, and try again.");
-			
+
 			#ifdef _DEBUG
 				cerr << "Couldn't start coserver4. Make sure the path of coserver4 is correctly set in the setup of your client, and try again." << endl;;
 			#endif
-				
+
 			server->kill();
 			noCoserver4 = true;
 			return;
 		}
-		
+
 		LOG4CXX_INFO(logger, "coserver started");
-		
+
 		#ifdef _DEBUG
 			cerr << "Connect to host with port " << port << endl;
-		#endif	
-		
-			
-		cerr << "nrOfAttempts: " << nrOfAttempts << endl;  
+		#endif
+
+
+		cerr << "nrOfAttempts: " << nrOfAttempts << endl;
 		tcpSocket->connectToHost(QString(host.cStr()), port);
 		nrOfAttempts++;
-		
-	
+
+
 	} else  {
-		
+
 		connect(server, SIGNAL(readyReadStandardOutput()), SLOT(checkServer()));
-		
-		cerr << "Connection attempt limit reached. Disconnecting..." << endl;		
+
+		cerr << "Connection attempt limit reached. Disconnecting..." << endl;
 		tcpSocket->disconnectFromHost();
 		server->kill();
-		
+
 		emit unableToConnect();
-		
+
 		noCoserver4 = true;
 		return;
 	}
-	
+
 }
