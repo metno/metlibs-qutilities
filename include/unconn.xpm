@@ -1,5 +1,5 @@
 /* XPM */
-static char * unconn_xpm[] = {
+static const char * unconn_xpm[] = {
 "26 34 34 1",
 " 	c None",
 ".	c #FF0000",

@@ -1,28 +1,28 @@
 /**
  * coclient - coserver client file
  * @author Martin Lilleeng Sætra <martinls@met.no>
- * 
+ *
  * $Id: ClientButton.cc 3 2007-09-28 10:40:54Z martinls $
- * 
+ *
  * Copyright (C) 2007 met.no
- * 
+ *
  * Contact information:
  * Norwegian Meteorological Institute
  * Box 43 Blindern
  * 0313 OSLO
  * NORWAY
  * email: diana@met.no
- *  
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -39,12 +39,10 @@
 #include <miMessage.h>
 #include <ClientButton.h>
 
+
 ClientButton::ClientButton(const QString & name, const QString & server,
 		QWidget * parent) :
-	QPushButton(name, parent) {	
-#ifdef  HAVE_LOG4CXX
-	logger = log4cxx::Logger::getLogger("coclient.ClientButton"); ///< LOG4CXX init
-#endif // HAVE_LOG4CXX
+	QPushButton(name, parent) {
 
 	uselabel = false;
 	setIcon(QPixmap(disconn_xpm));
@@ -65,14 +63,14 @@ ClientButton::ClientButton(const QString & name, const QString & server,
 }
 
 void ClientButton::connectToServer() {
-	
+
 	cerr << "ClientButton::connectToServer()" << endl;
-	
+
 	if (coclient->notConnected()) {
 		cerr << "ClientButton::connectToServer(): notConnected" << endl;
 		setToolTip("Connecting...");
-		coclient->connectToServer();				
-						
+		coclient->connectToServer();
+
 	} else {
 		cerr << "ClientButton::connectToServer(): connected" << endl;
 		coclient->disconnectFromServer();
@@ -102,10 +100,10 @@ void ClientButton::setLabel(miString name) {
 		setText("");
 	} else if (name == "portBusy") {
 		setIcon(QPixmap(unconn_xpm));
-		setText("");		
+		setText("");
 	} else if (uselabel ) {
 		setIcon(QPixmap(conn_xpm));
-		
+
 		/// not useful anymore.. needs refactoring
 		setText("");
 		//setText(name.c_str());

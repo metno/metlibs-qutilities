@@ -44,14 +44,30 @@
 #include <CoClient.h>
 #include <fstream>
 
+
+
+
+
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif  /* HAVE_CONFIG_H */
+
+#ifdef HAVE_LOG4CXX   /* Defined in config.h */
+#include <log4cxx/logger.h>
+
+log4cxx::LoggerPtr logger = log4cxx::Logger::getLogger("coclient.CoClient");
+
+#else  /* ! HAVE_LOG4CXX */
+#include <miLogger/logger.h>
+#endif /* HAVE_LOG4CXX */
+
+
+
 //#define _DEBUG
 
 CoClient::CoClient(QWidget* parent, const char *name, const char *h,
 		const char *sc, const char *lf, quint16 p) :
 	QDialog(parent) {
-#ifdef HAVE_LOG4CXX
-	logger = log4cxx::Logger::getLogger("coclient.CoClient"); ///< LOG4CXX init
-#endif	// HAVE_LOG4CXX
 
 	nrOfAttempts = 0;
 
