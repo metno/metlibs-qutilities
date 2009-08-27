@@ -55,7 +55,7 @@
 #ifdef HAVE_LOG4CXX   /* Defined in config.h */
 #include <log4cxx/logger.h>
 
-log4cxx::LoggerPtr logger = log4cxx::Logger::getLogger("coclient.CoClient");
+static log4cxx::LoggerPtr logger = log4cxx::Logger::getLogger("coclient.CoClient");
 
 #else  /* ! HAVE_LOG4CXX */
 #include <miLogger/logger.h>
