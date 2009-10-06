@@ -1,8 +1,83 @@
-SUBDIRS = include src lang
+# $Id: Makefile.am 2786 2009-09-23 11:39:02Z dages $
 
-ACLOCAL_AMFLAGS = -I m4
+pkgname = qUtilities
 
-pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = @PACKAGE_TARNAME@.pc
+include $(top_srcdir)/metlibs.mk
 
-$(pkgconfig_DATA): config.status
+# Should we flatten this as well?
+SUBDIRS = lang
+
+lib_LTLIBRARIES = libqUtilities.la
+
+qt_sources = \
+	ClientButton.cc \
+	CoClient.cc \
+	miLogFile.cc \
+	miMessage.cc \
+	miSliderWidget.cc \
+	miTimeSpinBox.cc \
+	qtHelpDialog.cc \
+	qbLoginDialog.cc \
+	qbLoginInfo.cc
+
+nodist_libqUtilities_la_SOURCES = \
+	$(qt_sources:.cc=.moc.cc)
+
+libqUtilities_la_SOURCES = \
+	$(qt_sources)
+
+libqUtilities_la_CPPFLAGS = \
+	${LOG4CXX_CPPFLAGS} \
+	${MILOGGER_CPPFLAGS} \
+	${PUSQL_CPPFLAGS} \
+	${PUTOOLS_CPPFLAGS} \
+	${QT4_CPPFLAGS}
+
+libqUtilities_la_LDFLAGS = \
+	${VERSION_INFO} \
+	${LOG4CXX_LDFLAGS} \
+	${MILOGGER_LDFLAGS} \
+	${PUSQL_LDFLAGS} \
+	${PUTOOLS_LDFLAGS} \
+	${QT4_LDFLAGS}
+
+libqUtilities_la_LIBADD = \
+	${LOG4CXX_LIBS} \
+	${MILOGGER_LIBS} \
+	${PUSQL_LIBS} \
+	${PUTOOLS_LIBS} \
+	${QT4_LIBS}
+
+# Do we really want to do this?  Wouldn't it be better to include the
+# generated files in the dist tarball, like we do with configure etc.?
+CLEANFILES = $(qt_sources:.cc=.moc.cc)
+
+# I have not yet found a good way to do this:
+LANGUAGES = $(srcdir)/lang/qUtilities_no.ts
+
+languages:
+	${QT4_LUPDATE} -verbose $(qt_sources) -ts $(LANGUAGES)
+
+pkg_includedir = ${prefix}/include/qUtilities
+
+pkg_include_HEADERS = \
+	ClientButton.h \
+	CoClient.h \
+	QLetterCommands.h \
+	miLogFile.h \
+	miMessage.h \
+	miSliderWidget.h \
+	miTimeSpinBox.h \
+	qtHelpDialog.h \
+	qbLoginDialog.h \
+	qbLoginInfo.h \
+	circle_green.xpm \
+	circle_red.xpm \
+	circle_yellow.xpm \
+	conn.xpm \
+	disconn.xpm
+
+# ???
+%.xpm:
+	@:
+
