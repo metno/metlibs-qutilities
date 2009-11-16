@@ -86,8 +86,8 @@ public:
 private:
 	QTcpSocket *tcpSocket;
 
-	miString clientType;
-	miString lockFile, serverCommand, host;
+	miutil::miString clientType;
+	miutil::miString lockFile, serverCommand, host;
 
 	quint32 blockSize;
 	quint16 port;
@@ -122,7 +122,7 @@ signals:
   	void receivedMessage(miMessage &);
   	void addressListChanged();
   	void connected();
-  	void newClient(miString);
+  	void newClient(miutil::miString);
   	void unableToConnect();
 
 private slots:

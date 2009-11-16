@@ -1,6 +1,6 @@
 /*
   libqUtilities - Diverse Qt-classes and coserver base
-  
+
   $Id$
 
   Copyright (C) 2006 met.no
@@ -11,7 +11,7 @@
   0313 OSLO
   NORWAY
   email: diana@met.no
-  
+
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
   License as published by the Free Software Foundation; either
@@ -21,7 +21,7 @@
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   Lesser General Public License for more details.
-  
+
   You should have received a copy of the GNU Lesser General Public
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -33,6 +33,10 @@
 #include <QLetterCommands.h>
 #include <iostream>
 
+using namespace std;
+using namespace miutil;
+
+
 miMessage::miMessage()
 {
   to = qmstrings::default_id;
@@ -41,8 +45,8 @@ miMessage::miMessage()
 
 miMessage::miMessage(int t, int f, const char * c, const char *d)
 {
-  to = t; 
-  from = f; 
+  to = t;
+  from = f;
   command = c;
   description = d;
 }
@@ -62,7 +66,7 @@ miString miMessage::content()
      << "command:     " << command               << endl
      << (data.size() ? "DATA:"  : "NO DATA")     << endl;
   for (i = 0; i < data.size(); i++)
-    os << i  << " > " << data[i] << endl; 
+    os << i  << " > " << data[i] << endl;
   os << "======================================" << endl;
   return os.str();
 }

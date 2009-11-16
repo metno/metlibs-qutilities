@@ -25,30 +25,30 @@ class QLabel;
 class HelpDialog: public QDialog {
   Q_OBJECT
 public:
-  
+
   struct Info {
     struct Source {
-      miString source;
-      miString name;
-      miString defaultlink; 
+      miutil::miString source;
+      miutil::miString name;
+      miutil::miString defaultlink;
     };
-    miString path;
+    miutil::miString path;
     vector<Source> src;
   };
-  
+
   HelpDialog( QWidget* parent, const Info& hdi );
 
-  void setSource( const miString& source );
-  miString helpPath() const {return info.path;}
+  void setSource( const miutil::miString& source );
+  miutil::miString helpPath() const {return info.path;}
 
 public slots:
-  void showdoc(const int doc, const miString tag ="");
-  void showsource( const miString& source, const miString tag ="");
+  void showdoc(const int doc, const miutil::miString tag ="");
+  void showsource( const miutil::miString& source, const miutil::miString tag ="");
 
 private slots:
   void hideHelp();
   void printHelp();
-   
+
 private:
   QTextBrowser* tb;
   Info info;
@@ -57,12 +57,12 @@ private:
   QPushButton* pushforward;
   QPushButton* closebutton;
   QPushButton* printbutton;
-  QLabel* plabel; 
+  QLabel* plabel;
 
   QVBoxLayout* vlayout;
   QHBoxLayout* hlayout;
 
-  QFont m_font; 
+  QFont m_font;
 };
 
 

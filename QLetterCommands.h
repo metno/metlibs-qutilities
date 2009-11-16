@@ -1,6 +1,6 @@
 /*
   libqUtilities - Diverse Qt-classes and coserver base
-  
+
   $Id$
 
   Copyright (C) 2006 met.no
@@ -11,7 +11,7 @@
   0313 OSLO
   NORWAY
   email: diana@met.no
-  
+
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
   License as published by the Free Software Foundation; either
@@ -21,7 +21,7 @@
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   Lesser General Public License for more details.
-  
+
   You should have received a copy of the GNU Lesser General Public
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -34,49 +34,49 @@
 #include <puTools/miString.h>
 
 namespace qmstrings{
-  const miString vprof               = "vprof";
-  const miString addimage            = "addimage";
-  const miString positions           = "positions";
-  const miString showpositions       = "showpositions";
-  const miString hidepositions       = "hidepositions";
-  const miString changeimage         = "changeimage";
-  const miString showpositionname    = "showpositionname";
-  const miString showpositiontext    = "showpositiontext";
-  const miString enableposclick      = "enableposclick";
-  const miString enableposmove       = "enableposmove";
-  const miString showtext            = "showtext";
-  const miString enableshowtext      = "enableshowtext";
-  const miString textrequest         = "textrequest";
-  const miString selectposition     = "selectposition";
-  const miString settime             = "settime";
-  const miString remove              = "remove";
-  const miString removeclient        = "removeclient";
-  const miString newclient           = "newclient";
-  const miString allclients          = "allclients";
-  const miString timechanged         = "timechanged";
-  const miString init_HQC_params     = "init_HQC_params";
-  const miString update_HQC_params   = "update_HQC_params";
-  const miString select_HQC_param    = "select_HQC_param";
-  const miString apply_quickmenu     = "apply_quickmenu";
-  const miString station             = "station";
-  const miString changeimageandtext  = "change_image_and_text";
-  const miString changeimageandimage = "change_image_and_image";
-  const miString seteditpositions    = "seteditpositions";
-  const miString editposition        = "editposition";
-  const miString copyvalue           = "copyvalue";
-  const miString areas               = "areas";
-  const miString selectarea          = "selectarea";
-  const miString areacommand         = "areacommand";
-  const miString showarea            = "showarea";
-  const miString changearea          = "changearea";
-  const miString deletearea          = "deletearea";
-  const miString annotation          = "annotation";
-  const miString changetype          = "changetype";
-  const miString autoredraw          = "autoredraw";
-  const miString redraw              = "redraw";
-  const miString sendkey             = "sendkey";
-  const miString editmode            = "editmode";
-  const miString printclicked        = "printclicked";
+  const miutil::miString vprof               = "vprof";
+  const miutil::miString addimage            = "addimage";
+  const miutil::miString positions           = "positions";
+  const miutil::miString showpositions       = "showpositions";
+  const miutil::miString hidepositions       = "hidepositions";
+  const miutil::miString changeimage         = "changeimage";
+  const miutil::miString showpositionname    = "showpositionname";
+  const miutil::miString showpositiontext    = "showpositiontext";
+  const miutil::miString enableposclick      = "enableposclick";
+  const miutil::miString enableposmove       = "enableposmove";
+  const miutil::miString showtext            = "showtext";
+  const miutil::miString enableshowtext      = "enableshowtext";
+  const miutil::miString textrequest         = "textrequest";
+  const miutil::miString selectposition      = "selectposition";
+  const miutil::miString settime             = "settime";
+  const miutil::miString remove              = "remove";
+  const miutil::miString removeclient        = "removeclient";
+  const miutil::miString newclient           = "newclient";
+  const miutil::miString allclients          = "allclients";
+  const miutil::miString timechanged         = "timechanged";
+  const miutil::miString init_HQC_params     = "init_HQC_params";
+  const miutil::miString update_HQC_params   = "update_HQC_params";
+  const miutil::miString select_HQC_param    = "select_HQC_param";
+  const miutil::miString apply_quickmenu     = "apply_quickmenu";
+  const miutil::miString station             = "station";
+  const miutil::miString changeimageandtext  = "change_image_and_text";
+  const miutil::miString changeimageandimage = "change_image_and_image";
+  const miutil::miString seteditpositions    = "seteditpositions";
+  const miutil::miString editposition        = "editposition";
+  const miutil::miString copyvalue           = "copyvalue";
+  const miutil::miString areas               = "areas";
+  const miutil::miString selectarea          = "selectarea";
+  const miutil::miString areacommand         = "areacommand";
+  const miutil::miString showarea            = "showarea";
+  const miutil::miString changearea          = "changearea";
+  const miutil::miString deletearea          = "deletearea";
+  const miutil::miString annotation          = "annotation";
+  const miutil::miString changetype          = "changetype";
+  const miutil::miString autoredraw          = "autoredraw";
+  const miutil::miString redraw              = "redraw";
+  const miutil::miString sendkey             = "sendkey";
+  const miutil::miString editmode            = "editmode";
+  const miutil::miString printclicked        = "printclicked";
 
   const int default_id = -1000;
   const int all = -1;

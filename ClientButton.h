@@ -40,15 +40,10 @@
 #include <puTools/miString.h>
 #include "CoClient.h"
 
-using namespace std;
-
 class miMessage;
 
 class ClientButton : public QPushButton {
 	Q_OBJECT
-
-
-
 private:
 	bool uselabel;
 
@@ -77,7 +72,7 @@ public:
 	 */
 	void sendMessage(miMessage &msg);
 
-	miString getClientName(int id);
+	miutil::miString getClientName(int id);
 
 	/**
 	 * Sends a request to the server to search for a
@@ -104,7 +99,7 @@ public slots:
   	 * Sets the name of the other connected client on the connect button.
   	 * @param name Name of connecting client
   	 */
-  	void setLabel(miString name);
+  	void setLabel(miutil::miString name);
 
   	/**
   	 * Displays "Tilkoblet" as tooltip to coserver client button

@@ -44,10 +44,6 @@
 #include <CoClient.h>
 #include <fstream>
 
-
-
-
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif  /* HAVE_CONFIG_H */
@@ -61,7 +57,8 @@ static log4cxx::LoggerPtr logger = log4cxx::Logger::getLogger("coclient.CoClient
 #include <miLogger/logger.h>
 #endif /* HAVE_LOG4CXX */
 
-
+using namespace std;
+using namespace miutil;
 
 //#define _DEBUG
 

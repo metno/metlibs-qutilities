@@ -1,6 +1,6 @@
 /*
   libqUtilities - Diverse Qt-classes and coserver base
-  
+
   $Id$
 
   Copyright (C) 2006 met.no
@@ -11,7 +11,7 @@
   0313 OSLO
   NORWAY
   email: diana@met.no
-  
+
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
   License as published by the Free Software Foundation; either
@@ -21,7 +21,7 @@
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   Lesser General Public License for more details.
-  
+
   You should have received a copy of the GNU Lesser General Public
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -36,8 +36,10 @@
 #include <QVBoxLayout>
 #include <QLabel>
 
+using namespace miutil;
+
 miSpinBox::miSpinBox( int mi, int ma, int st, QWidget* p, const char* n )
-    : QSpinBox(p) 
+    : QSpinBox(p)
 {
 	setRange(mi, ma);
 	setSingleStep(st);
@@ -49,17 +51,17 @@ miSpinBox::miSpinBox( int mi, int ma, int st, QWidget* p, const char* n )
 
 miTimeSpinBox::miTimeSpinBox( const char* name,QWidget* parent,
 			      miutil::miString title,
-			      miTimeSpinBox::Dayname dname, 
+			      miTimeSpinBox::Dayname dname,
 			      miTimeSpinBox::DisplayUntil displayuntil)
   : QWidget(parent)
-{ 
+{
   min=miutil::miTime(1900,1,1,0,0,0);
   max=miutil::miTime::nowTime();
 
-  
-  daynamelang = ( dname == NOR ? miutil::miDate::Norwegian : 
+
+  daynamelang = ( dname == NOR ? miutil::miDate::Norwegian :
 		  miutil::miDate::English );
-  
+
 
   QVBoxLayout* topvl = new QVBoxLayout(this);
   topvl->setObjectName("topvl");
@@ -70,14 +72,14 @@ miTimeSpinBox::miTimeSpinBox( const char* name,QWidget* parent,
 
   QHBoxLayout* hlayout = new QHBoxLayout(frame);
   hlayout->setObjectName("mainlayout");
-   
+
 
   dayname     = NULL;
   second      = NULL;
   minute      = NULL;
   hour        = NULL;
   QLabel* tit = NULL;
-  
+
   weekday = -1;
 
 
@@ -99,8 +101,8 @@ miTimeSpinBox::miTimeSpinBox( const char* name,QWidget* parent,
   year     = new miSpinBox(0 ,3000,1,frame,"spinyear" );
   month    = new miSpinBox(0 ,13  ,1,frame,"spinmonth");
   day      = new miSpinBox(0 ,32  ,1,frame,"spinday"  );
-  
- 
+
+
   connect(year,   SIGNAL(valueChanged(QString)),this,SLOT(changeYear(QString)  ));
   connect(month,  SIGNAL(valueChanged(QString)),this,SLOT(changeMonth(QString) ));
   connect(day,    SIGNAL(valueChanged(QString)),this,SLOT(changeDay(QString)   ));
@@ -132,7 +134,7 @@ miTimeSpinBox::miTimeSpinBox( const char* name,QWidget* parent,
     hlayout->addWidget(minute,1);
   }
 
-  
+
   if(displayuntil == SECOND) {
     second = new miSpinBox(-1,60  ,1,frame,"spinsec"  );
 
@@ -140,9 +142,9 @@ miTimeSpinBox::miTimeSpinBox( const char* name,QWidget* parent,
 
     hlayout->addWidget(second,1);
   }
-      
+
   hlayout->setSizeConstraint(QLayout::SetFixedSize);
-  
+
   setTime( max  );
 
   resetWeekdayName();
@@ -153,7 +155,7 @@ void miTimeSpinBox::setDate(const miutil::miDate& d)
 {
   yy = d.year();
   mm = d.month();
-  dd = d.day();  
+  dd = d.day();
   setTime(miutil::miTime(yy,mm,dd,0,0,0));
 }
 
@@ -161,7 +163,7 @@ void miTimeSpinBox::setTime(const miutil::miTime& t)
 {
   yy = t.year();
   mm = t.month();
-  dd = t.day();  
+  dd = t.day();
   h  = 0;
   m  = 0;
   s  = 0;
@@ -169,15 +171,15 @@ void miTimeSpinBox::setTime(const miutil::miTime& t)
   year->blockSignals(true);
   year->setValue(  yy );
   year->blockSignals(false);
-  
+
   month->blockSignals(true);
   month->setValue( mm );
   month->blockSignals(false);
-  
+
   day->blockSignals(true);
   day->setValue(   dd );
   day->blockSignals(false);
-  
+
   if(hour) {
     h = t.hour();
     hour->blockSignals(true);
@@ -223,7 +225,7 @@ void miTimeSpinBox::checkMaxThisMonth()
   miutil::miDate tmp(yy,mm,1);
   maxday=tmp.daysInMonth();
 
-  if(dd > maxday)   
+  if(dd > maxday)
     dd=maxday;
 }
 
@@ -323,8 +325,8 @@ void miTimeSpinBox::changeDay(QString v)
 void miTimeSpinBox::newDay( int v)
 {
  dd = v;
- 
- if(dd > maxday) { 
+
+ if(dd > maxday) {
    dd=1;
    newMonth(++mm);
  }
@@ -346,7 +348,7 @@ void miTimeSpinBox::changeMonth(QString v)
 void miTimeSpinBox::newMonth(int v)
 {
   mm = v;
-  if(mm > 12){   
+  if(mm > 12){
     yy++;
     mm=1;
   }
@@ -376,10 +378,10 @@ void miTimeSpinBox::changeTime()
 
   if(checkMax())
     ref = max;
-  
+
   if ( checkMin() )
     ref = min;
- 
+
   setTime(ref);
   resetWeekdayName();
 
@@ -405,7 +407,7 @@ void miTimeSpinBox::resetWeekdayName()
 
   miutil::miString t = ref.format("%a ",daynamelang );
   dayname->setText(t.cStr());
-    
+
   if(weekday == 0 || weekday == 6) {
   	QPalette qp;
   	qp.setColor(QPalette::WindowText, Qt::red);

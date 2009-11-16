@@ -6,8 +6,11 @@
 #include <QDoubleValidator>
 #include <QShortcut>
 
+using namespace miutil;
+
+
 miSliderWidget::miSliderWidget(float minV, float maxV,
-			       float stepV,float Val, 
+			       float stepV,float Val,
 			       Qt::Orientation orientation,
 			       miString descript,miString unit,
 			       bool usetracking,
@@ -17,16 +20,16 @@ miSliderWidget::miSliderWidget(float minV, float maxV,
     minValue(minV), maxValue(maxV), stepValue(stepV), Value(Val), tracking(usetracking),
     editfield(editf), buttons(btns), valedit(0), vallabel(0)
 {
-  
+
   editfield=true;
 
   setObjectName(name);
-  
+
   if ( stepValue <= 0.0 )
     stepValue = 0.1;
 
   QBoxLayout * hl;
-  if(orientation==Qt::Horizontal) 
+  if(orientation==Qt::Horizontal)
     hl =  new QBoxLayout(QBoxLayout::LeftToRight,this);
   else {
     hl =  new QBoxLayout(QBoxLayout::BottomToTop,this);
@@ -38,7 +41,7 @@ miSliderWidget::miSliderWidget(float minV, float maxV,
   parname=descript;
   desclabel= new QLabel(descript.c_str(),this);
   hl->addWidget(desclabel);
-  
+
   nsteps = static_cast<int>((maxValue - minValue)/stepValue);
 
   int iminValue =  0;
@@ -50,7 +53,7 @@ miSliderWidget::miSliderWidget(float minV, float maxV,
   while ( ((imaxValue-iminValue)/tickinterval) > 40 ){
     tickinterval*= 10;
   }
-  
+
   slider = new QSlider(orientation, this);
   slider->setTracking(false);
   slider->setSingleStep(istepValue);
@@ -83,7 +86,7 @@ miSliderWidget::miSliderWidget(float minV, float maxV,
     int maxchars = static_cast<int>(fmaxf(minlog,maxlog)) + 1;
     valedit->setMaximumWidth(11*maxchars);
     valedit->setValidator ( new QDoubleValidator(minValue,maxValue,decimals,this) );
-    connect(valedit,SIGNAL(editingFinished()),this,SLOT(editingFinished())); 
+    connect(valedit,SIGNAL(editingFinished()),this,SLOT(editingFinished()));
     QShortcut *scut = new QShortcut(QKeySequence(tr("Ctrl+A")),valedit,
 				    0,0,Qt::WidgetShortcut);
     connect(scut,SIGNAL(activated()),this,SLOT(editingFinished()) );
@@ -95,9 +98,9 @@ miSliderWidget::miSliderWidget(float minV, float maxV,
     hl->addWidget(vallabel,2);
   }
   writeValue(Value);
-  
+
 //  if(orientation==Qt::Horizontal)
-//    vallabel->setFixedWidth(30);  
+//    vallabel->setFixedWidth(30);
 }
 
 void miSliderWidget::editingFinished()
@@ -116,18 +119,18 @@ float miSliderWidget::fValue(int v)
   return (minValue + roundf(v*stepValue*100)/100);
 }
 
-void miSliderWidget::setValue(float v) 
+void miSliderWidget::setValue(float v)
 {
   if(v<minValue || v > maxValue)
     return;
 
   Value=v;
-  
+
   int ivalue = static_cast<int>((Value - minValue)/stepValue);
 
   writeValue(Value);
   slider->setSliderPosition(ivalue);
-} 
+}
 
 
 void miSliderWidget::writeValue(float V)
@@ -145,7 +148,7 @@ void miSliderWidget::valueChanged(int v)
 {
 //   cerr << "valueChanged" << endl;
   Value = fValue(v);
-  
+
   writeValue(Value);
 
   emit valueChanged(Value);

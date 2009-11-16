@@ -41,6 +41,10 @@
 
 #include <miLogFile.h>
 
+using namespace std;
+using namespace miutil;
+
+
 map<miString,miLogFile::xy >  miLogFile::pos;
 map<miString,miLogFile::xy >  miLogFile::size;
 map<miString,miString >       miLogFile::tokens;

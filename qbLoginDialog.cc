@@ -1,6 +1,6 @@
 /*
   libqUtilities - Diverse Qt-classes and coserver base
-  
+
   $Id$
 
   Copyright (C) 2006 met.no
@@ -11,7 +11,7 @@
   0313 OSLO
   NORWAY
   email: diana@met.no
-  
+
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
   License as published by the Free Software Foundation; either
@@ -21,7 +21,7 @@
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   Lesser General Public License for more details.
-  
+
   You should have received a copy of the GNU Lesser General Public
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -37,6 +37,8 @@
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QGroupBox>
+
+using namespace miutil;
 
 qbLoginDialog::qbLoginDialog(puSQLgate* g, QWidget* parent)
   : QDialog(parent), gate(g),
@@ -66,7 +68,7 @@ qbLoginDialog::qbLoginDialog(puSQLgate* g,
     host(h), user(u), base(b), port(p),
     oper_host(h), oper_user(u), oper_base(b), oper_port(p),
     test_host(th), test_user(tu), test_base(tb), test_port(tp),
-    loggedin(false), inTest(false), oper_label(oplabel), 
+    loggedin(false), inTest(false), oper_label(oplabel),
     test_label(testlabel), hasTest(hastest), hasOffline(hasoffline),
     isoffline(false)
 {
@@ -74,7 +76,7 @@ qbLoginDialog::qbLoginDialog(puSQLgate* g,
 	setModal(true);
   makeWidget();
 }
-  
+
 void qbLoginDialog::makeWidget()
 {
   oper_color = QColor(181,211,72);
@@ -97,7 +99,7 @@ void qbLoginDialog::makeWidget()
   topframe->setFrameStyle( QFrame::Panel | QFrame::Raised );
   topframe->setAutoFillBackground(true);
   topframe->setPalette( oper_color );
-  
+
   // Create a layout manager for the label
   h_hlayout = new QHBoxLayout(topframe);
   h_hlayout->setObjectName("h_hlayout");
@@ -107,16 +109,16 @@ void qbLoginDialog::makeWidget()
   label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
   label->setPalette( QPalette( oper_color ) );
   h_hlayout->addWidget(label,0);
-  
+
   gtestoper= new QButtonGroup(topframe);
   gtestoper->setExclusive(true);
   connect(gtestoper,SIGNAL(buttonClicked(int)),this,SLOT(testoperChanged(int)));
-  
+
   b_oper= new QPushButton(oper_label.cStr());
   b_test= new QPushButton(test_label.cStr());
   gtestoper->addButton(b_oper, 0);
   gtestoper->addButton(b_test, 1);
-  
+
   QGroupBox* opertest_box = new QGroupBox(topframe);
   opertest_box->setFlat(true);
   QHBoxLayout *hbox = new QHBoxLayout;
@@ -125,13 +127,13 @@ void qbLoginDialog::makeWidget()
   opertest_box->setLayout(hbox);
 
   h_hlayout->addWidget(opertest_box, 0);
-  
+
   f_vlayout->addWidget(topframe, 0);
 
   // gridlayout for the input-fields
   QGridLayout* glayout = new QGridLayout();
   glayout->setObjectName("loglayout");
-  
+
   int startwidget= 0;
   QLabel* server= new QLabel(tr("Database server:"), ff);
   server->setObjectName("server");
@@ -175,7 +177,7 @@ void qbLoginDialog::makeWidget()
   glayout->addWidget(passwd,    4,2);
 
   f_vlayout->addLayout(glayout, 0);
- 
+
   warnings= new QLabel(ff);
   warnings->setTextFormat(Qt::RichText);
   warnings->setMinimumHeight(45);
@@ -218,7 +220,7 @@ void qbLoginDialog::makeWidget()
     passwd->end(true);
     passwd->setFocus();
   }
-  
+
   b_oper->setDown(true);
 }
 

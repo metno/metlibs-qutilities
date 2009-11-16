@@ -1,6 +1,6 @@
 /*
   libqUtilities - Diverse Qt-classes and coserver base
-  
+
   $Id$
 
   Copyright (C) 2006 met.no
@@ -11,7 +11,7 @@
   0313 OSLO
   NORWAY
   email: diana@met.no
-  
+
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
   License as published by the Free Software Foundation; either
@@ -21,7 +21,7 @@
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   Lesser General Public License for more details.
-  
+
   You should have received a copy of the GNU Lesser General Public
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -32,7 +32,7 @@
 #define _qbLoginInfo_h
 
 
-/* Created by met.no/FoU/PU 
+/* Created by met.no/FoU/PU
    at Tue Feb  5 16:10:30 2002 */
 
 #include <QWidget>
@@ -43,7 +43,7 @@
 
 #include <puTools/miString.h>
 
-using namespace std; 
+using namespace std;
 
 /**
    @brief Login details info in statusbar
@@ -63,10 +63,10 @@ public:
   qbLoginInfo(QWidget* parent);
 
 public slots:
-  void setInfo(const miString host,
-	       const miString user,
+  void setInfo(const miutil::miString host,
+	       const miutil::miString user,
 	       bool loggedin,
-	       bool testbase);  
+	       bool testbase);
 };
 
 #endif

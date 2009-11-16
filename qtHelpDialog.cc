@@ -15,8 +15,8 @@
 #include <qlabel.h>
 #include <qpushbutton.h>
 
-#include <qmime.h> 
-#include <qapplication.h> 
+#include <qmime.h>
+#include <qapplication.h>
 #include <qpainter.h>
 #include <qprinter.h>
 
@@ -30,6 +30,7 @@
 #include <tb_left_arrow.xpm>
 #include <tb_print.xpm>
 
+using namespace miutil;
 
 HelpDialog::HelpDialog( QWidget* parent, const Info& hdi )
   : QDialog(parent), info(hdi), closebutton(0)
@@ -38,19 +39,19 @@ HelpDialog::HelpDialog( QWidget* parent, const Info& hdi )
 
   m_font= qApp->font();
 
-  tb = new QTextBrowser( this ); 
-  
+  tb = new QTextBrowser( this );
+
   miString source = "";
   if (info.src.size()!=0) source= info.src[0].source;
-  setSource( source );  
-   
+  setSource( source );
+
   pushbackward= new QPushButton( QPixmap(tb_left_arrow_xpm),
 				 tr("Previous"), this );
   connect(pushbackward, SIGNAL( clicked()), tb, SLOT( backward()));
 
   pushforward= new QPushButton( QPixmap(tb_right_arrow_xpm),
 				tr("Next"), this );
-  connect(pushforward, SIGNAL( clicked()), tb, SLOT( forward())); 
+  connect(pushforward, SIGNAL( clicked()), tb, SLOT( forward()));
 
   closebutton= new QPushButton( QPixmap(tb_close_xpm),
 				tr("Close"), this );
@@ -60,17 +61,17 @@ HelpDialog::HelpDialog( QWidget* parent, const Info& hdi )
 				tr("Print.."), this );
   connect( printbutton, SIGNAL( clicked()), this, SLOT( printHelp()) );
 
-  hlayout = new QHBoxLayout();    
+  hlayout = new QHBoxLayout();
   hlayout->addWidget( pushbackward );
   hlayout->addWidget( pushforward );
   hlayout->addWidget( closebutton );
   hlayout->addWidget( printbutton );
   hlayout->addStretch();
-  
+
   vlayout = new QVBoxLayout( this );
   vlayout->addLayout( hlayout );
   vlayout->addWidget( tb );
-  
+
   resize( 800, 600 );
 }
 
@@ -88,7 +89,7 @@ void HelpDialog::printHelp(){
   printer.setPrintProgram( QString("lp") );
 #endif
   printer.setFullPage(TRUE);
-  
+
   QPrintDialog *dialog = new QPrintDialog(&printer, this);
   dialog->setWindowTitle(tr("Print Document"));
   if (dialog->exec() != QDialog::Accepted)
@@ -138,7 +139,7 @@ void HelpDialog::printHelp(){
 //     QRect body(margin*dpix/72, margin*dpiy/72,
 // 	       metrics.width()-margin*dpix/72*2,
 // 	       metrics.height()-margin*dpiy/72*2 );
-    
+
 //     frompage= printer.fromPage();
 //     topage=   printer.toPage();
 
@@ -164,7 +165,7 @@ void HelpDialog::printHelp(){
 // 	  continue;
 // 	if (page > topage)
 // 	  break;
-	
+
 // 	if (progress){ // show progress in dialog
 // 	  progress->setValue( page - frompage + 1);
 // 	  qApp->processEvents();
@@ -229,10 +230,10 @@ void HelpDialog::setSource( const miString& source ){
 void HelpDialog::showsource( const miString& source, const miString tag ){
 
   setSource(source);
-  
+
   if(tag.exists())
     tb->scrollToAnchor( QString(tag.cStr()) );
-  
+
   show();
 
 }
@@ -243,12 +244,12 @@ void HelpDialog::showdoc(const int doc, const miString tag ){
 
   setWindowTitle( QString(info.src[doc].name.cStr()) );
   setSource( info.src[doc].source );
-  
+
   if(tag.exists())
     tb->scrollToAnchor( QString(tag.cStr()) );
   else
     tb->scrollToAnchor( QString(info.src[doc].defaultlink.cStr()) );
-  
+
   show();
 }
 

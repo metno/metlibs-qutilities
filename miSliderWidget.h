@@ -19,7 +19,7 @@
 
 #include <puTools/miString.h>
 
-using namespace std; 
+using namespace std;
 
 class miSliderWidget : public QWidget {
   Q_OBJECT
@@ -35,17 +35,17 @@ private:
   float stepValue;
   float Value;
   bool tracking;
-  miString parname;
+  miutil::miString parname;
   bool editfield;
   bool buttons;
-  
+
   float fValue(int v);
   void writeValue(float V);
 
 public:
   miSliderWidget(float minV,  float maxV, float stepV, float Val,
-		 Qt::Orientation orientation, miString descript,
-		 miString unit, bool usetracking, QWidget* p, const char * name = 0,
+		 Qt::Orientation orientation, miutil::miString descript,
+		 miutil::miString unit, bool usetracking, QWidget* p, const char * name = 0,
 		 bool editf=false, bool btns=false);
 
   float value();
@@ -58,7 +58,7 @@ public slots:
 
 signals:
   void valueChanged(float);
-  void valueChangedForPar(float,miString);
+  void valueChangedForPar(float,miutil::miString);
   void sliderReleased();
 };
 

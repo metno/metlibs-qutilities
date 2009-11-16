@@ -40,6 +40,10 @@
 #include <ClientButton.h>
 
 
+using namespace std;
+using namespace miutil;
+
+
 ClientButton::ClientButton(const QString & name, const QString & server,
 		QWidget * parent) :
 	QPushButton(name, parent) {

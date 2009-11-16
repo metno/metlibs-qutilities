@@ -1,6 +1,6 @@
 /*
   libqUtilities - Diverse Qt-classes and coserver base
-  
+
   $Id$
 
   Copyright (C) 2006 met.no
@@ -11,7 +11,7 @@
   0313 OSLO
   NORWAY
   email: diana@met.no
-  
+
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
   License as published by the Free Software Foundation; either
@@ -21,7 +21,7 @@
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   Lesser General Public License for more details.
-  
+
   You should have received a copy of the GNU Lesser General Public
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -32,7 +32,7 @@
 #define _qbLoginDialog_h
 
 
-/* Created by met.no/FoU/PU 
+/* Created by met.no/FoU/PU
    at Tue Feb  5 14:10:48 2002 */
 
 // QLineEdit(port) added by JS/ 07-2002
@@ -52,7 +52,7 @@
 #include <puTools/miString.h>
 
 
-using namespace std; 
+using namespace std;
 
 /**
    @brief Login dialog
@@ -62,36 +62,36 @@ using namespace std;
 class qbLoginDialog : public QDialog {
   Q_OBJECT
 private:
-  miString title_;
+  miutil::miString title_;
 
   puSQLgate* gate;
   /// current serverhost,user,database and portnumber
-  miString host;
-  miString user;
-  miString base;
+  miutil::miString host;
+  miutil::miString user;
+  miutil::miString base;
   unsigned int port;
 
   /// .. for operational use
-  miString oper_label;
-  miString oper_host;
-  miString oper_user;
-  miString oper_base;
+  miutil::miString oper_label;
+  miutil::miString oper_host;
+  miutil::miString oper_user;
+  miutil::miString oper_base;
   unsigned int oper_port;
 
   /// .. for testing
-  miString test_label;
-  miString test_host;
-  miString test_user;
-  miString test_base;
+  miutil::miString test_label;
+  miutil::miString test_host;
+  miutil::miString test_user;
+  miutil::miString test_base;
   unsigned int test_port;
 
-  miString pass;
+  miutil::miString pass;
   bool loggedin;
   bool inTest;
   bool hasTest;
   bool hasOffline;
   bool isoffline;
- 
+
   QVBoxLayout*   top_vlayout; ///< top layout
   QVBoxLayout*   f_vlayout;   ///< frame  layout
   QHBoxLayout*   h_hlayout;   ///< header layout
@@ -111,7 +111,7 @@ private:
   QColor std_color;
 
   QLabel* warnings;
-  
+
   QPushButton *b_oper;
   QPushButton *b_test;
   QPushButton *okb;
@@ -119,9 +119,9 @@ private:
   QPushButton *offlineb;
 
   void makeWidget();
-  void setInfo(const miString h,
-	       const miString u,
-	       const miString b,
+  void setInfo(const miutil::miString h,
+	       const miutil::miString u,
+	       const miutil::miString b,
 	       const unsigned int p);
 
 
@@ -137,27 +137,27 @@ protected slots:
 public:
   qbLoginDialog(puSQLgate* g, QWidget* parent);
   qbLoginDialog(puSQLgate* g,
-		const miString title,
-		const miString h,
-		const miString u,
-		const miString b,
+		const miutil::miString title,
+		const miutil::miString h,
+		const miutil::miString u,
+		const miutil::miString b,
 		const unsigned int p,
-		const miString th,
-		const miString tu,
-		const miString tb,
+		const miutil::miString th,
+		const miutil::miString tu,
+		const miutil::miString tb,
 		const unsigned int tp,
 		QWidget* parent,
-		miString oplabel="Operational",
-		miString testlabel="Test",
+		miutil::miString oplabel="Operational",
+		miutil::miString testlabel="Test",
 		bool     hastest=true,
 		bool     hasoffline=false);
 
-  
-  miString Host() const {return host;}
-  miString User() const {return user;}
-  miString Base() const {return base;}
+
+  miutil::miString Host() const {return host;}
+  miutil::miString User() const {return user;}
+  miutil::miString Base() const {return base;}
   unsigned int Port() const {return port;}
-  miString Password() const {return pass;}
+  miutil::miString Password() const {return pass;}
   bool LoggedIn() const { return loggedin;}
   bool Test() const { return inTest;}
   bool Offline() const { return isoffline;}
