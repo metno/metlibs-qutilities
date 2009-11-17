@@ -41,8 +41,6 @@
 
 
 using namespace std;
-using namespace miutil;
-
 
 ClientButton::ClientButton(const QString & name, const QString & server,
 		QWidget * parent) :
@@ -59,7 +57,7 @@ ClientButton::ClientButton(const QString & name, const QString & server,
 
 	connect(this, SIGNAL(clicked()), SLOT(connectToServer()));
 
-	connect(coclient, SIGNAL(newClient(miString)), SLOT(setLabel(miString)));
+	connect(coclient, SIGNAL(newClient(miutil::miString)), SLOT(setLabel(miutil::miString)));
 	connect(coclient, SIGNAL(connected()), SLOT(connected()));
 	connect(coclient, SIGNAL(unableToConnect()), SLOT(unableToConnect()));
 	connect(coclient, SIGNAL(receivedMessage(miMessage&)), SIGNAL(receivedMessage(miMessage&)));
@@ -95,7 +93,7 @@ void ClientButton::unableToConnect() {
 	setToolTip("Unable to connect");
 }
 
-void ClientButton::setLabel(miString name) {
+void ClientButton::setLabel(miutil::miString name) {
 	if (name == "noClient") {
 		setIcon(QPixmap(disconn_xpm));
 		setText("");
@@ -118,7 +116,7 @@ void ClientButton::sendMessage(miMessage& msg) {
 	coclient->sendMessage(msg);
 }
 
-miString ClientButton::getClientName(int id) {
+miutil::miString ClientButton::getClientName(int id) {
 	return coclient->getClientName(id);
 }
 
