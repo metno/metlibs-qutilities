@@ -3,7 +3,7 @@
  *
  * qUtilities - coserver client file
  *
- * $Id: ClientButton.h 204 2008-02-11 16:15:08Z martinls $
+ * $Id$
  *
  * Copyright (C) 2007 met.no
  *

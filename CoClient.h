@@ -1,7 +1,7 @@
 /** @mainpage qUtilities - coserver client file
  * @author Martin Lilleeng Sætra <martinls@met.no>
  *
- * $Id: CoClient.h 3 2007-09-28 10:40:54Z martinls $
+ * $Id$
  *
  * Copyright (C) 2007 met.no
  *
