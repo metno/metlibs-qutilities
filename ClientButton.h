@@ -80,7 +80,7 @@ public:
 	 * clients.
 	 * @param type The type of client(s) to search for
 	 */
-	bool clientTypeExist(const string &type);
+        bool clientTypeExist(const std::string &type);
 
 	/**
 	 * Sets the text-label on the button to label.

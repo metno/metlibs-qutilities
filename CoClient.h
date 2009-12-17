@@ -43,8 +43,6 @@
 
 #include "miMessage.h"
 
-using namespace std;
-
 class CoClient : public QDialog {
 	Q_OBJECT
 
@@ -80,8 +78,8 @@ public:
 	bool sendMessage(miMessage &msg, const char *sep = "|");
 
 	bool notConnected(void);
-	string getClientName(int);
-	bool clientTypeExist(const string &type);
+        std::string getClientName(int);
+        bool clientTypeExist(const std::string &type);
 
 private:
 	QTcpSocket *tcpSocket;
@@ -96,8 +94,8 @@ private:
 	bool noCoserver4;
 	int nrOfAttempts;
 
-	vector<miMessage> inbox;
-	map<int, string> clients;
+        std::vector<miMessage> inbox;
+        std::map<int, std::string> clients;
 
 	/**
 	 * Adds or removes entries in the list of clients as clients
