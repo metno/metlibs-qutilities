@@ -41,7 +41,8 @@
 class miMessage {
 public:
   miMessage();
-  miMessage(int , int , const char *,const char* );
+  miMessage(int to, int from, const char *command,
+            const char *description);
 
   int to,from;
   miutil::miString command,description,commondesc,common,clientType,co;
