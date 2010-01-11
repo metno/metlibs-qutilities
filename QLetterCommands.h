@@ -77,6 +77,8 @@ namespace qmstrings{
   const miutil::miString sendkey             = "sendkey";
   const miutil::miString editmode            = "editmode";
   const miutil::miString printclicked        = "printclicked";
+  const miutil::miString getcurrentplotcommand = "getcurrentplotcommand";
+  const miutil::miString currentplotcommand  = "currentplotcommand";
 
   const int default_id = -1000;
   const int all = -1;
