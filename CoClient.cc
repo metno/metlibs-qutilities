@@ -85,6 +85,7 @@ CoClient::CoClient(QWidget* parent, const char *name, const char *h,
 	lockFile = lf;
 	serverCommand = sc ;
 	host = h;
+	userid = getuid();
 
 	blockSize = 0;
 
@@ -104,6 +105,10 @@ CoClient::CoClient(QWidget* parent, const char *name, const char *h,
 #ifdef _DEBUG
 	connect(tcpSocket, SIGNAL(bytesWritten(qint64)), this, SLOT(printBytesWritten(qint64)));
 #endif
+}
+
+void CoClient::setBroadcastClient() {
+  userid = 0;
 }
 
 int CoClient::readPortFromFile() {
@@ -291,6 +296,10 @@ void CoClient::sendType() {
 
 	miMessage msg(0, 0, "SETTYPE", "INTERNAL");
 	msg.data.push_back(clientType);
+	msg.commondesc = "userId";
+	stringstream ss;
+	ss << userid;
+	msg.common = ss.str();
 	sendMessage(msg);
 	emit connected();
 }

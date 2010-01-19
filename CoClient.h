@@ -59,6 +59,11 @@ public:
 			const char * lf = "/tmp/.serverlock",
 			quint16 p = 0);
 
+  /**
+   * Send message to all CoServer client
+   */
+  void setBroadcastClient();
+
 	/**
 	 * Connects to the server.
 	 */
@@ -90,8 +95,9 @@ private:
 	quint32 blockSize;
 	quint16 port;
 	QProcess *server;
+        uid_t userid;
 
-	bool noCoserver4;
+        bool noCoserver4;
 	int nrOfAttempts;
 
         std::vector<miMessage> inbox;
