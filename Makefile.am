@@ -31,6 +31,7 @@ libqUtilities_la_CPPFLAGS = \
 	${MILOGGER_CPPFLAGS} \
 	${PUSQL_CPPFLAGS} \
 	${PUTOOLS_CPPFLAGS} \
+	${MYSQL_CPPFLAGS} \
 	${QT4_CPPFLAGS}
 
 libqUtilities_la_LDFLAGS = \
@@ -39,6 +40,7 @@ libqUtilities_la_LDFLAGS = \
 	${MILOGGER_LDFLAGS} \
 	${PUSQL_LDFLAGS} \
 	${PUTOOLS_LDFLAGS} \
+	${MYSQL_LDFLAGS} \
 	${QT4_LDFLAGS}
 
 libqUtilities_la_LIBADD = \
@@ -46,6 +48,7 @@ libqUtilities_la_LIBADD = \
 	${MILOGGER_LIBS} \
 	${PUSQL_LIBS} \
 	${PUTOOLS_LIBS} \
+	${MYSQL_LIBS} \
 	${QT4_LIBS}
 
 # Do we really want to do this?  Wouldn't it be better to include the
