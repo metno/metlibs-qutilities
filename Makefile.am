@@ -17,8 +17,12 @@ qt_sources = \
 	miSliderWidget.cc \
 	miTimeSpinBox.cc \
 	qtHelpDialog.cc \
-	qbLoginDialog.cc \
 	qbLoginInfo.cc
+
+if ENABLE_PUSQL
+qt_sources += \
+	qbLoginDialog.cc
+endif
 
 nodist_libqUtilities_la_SOURCES = \
 	$(qt_sources:.cc=.moc.cc)
@@ -29,7 +33,6 @@ libqUtilities_la_SOURCES = \
 libqUtilities_la_CPPFLAGS = \
 	${LOG4CXX_CPPFLAGS} \
 	${MILOGGER_CPPFLAGS} \
-	${PUSQL_CPPFLAGS} \
 	${PUTOOLS_CPPFLAGS} \
 	${MYSQL_CPPFLAGS} \
 	${QT4_CPPFLAGS}
@@ -38,7 +41,6 @@ libqUtilities_la_LDFLAGS = \
 	${VERSION_INFO} \
 	${LOG4CXX_LDFLAGS} \
 	${MILOGGER_LDFLAGS} \
-	${PUSQL_LDFLAGS} \
 	${PUTOOLS_LDFLAGS} \
 	${MYSQL_LDFLAGS} \
 	${QT4_LDFLAGS}
@@ -46,10 +48,18 @@ libqUtilities_la_LDFLAGS = \
 libqUtilities_la_LIBADD = \
 	${LOG4CXX_LIBS} \
 	${MILOGGER_LIBS} \
-	${PUSQL_LIBS} \
 	${PUTOOLS_LIBS} \
 	${MYSQL_LIBS} \
 	${QT4_LIBS}
+
+if ENABLE_PUSQL
+libqUtilities_la_CPPFLAGS += \
+	${PUSQL_CPPFLAGS}
+libqUtilities_la_LDFLAGS += \
+	${PUSQL_LDFLAGS}
+libqUtilities_la_LIBADD += \
+	${PUSQL_LIBS}
+endif
 
 # Do we really want to do this?  Wouldn't it be better to include the
 # generated files in the dist tarball, like we do with configure etc.?
