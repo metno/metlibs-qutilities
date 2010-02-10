@@ -6,6 +6,6 @@ includedir=@includedir@
 Name: qUtilities
 Description: The qUtilities Library
 Version: @VERSION@
-Requires: puTools >= 3.1.0, puSQL >= 3.1.0
+Requires: @qUtilities_pc_requires@
 Libs: -L${libdir} -lqUtilities
 Cflags: -I${includedir}
