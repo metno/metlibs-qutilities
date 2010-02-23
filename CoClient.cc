@@ -31,6 +31,19 @@
 // TODO: Add support for multiple servers active on different ports (on the same node)
 // TODO: Add support for multiple clients per server
 
+#ifdef __WIN32__
+// GetUserName()
+#include <windows.h>
+#include <lmcons.h>
+#else
+// uid_t and getpwnam()
+#include <sys/types.h>
+#include <pwd.h>
+#endif
+
+#include <stdlib.h>
+#include <unistd.h>
+
 // Qt-includes
 #include <QtGui>
 #include <QtNetwork>
@@ -38,7 +51,6 @@
 #include <qfile.h>
 
 #include <iostream>
-#include <stdlib.h>
 
 #include <QLetterCommands.h>
 #include <CoClient.h>
@@ -85,7 +97,33 @@ CoClient::CoClient(QWidget* parent, const char *name, const char *h,
 	lockFile = lf;
 	serverCommand = sc ;
 	host = h;
-	userid = getuid();
+#ifdef __WIN32__
+	{
+		WCHAR wcName[UNLEN + 1];
+		char mbName[UNLEN + 1];
+		DWORD lSize = sizeof(name);
+		userid = "UnknownWin32User";
+		if (!GetUserName(wcName, &lSize)) {
+			cerr << "GetUserName() failed" << endl;
+		} else if (wcstombs(mbName, wcName, sizeof(mbName)) == (size_t)-1) {
+			cerr << "User name contains untranslatable characters" << endl;
+		} else {
+			userid = mbName;
+		}
+	}
+#else
+	{
+		uid_t uid = getuid();
+		struct passwd *pw = getpwuid(uid);
+		if (pw) {
+			userid = pw->pw_name;
+		} else {
+			stringstream ss;
+			ss << "UnknownUser" << uid;
+			userid = ss.str();
+		}
+	}
+#endif
 
 	blockSize = 0;
 
@@ -108,7 +146,7 @@ CoClient::CoClient(QWidget* parent, const char *name, const char *h,
 }
 
 void CoClient::setBroadcastClient() {
-  userid = 0;
+  userid = "";
 }
 
 int CoClient::readPortFromFile() {
@@ -297,9 +335,7 @@ void CoClient::sendType() {
 	miMessage msg(0, 0, "SETTYPE", "INTERNAL");
 	msg.data.push_back(clientType);
 	msg.commondesc = "userId";
-	stringstream ss;
-	ss << userid;
-	msg.common = ss.str();
+	msg.common = userid;
 	sendMessage(msg);
 	emit connected();
 }
@@ -420,7 +456,7 @@ void CoClient::socketError(QAbstractSocket::SocketError e) {
 
 		// make sure that coserver has time to start before checking its state
 		server->waitForStarted();
-		sleep(1);
+		usleep(1000);
 
 		if (server->state() != QProcess::Running) {
 			LOG4CXX_ERROR(logger, "Couldn't start server. Make sure the path of coserver4 is correctly set in the setup of your client, and try again.");

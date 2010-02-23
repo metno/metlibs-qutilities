@@ -95,7 +95,7 @@ private:
 	quint32 blockSize;
 	quint16 port;
 	QProcess *server;
-        uid_t userid;
+	miutil::miString userid;
 
         bool noCoserver4;
 	int nrOfAttempts;
