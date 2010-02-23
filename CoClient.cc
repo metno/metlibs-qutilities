@@ -41,7 +41,6 @@
 #include <pwd.h>
 #endif
 
-#include <stdlib.h>
 #include <unistd.h>
 
 // Qt-includes
@@ -99,16 +98,14 @@ CoClient::CoClient(QWidget* parent, const char *name, const char *h,
 	host = h;
 #ifdef __WIN32__
 	{
-		WCHAR wcName[UNLEN + 1];
-		char mbName[UNLEN + 1];
-		DWORD lSize = sizeof(name);
-		userid = "UnknownWin32User";
-		if (!GetUserName(wcName, &lSize)) {
-			cerr << "GetUserName() failed" << endl;
-		} else if (wcstombs(mbName, wcName, sizeof(mbName)) == (size_t)-1) {
-			cerr << "User name contains untranslatable characters" << endl;
+		DWORD size = UNLEN + 1;
+		CHAR name[size];
+
+		if (GetUserNameA(name, &size)) {
+			cerr << "GetUserNameA() failed" << endl;
+			userid = "UnknownWin32User";
 		} else {
-			userid = mbName;
+			userid = name;
 		}
 	}
 #else
