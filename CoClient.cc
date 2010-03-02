@@ -452,7 +452,7 @@ void CoClient::socketError(QAbstractSocket::SocketError e) {
 
 		// make sure that coserver has time to start before checking its state
 		server->waitForStarted();
-		usleep(1000);
+		usleep(1000000);
 
 		if (server->state() != QProcess::Running) {
 			LOG4CXX_ERROR(logger, "Couldn't start server. Make sure the path of coserver4 is correctly set in the setup of your client, and try again.");
