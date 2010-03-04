@@ -71,7 +71,7 @@ LANGUAGES = $(srcdir)/lang/qUtilities_no.ts
 languages:
 	${QT4_LUPDATE} -verbose $(qt_sources) -ts $(LANGUAGES)
 
-pkg_includedir = ${prefix}/include/qUtilities
+pkg_includedir = ${includedir}/qUtilities
 
 pkg_include_HEADERS = \
 	ClientButton.h \
