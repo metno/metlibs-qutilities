@@ -88,8 +88,13 @@ pkg_include_HEADERS = \
 	circle_red.xpm \
 	circle_yellow.xpm \
 	conn.xpm \
-	disconn.xpm
-
+	disconn.xpm \
+    tb_close.xpm \
+    tb_left_arrow.xpm \
+    tb_print.xpm \
+    tb_right_arrow.xpm \
+	unconn.xpm     
+    
 # ???
 %.xpm:
 	@:
