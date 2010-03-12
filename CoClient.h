@@ -59,10 +59,10 @@ public:
 			const char * lf = "/tmp/.serverlock",
 			quint16 p = 0);
 
-  /**
-   * Send message to all CoServer client
-   */
-  void setBroadcastClient();
+        /**
+         * Send message to all CoServer client
+         */
+        void setBroadcastClient();
 
 	/**
 	 * Connects to the server.
