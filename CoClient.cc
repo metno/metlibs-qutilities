@@ -43,17 +43,19 @@
 
 #include <unistd.h>
 
+#include <fstream>
+#include <iostream>
+
 // Qt-includes
 #include <QtGui>
 #include <QtNetwork>
 #include <qstring.h>
 #include <qfile.h>
 
-#include <iostream>
+#include <puCtools/sleep.h>
 
 #include <QLetterCommands.h>
 #include <CoClient.h>
-#include <fstream>
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -452,7 +454,7 @@ void CoClient::socketError(QAbstractSocket::SocketError e) {
 
 		// make sure that coserver has time to start before checking its state
 		server->waitForStarted();
-		usleep(1000000);
+		pu_sleep(1);
 
 		if (server->state() != QProcess::Running) {
 			LOG4CXX_ERROR(logger, "Couldn't start server. Make sure the path of coserver4 is correctly set in the setup of your client, and try again.");
