@@ -102,7 +102,7 @@ CoClient::CoClient(QWidget* parent, const char *name, const char *h,
 	{
 		DWORD size = UNLEN + 1;
 		CHAR name[size];
-		if (GetUserNameA(name, &size)) {
+		if (!GetUserNameA(name, &size)) {
 			cerr << "GetUserNameA() failed" << endl;
 			userid = "UnknownWin32User";
 		} else {
