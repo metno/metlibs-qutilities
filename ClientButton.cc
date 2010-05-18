@@ -58,7 +58,7 @@ ClientButton::ClientButton(const QString & name, const QString & server,
 
 	string sc = server.toStdString();
 	string n = name.toStdString();
-	coclient = new CoClient(parent, n.c_str(), "localhost", sc.c_str());
+	coclient = new CoClient(n.c_str(), "localhost", sc.c_str());
 
 	connect(this, SIGNAL(clicked()), SLOT(connectToServer()));
 

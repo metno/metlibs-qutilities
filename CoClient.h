@@ -43,7 +43,7 @@
 
 #include "miMessage.h"
 
-class CoClient : public QDialog {
+class CoClient : public QObject {
 	Q_OBJECT
 
 protected:
@@ -52,7 +52,7 @@ public:
 	/**
 	 * CoClient.
 	 */
-	CoClient(QWidget* parent,
+	CoClient(
 			const char * name,
 			const char * h,
 			const char * sc,
@@ -95,13 +95,17 @@ private:
 	quint32 blockSize;
 	quint16 port;
 	QProcess *server;
+	QProcess *shell;
+	bool coserverStarted;
+	miutil::miString shellresult;
 	miutil::miString userid;
 
         bool noCoserver4;
+
 	int nrOfAttempts;
 
-        std::vector<miMessage> inbox;
-        std::map<int, std::string> clients;
+    std::vector<miMessage> inbox;
+    std::map<int, std::string> clients;
 
 	/**
 	 * Adds or removes entries in the list of clients as clients
@@ -144,6 +148,8 @@ private slots:
   	 * Starts new session if coserver outputs "Started".
   	 */
   	void checkServer();
+	void checkServerRunning();
+	void shellFinished( int exitCode, QProcess::ExitStatus exitStatus );
 
   	/**
   	 * Called when disconnected from server.
@@ -154,6 +160,7 @@ private slots:
   	 * Logs new errors when they are available on coserver's stderr. (DEPRECATED?)
   	 */
   	void slotWriteStandardError();
+	void slotWriteCheckStandardError();
 
   	/**
   	 * Starts coserver if not already running.

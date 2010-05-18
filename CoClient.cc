@@ -56,6 +56,7 @@
 
 #include <QLetterCommands.h>
 #include <CoClient.h>
+#include <unistd.h>
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -75,11 +76,13 @@ using namespace miutil;
 
 //#define _DEBUG
 
-CoClient::CoClient(QWidget* parent, const char *name, const char *h,
-		const char *sc, const char *lf, quint16 p) :
-	QDialog(parent) {
-
+CoClient::CoClient(const char *name, const char *h,
+		const char *sc, const char *lf, quint16 p)
+{
+    shell = NULL;
+	server = NULL;
 	nrOfAttempts = 0;
+	coserverStarted = false;
 
 	/*
 	 * Uncomment this and comment the one below to read from etc/services instead of ~/.diana/diana.port
@@ -98,6 +101,19 @@ CoClient::CoClient(QWidget* parent, const char *name, const char *h,
 	lockFile = lf;
 	serverCommand = sc ;
 	host = h;
+	if (getenv("COSERVER_HOST") != NULL) {
+	  host = getenv("COSERVER_HOST");
+	}
+	if (getenv("USER") != NULL) {
+          userid = miString(getenv("USER"));
+        } else {
+          userid = miString(getenv("USERNAME"));
+        }
+        if (getenv("HOSTNAME") != NULL) {
+          userid += "@" + miString(getenv("HOSTNAME"));
+        } else {
+          userid += "@" + miString(getenv("COMPUTERNAME"));
+        }
 #ifdef __WIN32__
 	{
 		DWORD size = UNLEN + 1;
@@ -231,10 +247,59 @@ void CoClient::connectionClosed() {
 
 void CoClient::connectToServer() {
 	noCoserver4 = false;
-	#ifdef _DEBUG
-		cerr << "Connecting to port: " << port << endl;
-	#endif
-	tcpSocket->connectToHost(QString(host.cStr()), port);
+#ifdef _DEBUG
+	cerr << "connectToServer(): Connecting to port: " << port << endl;
+#endif
+	// Here we should check if process already running!
+	if (host == "localhost") {
+	shell = new QProcess();
+	QString tmpcmd = QString("/bin/ps");
+
+	QStringList tmpargs;
+	tmpargs << "-ef";
+	connect(shell, SIGNAL(readyReadStandardOutput()), SLOT(checkServerRunning()));
+	connect(shell, SIGNAL(readyReadStandardError()), SLOT(slotWriteCheckStandardError()));
+	connect(shell, SIGNAL(finished( int , QProcess::ExitStatus )), SLOT(shellFinished(int , QProcess::ExitStatus)));
+
+	shell->start(tmpcmd, tmpargs);
+	if (!shell->waitForStarted())
+	{
+		cerr << "error starting shell" << endl;
+		shell->terminate();
+	}
+	if (!shell->waitForFinished()) {
+		cerr << "ps never finished" << endl;
+	}
+	// check shellresult here...
+#ifdef _DEBUG
+	cerr << "connectToServer() " << shellresult << endl;
+#endif
+	if (shellresult.contains("coserver4"))
+		coserverStarted = true;
+	else
+		coserverStarted = false;
+#ifdef _DEBUG
+	cerr << "connectToServer(): " << coserverStarted << endl;
+#endif
+	// clear to the next try
+	shellresult.clear();
+
+	if (coserverStarted) {
+		tcpSocket->connectToHost(QString(host.cStr()), port);
+	}
+	}
+	else {
+	  // Connect to remote server
+	  tcpSocket->connectToHost(QString(host.cStr()), port);
+	}
+}
+
+void CoClient::shellFinished( int exitCode, QProcess::ExitStatus exitStatus ) {
+#ifdef _DEBUG
+	cerr << "shellFinished( " << exitCode << ", " << exitStatus << " )" << endl;
+#endif
+	delete shell;
+	shell = NULL;
 }
 
 void CoClient::disconnectFromServer() {
@@ -416,15 +481,55 @@ void CoClient::checkServer() {
 		connectToServer();
 }
 
+void CoClient::checkServerRunning() {
+#ifdef _DEBUG
+	cerr << "checkServerRunning()" << endl;
+#endif
+	QByteArray result = shell->readAllStandardOutput();
+	shellresult= shellresult + miString(result.data());
+}
+
 void CoClient::slotWriteStandardError() {
-	LOG4CXX_ERROR(logger, server->readAllStandardError().data());
+#ifdef _DEBUG
+	cerr << "slotWriteStandardError()" << endl;
+#endif
+	if (server)
+		LOG4CXX_ERROR(logger, server->readAllStandardError().data());
+}
+
+void CoClient::slotWriteCheckStandardError() {
+#ifdef _DEBUG
+	cerr << "slotWriteCheckStandardError()" << endl;
+#endif
+	if (shell)
+	{
+		LOG4CXX_ERROR(logger, shell->readAllStandardError().data());
+		shell->terminate();
+	}
 }
 
 void CoClient::socketError(QAbstractSocket::SocketError e) {
+	
 	/// try this only once
 	if(noCoserver4) return;
+	if (nrOfAttempts < 4)
+	{
+		cerr << "socketError: " << tcpSocket->errorString().toStdString() << endl;
+		nrOfAttempts++;
+		cerr << "nrOfAttempts: " << nrOfAttempts << endl;
+		connectToServer();
+	}
 
-	if (nrOfAttempts < 2) {
+	if (nrOfAttempts == 4) {
+
+		if (coserverStarted)
+		{
+			// some error must have occured
+			LOG4CXX_ERROR(logger, "Couldn't connect to server, but server already started. Contact support...");
+			emit unableToConnect();
+			noCoserver4 = true;
+			return;
+		}
 
 		#ifdef _DEBUG
 			cerr << "Starting coserver..." << endl;
@@ -454,6 +559,7 @@ void CoClient::socketError(QAbstractSocket::SocketError e) {
 
 		// make sure that coserver has time to start before checking its state
 		server->waitForStarted();
+
 		pu_sleep(1);
 
 		if (server->state() != QProcess::Running) {
@@ -474,13 +580,10 @@ void CoClient::socketError(QAbstractSocket::SocketError e) {
 			cerr << "Connect to host with port " << port << endl;
 		#endif
 
+		nrOfAttempts = 0;
+		connectToServer();
 
-		cerr << "nrOfAttempts: " << nrOfAttempts << endl;
-		tcpSocket->connectToHost(QString(host.cStr()), port);
-		nrOfAttempts++;
-
-
-	} else  {
+	} else if (nrOfAttempts > 4)  {
 
 		connect(server, SIGNAL(readyReadStandardOutput()), SLOT(checkServer()));
 
