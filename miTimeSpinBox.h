@@ -57,8 +57,8 @@ public:
 class miTimeSpinBox : public QWidget {
   Q_OBJECT
 public:
-  typedef enum DisplayUntil { SECOND, MINUTE, HOUR, DAY };
-  typedef enum Dayname      { NONAME, NOR, ENG          };
+  enum DisplayUntil { SECOND, MINUTE, HOUR, DAY };
+  enum Dayname      { NONAME, NOR, ENG          };
 
 private:
   miSpinBox * year;
