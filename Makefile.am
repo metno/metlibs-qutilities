@@ -47,20 +47,11 @@ libqUtilities_la_LDFLAGS = \
 	${MYSQL_LDFLAGS} \
 	${QT4_LDFLAGS}
 
-libqUtilities_la_LIBADD = \
-	${LOG4CXX_LIBS} \
-	${MILOGGER_LIBS} \
-	${PUTOOLS_LIBS} \
-	${MYSQL_LIBS} \
-	${QT4_LIBS}
-
 if ENABLE_PUSQL
 libqUtilities_la_CPPFLAGS += \
 	${PUSQL_CPPFLAGS}
 libqUtilities_la_LDFLAGS += \
 	${PUSQL_LDFLAGS}
-libqUtilities_la_LIBADD += \
-	${PUSQL_LIBS}
 endif
 
 # Do we really want to do this?  Wouldn't it be better to include the
