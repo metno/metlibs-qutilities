@@ -1,15 +1,13 @@
 #ifndef _helpdialog_h
 #define _helpdialog_h
 
-
-#include <qdialog.h>
-#include <qfont.h>
-#include <qpalette.h>
+#include <QString>
+#include <QDialog>
+#include <QFont>
+#include <QPalette>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
-
-#include <puTools/miString.h>
 
 #include <vector>
 
@@ -28,22 +26,22 @@ public:
 
   struct Info {
     struct Source {
-      miutil::miString source;
-      miutil::miString name;
-      miutil::miString defaultlink;
+      QString source;
+      QString name;
+      QString defaultlink;
     };
-    miutil::miString path;
+    QString path;
     vector<Source> src;
   };
 
   HelpDialog( QWidget* parent, const Info& hdi );
 
-  void setSource( const miutil::miString& source );
-  miutil::miString helpPath() const {return info.path;}
+  void setSource( const QString& source );
+  QString helpPath() const {return info.path;}
 
 public slots:
-  void showdoc(const int doc, const miutil::miString tag ="");
-  void showsource( const miutil::miString& source, const miutil::miString tag ="");
+  void showdoc(const int doc, const QString& tag = QString());
+  void showsource( const QString& source, const QString& tag = QString());
 
 private slots:
   void hideHelp();

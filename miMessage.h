@@ -35,7 +35,7 @@
 /* Created by DNMI/FoU/PU: k.roysland@dnmi.no
    at Tue Mar  5 10:20:47 2002 */
 
-#include <puTools/miString.h>
+#include <QString>
 #include <vector>
 
 class miMessage {
@@ -45,10 +45,10 @@ public:
             const char *description);
 
   int to,from;
-  miutil::miString command,description,commondesc,common,clientType,co;
-  std::vector <miutil::miString> data;
+  QString command,description,commondesc,common,clientType,co;
+  std::vector <QString> data;
 
-  miutil::miString content();
+  QString content();
 
 };
 

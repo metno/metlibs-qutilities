@@ -34,9 +34,10 @@
 #include "config.h"
 #endif
 
-#include <qpushbutton.h>
+#include <QDebug>
+#include <QPushButton>
 #include <QPixmap>
-#include <qtooltip.h>
+#include <QToolTip>
 
 #include <conn.xpm>
 #include <disconn.xpm>
@@ -45,24 +46,19 @@
 #include <ClientButton.h>
 
 
-using namespace std;
-
-ClientButton::ClientButton(const QString & name, const QString & server,
-		QWidget * parent) :
-	QPushButton(name, parent) {
+ClientButton::ClientButton(const QString& name, const QString& server, QWidget * parent)
+    : QPushButton(name, parent) {
 
 	uselabel = false;
 	setIcon(QPixmap(disconn_xpm));
 	setToolTip("Disconnected");
 	setText("");
 
-	string sc = server.toStdString();
-	string n = name.toStdString();
-	coclient = new CoClient(n.c_str(), "localhost", sc.c_str());
+	coclient = new CoClient(name.toLocal8Bit().data(), "localhost", server.toLocal8Bit().data());
 
 	connect(this, SIGNAL(clicked()), SLOT(connectToServer()));
 
-	connect(coclient, SIGNAL(newClient(miutil::miString)), SLOT(setLabel(miutil::miString)));
+	connect(coclient, SIGNAL(newClient(QString)), SLOT(setLabel(QString)));
 	connect(coclient, SIGNAL(connected()), SLOT(connected()));
 	connect(coclient, SIGNAL(unableToConnect()), SLOT(unableToConnect()));
 	connect(coclient, SIGNAL(receivedMessage(miMessage&)), SIGNAL(receivedMessage(miMessage&)));
@@ -71,15 +67,15 @@ ClientButton::ClientButton(const QString & name, const QString & server,
 
 void ClientButton::connectToServer() {
 
-	cerr << "ClientButton::connectToServer()" << endl;
+	qDebug() << __FUNCTION__;
 
 	if (coclient->notConnected()) {
-		cerr << "ClientButton::connectToServer(): notConnected" << endl;
+		qWarning() << "ClientButton::connectToServer(): notConnected";
 		setToolTip("Connecting...");
 		coclient->connectToServer();
 
 	} else {
-		cerr << "ClientButton::connectToServer(): connected" << endl;
+		qDebug() << "ClientButton::connectToServer(): connected";
 		coclient->disconnectFromServer();
 		setToolTip("Disconnected");
 		setLabel("noClient");
@@ -93,12 +89,12 @@ void ClientButton::connected() {
 }
 
 void ClientButton::unableToConnect() {
-	cerr << "ClientButton::disconnected()" << endl;
+	qWarning() << __FUNCTION__;
 	setLabel("portBusy");
 	setToolTip("Unable to connect");
 }
 
-void ClientButton::setLabel(miutil::miString name) {
+void ClientButton::setLabel(const QString& name) {
 	if (name == "noClient") {
 		setIcon(QPixmap(disconn_xpm));
 		setText("");
@@ -121,11 +117,11 @@ void ClientButton::sendMessage(miMessage& msg) {
 	coclient->sendMessage(msg);
 }
 
-miutil::miString ClientButton::getClientName(int id) {
+QString ClientButton::getClientName(int id) {
 	return coclient->getClientName(id);
 }
 
-bool ClientButton::clientTypeExist(const string& type) {
+bool ClientButton::clientTypeExist(const QString& type) {
 	return coclient->clientTypeExist(type);
 }
 
