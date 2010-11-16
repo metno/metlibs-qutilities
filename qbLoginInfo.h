@@ -41,6 +41,8 @@
 #include <QLayout>
 #include <QHBoxLayout>
 
+#include <puTools/miString.h>
+
 using namespace std;
 
 /**
@@ -61,10 +63,10 @@ public:
   qbLoginInfo(QWidget* parent);
 
 public slots:
-  void setInfo(const QString& host,
-               const QString& user,
-	           bool loggedin,
-	           bool testbase);
+  void setInfo(const miutil::miString host,
+	       const miutil::miString user,
+	       bool loggedin,
+	       bool testbase);
 };
 
 #endif

@@ -35,9 +35,9 @@
 #include <miMessage.h>
 #include <QLetterCommands.h>
 #include <iostream>
-#include <QTextStream>
 
 using namespace std;
+using namespace miutil;
 
 
 miMessage::miMessage()
@@ -56,21 +56,20 @@ miMessage::miMessage(int t, int f, const char * c, const char *d)
 
 
 
-QString miMessage::content()
+miString miMessage::content()
 {
   int i;
-  QString data;
-  QTextStream out(&data, QIODevice::WriteOnly);
-  out << "======================================" << endl
-       << "from:        " << from                 << endl
-       << "to:          " << to                   << endl
-       << "commondesc:  " << commondesc           << endl
-       << "common:      " << common               << endl
-       << "description: " << description          << endl
-       << "command:     " << command              << endl
-       << (data.size() ? "DATA:"  : "NO DATA")    << endl;
+  ostringstream os;
+  os << "======================================" << endl
+     << "from:        " << from                  << endl
+     << "to:          " << to                    << endl
+     << "commondesc:  " << commondesc            << endl
+     << "common:      " << common                << endl
+     << "description: " << description           << endl
+     << "command:     " << command               << endl
+     << (data.size() ? "DATA:"  : "NO DATA")     << endl;
   for (i = 0; i < data.size(); i++)
-    out << i  << " > " << data[i]                 << endl;
-  out << "======================================" << endl;
-  return data;
+    os << i  << " > " << data[i] << endl;
+  os << "======================================" << endl;
+  return os.str();
 }

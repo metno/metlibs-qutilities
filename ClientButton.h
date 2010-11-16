@@ -34,9 +34,10 @@
 
 
 // Qt-includes
-#include <QWidget>
-#include <QPushButton>
+#include <qwidget.h>
+#include <qpushbutton.h>
 
+#include <puTools/miString.h>
 #include "CoClient.h"
 
 class miMessage;
@@ -59,9 +60,9 @@ public:
 	 * @param server Which server to use
 	 * @param parent Parent widget
 	 */
-	ClientButton(const QString& text,
-			     const QString& server,
-			     QWidget * parent);
+	ClientButton(const QString & text,
+			const QString & server,
+			QWidget * parent);
 
 	CoClient *coclient;
 
@@ -71,7 +72,7 @@ public:
 	 */
 	void sendMessage(miMessage &msg);
 
-	QString getClientName(int id);
+	miutil::miString getClientName(int id);
 
 	/**
 	 * Sends a request to the server to search for a
@@ -79,7 +80,7 @@ public:
 	 * clients.
 	 * @param type The type of client(s) to search for
 	 */
-    bool clientTypeExist(const QString &type);
+        bool clientTypeExist(const std::string &type);
 
 	/**
 	 * Sets the text-label on the button to label.
@@ -98,7 +99,7 @@ public slots:
   	 * Sets the name of the other connected client on the connect button.
   	 * @param name Name of connecting client
   	 */
-  	void setLabel(const QString& name);
+  	void setLabel(miutil::miString name);
 
   	/**
   	 * Displays "Tilkoblet" as tooltip to coserver client button

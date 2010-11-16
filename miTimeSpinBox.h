@@ -34,13 +34,10 @@
 /* Created by met.no/PU
    at Mon Mar 31 08:03:45 2003 */
 
-//#include <puTools/miTime.h>
+#include <puTools/miTime.h>
 #include <puTools/miDate.h>
+#include <puTools/miString.h>
 
-#include <QString>
-#include <QTime>
-#include <QDate>
-#include <QDateTime>
 #include <QSpinBox>
 #include <QLayout>
 #include <QLabel>
@@ -73,9 +70,9 @@ private:
 
   QLabel    * dayname;
 
-  QDateTime ref;
-  QDateTime max;
-  QDateTime min;
+  miutil::miTime ref;
+  miutil::miTime max;
+  miutil::miTime min;
 
   int yy,mm,dd,h,m,s;
 
@@ -92,21 +89,20 @@ private:
   void newSecond(int);
   void checkMaxThisMonth();
   void resetWeekdayName();
-  QString mapDayOfWeekToShortDayName(const int dayOfWeek, const miutil::miDate::lang language) const;
 
 public:
 	/**
 	 * Constructor.
 	 * @deprecated title is no longer in use.
 	 */
-  miTimeSpinBox(const char *name,QWidget *parent, QString title="",
+  miTimeSpinBox(const char *name,QWidget *parent, miutil::miString title="",
 		miTimeSpinBox::Dayname      = miTimeSpinBox::NONAME,
 		miTimeSpinBox::DisplayUntil = miTimeSpinBox::MINUTE );
 
-  QDateTime   time()    const { return ref;          }
-  QString isoTime() const { return ref.time().toString(Qt::ISODate);}
-  QDate   date()    const { return ref.date();   }
-  QString isoDate() const { return ref.date().toString(Qt::ISODate);}
+  miutil::miTime   time()    const { return ref;          }
+  miutil::miString isoTime() const { return ref.isoTime();}
+  miutil::miDate   date()    const { return ref.date();   }
+  miutil::miString isoDate() const { return ref.isoDate();}
 
 
   bool checkMax();
@@ -114,8 +110,8 @@ public:
 
 
 public slots:
-  void setTime(const QDateTime&);
-  void setDate(const QDate&);
+  void setTime(const miutil::miTime&);
+  void setDate(const miutil::miDate&);
   void changeTime();
 
   void changeYear(QString v);
@@ -125,12 +121,12 @@ public slots:
   void changeMinute(QString v);
   void changeSecond(QString v);
 
-  void setMax(const QDateTime&);
-  void setMin(const QDateTime&);
+  void setMax(const miutil::miTime&);
+  void setMin(const miutil::miTime&);
 
 signals:
-  void valueChanged( const QDateTime& );
-  void valueChanged( const QDate& );
+  void valueChanged( const miutil::miTime& );
+  void valueChanged( const miutil::miDate& );
 };
 
 #endif

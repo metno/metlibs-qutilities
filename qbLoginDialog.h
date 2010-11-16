@@ -62,30 +62,30 @@ using namespace std;
 class qbLoginDialog : public QDialog {
   Q_OBJECT
 private:
-  QString title_;
+  miutil::miString title_;
 
   puSQLgate* gate;
   /// current serverhost,user,database and portnumber
-  QString host;
-  QString user;
-  QString base;
+  miutil::miString host;
+  miutil::miString user;
+  miutil::miString base;
   unsigned int port;
 
   /// .. for operational use
-  QString oper_label;
-  QString oper_host;
-  QString oper_user;
-  QString oper_base;
+  miutil::miString oper_label;
+  miutil::miString oper_host;
+  miutil::miString oper_user;
+  miutil::miString oper_base;
   unsigned int oper_port;
 
   /// .. for testing
-  QString test_label;
-  QString test_host;
-  QString test_user;
-  QString test_base;
+  miutil::miString test_label;
+  miutil::miString test_host;
+  miutil::miString test_user;
+  miutil::miString test_base;
   unsigned int test_port;
 
-  QString pass;
+  miutil::miString pass;
   bool loggedin;
   bool inTest;
   bool hasTest;
@@ -119,10 +119,10 @@ private:
   QPushButton *offlineb;
 
   void makeWidget();
-  void setInfo(const QString& h,
-               const QString& u,
-	           const QString& b,
-	           const unsigned int p);
+  void setInfo(const miutil::miString h,
+	       const miutil::miString u,
+	       const miutil::miString b,
+	       const unsigned int p);
 
 
 private slots:
@@ -137,27 +137,27 @@ protected slots:
 public:
   qbLoginDialog(puSQLgate* g, QWidget* parent);
   qbLoginDialog(puSQLgate* g,
-                const QString& title,
-                const QString& h,
-                const QString& u,
-                const QString& b,
-                const unsigned int p,
-                const QString& th,
-                const QString& tu,
-                const QString& tb,
-                const unsigned int tp,
-                QWidget* parent,
-                const QString& oplabel = QString("Operational"),
-                const QString& testlabel = QString("Test"),
-                bool     hastest=true,
-                bool     hasoffline=false);
+		const miutil::miString title,
+		const miutil::miString h,
+		const miutil::miString u,
+		const miutil::miString b,
+		const unsigned int p,
+		const miutil::miString th,
+		const miutil::miString tu,
+		const miutil::miString tb,
+		const unsigned int tp,
+		QWidget* parent,
+		miutil::miString oplabel="Operational",
+		miutil::miString testlabel="Test",
+		bool     hastest=true,
+		bool     hasoffline=false);
 
 
-  QString Host() const {return host;}
-  QString User() const {return user;}
-  QString Base() const {return base;}
+  miutil::miString Host() const {return host;}
+  miutil::miString User() const {return user;}
+  miutil::miString Base() const {return base;}
   unsigned int Port() const {return port;}
-  QString Password() const {return pass;}
+  miutil::miString Password() const {return pass;}
   bool LoggedIn() const { return loggedin;}
   bool Test() const { return inTest;}
   bool Offline() const { return isoffline;}

@@ -53,13 +53,13 @@ miSpinBox::miSpinBox( int mi, int ma, int st, QWidget* p, const char* n )
 
 
 miTimeSpinBox::miTimeSpinBox( const char* name,QWidget* parent,
-			      QString title,
+			      miutil::miString title,
 			      miTimeSpinBox::Dayname dname,
 			      miTimeSpinBox::DisplayUntil displayuntil)
   : QWidget(parent)
 {
-  min = QDateTime(QDate(1900,1,1));
-  max = QDateTime::currentDateTime();
+  min=miutil::miTime(1900,1,1,0,0,0);
+  max=miutil::miTime::nowTime();
 
 
   daynamelang = ( dname == NOR ? miutil::miDate::Norwegian :
@@ -87,8 +87,8 @@ miTimeSpinBox::miTimeSpinBox( const char* name,QWidget* parent,
 
 
 
-  if(!title.isEmpty()) {
-    tit = new QLabel(title,frame);
+  if(title.exists()) {
+    tit = new QLabel(title.cStr(),frame);
     tit->setObjectName("name");
     hlayout->addWidget(tit, 4);
   }
@@ -154,19 +154,19 @@ miTimeSpinBox::miTimeSpinBox( const char* name,QWidget* parent,
   checkMaxThisMonth();
 }
 
-void miTimeSpinBox::setDate(const QDate& d)
+void miTimeSpinBox::setDate(const miutil::miDate& d)
 {
   yy = d.year();
   mm = d.month();
   dd = d.day();
-  setTime(QDateTime(QDate(yy,mm,dd)));
+  setTime(miutil::miTime(yy,mm,dd,0,0,0));
 }
 
-void miTimeSpinBox::setTime(const QDateTime& t)
+void miTimeSpinBox::setTime(const miutil::miTime& t)
 {
-  yy = t.date().year();
-  mm = t.date().month();
-  dd = t.date().day();
+  yy = t.year();
+  mm = t.month();
+  dd = t.day();
   h  = 0;
   m  = 0;
   s  = 0;
@@ -184,21 +184,21 @@ void miTimeSpinBox::setTime(const QDateTime& t)
   day->blockSignals(false);
 
   if(hour) {
-    h = t.time().hour();
+    h = t.hour();
     hour->blockSignals(true);
     hour->setValue(h);
     hour->blockSignals(false);
   }
 
   if(minute) {
-    m = t.time().minute();
+    m  = t.min();
     minute->blockSignals(true);
     minute->setValue(m);
     minute->blockSignals(false);
   }
 
   if(second) {
-    s = t.time().second();
+    s=t.sec();
     second->blockSignals(true);
     second->setValue(s);
     second->blockSignals(false);
@@ -209,7 +209,7 @@ void miTimeSpinBox::setTime(const QDateTime& t)
   checkMaxThisMonth();
 }
 
-void miTimeSpinBox::setMax(const QDateTime& mx)
+void miTimeSpinBox::setMax(const miutil::miTime& mx)
 {
   max = mx;
   if(checkMax()) {
@@ -233,7 +233,7 @@ void miTimeSpinBox::checkMaxThisMonth()
 }
 
 
-void miTimeSpinBox::setMin(const QDateTime& mx)
+void miTimeSpinBox::setMin(const miutil::miTime& mx)
 {
   min = mx;
   if(checkMin()) {
@@ -377,8 +377,7 @@ void miTimeSpinBox::changeYear(QString v )
 
 void miTimeSpinBox::changeTime()
 {
-  ref.setDate(QDate(yy,mm,dd));
-  ref.setTime(QTime(h,m,s));
+  ref.setTime(yy,mm,dd,h,m,s);
 
   if(checkMax())
     ref = max;
@@ -402,16 +401,15 @@ void miTimeSpinBox::resetWeekdayName()
   if(!dayname)
     return;
 
-  int tmp = ref.date().dayOfWeek();
+  int tmp = ref.dayOfWeek();
 
   if(tmp == weekday)
     return;
 
   weekday=tmp;
 
-  //QString t = ref.format("%a ",daynamelang );
-  QString t = mapDayOfWeekToShortDayName(ref.date().dayOfWeek(), daynamelang);
-  dayname->setText(t);
+  miutil::miString t = ref.format("%a ",daynamelang );
+  dayname->setText(t.cStr());
 
   if(weekday == 0 || weekday == 6) {
   	QPalette qp;
@@ -422,54 +420,4 @@ void miTimeSpinBox::resetWeekdayName()
   	qp.setColor(QPalette::WindowText, Qt::black);
     dayname->setPalette(qp);
   }
-}
-
-QString miTimeSpinBox::mapDayOfWeekToShortDayName(const int dayOfWeek, const miutil::miDate::lang l) const
-{
-  QString language = l== miDate::Norwegian ? QString("no") : QString(miDate::getDefaultLanguage().cStr());
-
-  QString la = language.toLower();
-
-  int a=dayOfWeek - 1; // as QDate counts 1..7
-
-  static QString nameEN[]={ "Sun",
-			     "Mon",
-			     "Tue",
-			     "Wed",
-			     "Thu",
-			     "Fri",
-			     "Sat" };
-
-  static QString nameNO[]={ "Søn",
-			     "Man",
-			     "Tir",
-			     "Ons",
-			     "Tor",
-			     "Fre",
-			     "Lør" };
-
-  static QString nameNN[]={ "Søn",
-			     "Mån",
-			     "Tys",
-			     "Ons",
-			     "Tor",
-			     "Fre",
-			     "Lau" };
-
-  static QString nameDE[]={ "So",
-			     "Mo",
-			     "Di",
-			     "Mi",
-			     "Do",
-			     "Fr",
-			     "Sa" };
-
-  if (la=="no" || la=="nb")
-    return nameNO[a];
-  if (la=="nn")
-    return nameNN[a];
-  if (la=="de")
-    return nameDE[a];
-
-  return nameEN[a];
 }
