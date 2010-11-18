@@ -54,7 +54,7 @@ ClientButton::ClientButton(const QString& name, const QString& server, QWidget *
 	setToolTip("Disconnected");
 	setText("");
 
-	coclient = new CoClient(name.toLocal8Bit().data(), "localhost", server.toLocal8Bit().data());
+        coclient = new CoClient(name.toLatin1().constData(), "localhost", server.toLatin1().constData());
 
 	connect(this, SIGNAL(clicked()), SLOT(connectToServer()));
 
