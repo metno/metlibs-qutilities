@@ -32,8 +32,8 @@
 
 
 // Qt-includes
-#include <qapplication.h>
-#include <qstring.h>
+#include <QApplication>
+#include <QString>
 #include <QTcpSocket>
 #include <QProcess>
 #include <QDialog>
@@ -42,6 +42,7 @@
 #include <map>
 
 #include "miMessage.h"
+#include "puTools/miString.h"
 
 class CoClient : public QObject {
 	Q_OBJECT
@@ -83,29 +84,29 @@ public:
 	bool sendMessage(miMessage &msg, const char *sep = "|");
 
 	bool notConnected(void);
-        std::string getClientName(int);
-        bool clientTypeExist(const std::string &type);
+    QString getClientName(int);
+    bool clientTypeExist(const QString &type);
 
 private:
 	QTcpSocket *tcpSocket;
 
-	miutil::miString clientType;
-	miutil::miString lockFile, serverCommand, host;
+	QString clientType;
+	QString lockFile, serverCommand, host;
 
 	quint32 blockSize;
 	quint16 port;
 	QProcess *server;
 	QProcess *shell;
 	bool coserverStarted;
-	miutil::miString shellresult;
-	miutil::miString userid;
+	QString shellresult;
+	QString userid;
 
-        bool noCoserver4;
+    bool noCoserver4;
 
 	int nrOfAttempts;
 
     std::vector<miMessage> inbox;
-    std::map<int, std::string> clients;
+    std::map<int, QString> clients;
 
 	/**
 	 * Adds or removes entries in the list of clients as clients
@@ -130,6 +131,7 @@ signals:
   	void receivedMessage(miMessage &);
   	void addressListChanged();
   	void connected();
+  	void newClient(QString);
   	void newClient(miutil::miString);
   	void unableToConnect();
 
