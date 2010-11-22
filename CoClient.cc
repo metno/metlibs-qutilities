@@ -179,7 +179,7 @@ int CoClient::readPortFromFile() {
 
   QString pFilePath = homePath + QString("/.coserver.port");
 
-  pfile = fopen(pFilePath.toLatin1().constData(), "r");
+  pfile = fopen(pFilePath.toLocal8Bit().constData(), "r");
   if (pfile == NULL) {
 #ifdef _DEBUG
     cerr << "Could not read file " << endl;
@@ -213,7 +213,7 @@ int CoClient::readPortFromFile_Services() {
   int port = 0;
 
   if (!file.open(QFile::ReadOnly |QIODevice::Text)) {
-    cerr << "Could not open file: " << filename.toStdString() << endl;
+    cerr << "Could not open file: " << filename.toLocal8Bit().constData() << endl;
     return 1;
   } else {
     QTextStream in(&file);
@@ -343,13 +343,13 @@ void CoClient::editClients(miMessage msg) {
   if (msg.command == qmstrings::newclient) {
     clients.erase(id);
     clients[id] = type;
-    LOG4CXX_INFO(logger, "Added new client of type " << type.toStdString() << " and id " << id << " to the list of clients");
+    LOG4CXX_INFO(logger, "Added new client of type " << type.toLocal8Bit().constData() << " and id " << id << " to the list of clients");
 
     emit newClient(type);
     emit addressListChanged();
   } else if (msg.command == qmstrings::removeclient) {
     clients.erase(id);
-    LOG4CXX_INFO(logger, "Removed client of type " << type.toStdString() << " and id " << id << " from the list of clients");
+    LOG4CXX_INFO(logger, "Removed client of type " << type.toLocal8Bit().constData() << " and id " << id << " from the list of clients");
 
     emit newClient(QString("myself"));
     emit newClient(miString("myself"));

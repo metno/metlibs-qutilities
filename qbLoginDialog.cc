@@ -282,8 +282,8 @@ void qbLoginDialog::okPushed()
   puSQLwarning w;
   isoffline= false;
 
-  if (gate->open(base.toLatin1().constData(), host.toLatin1().constData(),
-                         user.toLatin1().constData(), pass.toLatin1().constData(),
+  if (gate->open(base.toLocal8Bit().data(), host.toLocal8Bit().data(),
+		         user.toLocal8Bit().data(), pass.toLocal8Bit().data(),
 		         w,port)){
     loggedin= true;
     warnings->clear();

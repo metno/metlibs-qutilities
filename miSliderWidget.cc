@@ -115,7 +115,7 @@ void miSliderWidget::editingFinished()
     setValue(v);
     emit valueChanged(Value);
     emit valueChangedForPar(Value, parname);
-    emit valueChangedForPar(Value, parname.toStdString());
+    emit valueChangedForPar(Value, miutil::miString(parname.toLocal8Bit().data()));
   }
 }
 

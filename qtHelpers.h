@@ -14,8 +14,11 @@
 
 class QtHelpers {
 public:
-    static std::vector<miutil::miString> qt2mi_vector_string(const std::vector<QString>& vQString);
-    static std::vector<QString> mi2qt_vector_string(const std::vector<miutil::miString>& vMiString);
+	static miutil::miString qt2mi_string(const QString qString);
+	static QString mi2qt_string(const miutil::miString miString);
+
+	static std::vector<miutil::miString> qt2mi_vector_string(const std::vector<QString>& vQString);
+	static std::vector<QString> mi2qt_vector_string(const std::vector<miutil::miString>& vMiString);
 };
 
 #endif /* QTHELPERS_H_ */
