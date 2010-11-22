@@ -40,8 +40,8 @@
  ------------------------------------
  */
 
-#include <QString>
-#include <QWidget>
+#include <puTools/miString.h>
+#include <qwidget.h>
 #include <map>
 #include <fstream>
 
@@ -63,66 +63,67 @@ private:
     }
   } xy;
 
-  static std::map<QString, xy> pos;
-  static std::map<QString, xy> size;
-  static std::map<QString, QString> tokens;
-  static std::map<QString, QString> sections; // which section for each key
-  static QString filename;
+  static std::map<miutil::miString, xy> pos;
+  static std::map<miutil::miString, xy> size;
+  static std::map<miutil::miString, miutil::miString> tokens;
+  static std::map<miutil::miString, miutil::miString> sections; // which section for each key
+  static miutil::miString filename;
   static int xmax;
   static int ymax;
 
-  QString section; // current section of a single instance
+  miutil::miString section; // current section of a single instance
 public:
   miLogFile()
   {
   }
-  miLogFile(const QString& f)
+  miLogFile(miutil::miString f)
   {
     read(f);
   }
 
-  void setSection(const QString& s)
+  void setSection(miutil::miString s)
   {
     section = s;
   }
 
-  int posx(const QString& key);
-  int posy(const QString& key);
+  int posx(miutil::miString key);
+  int posy(miutil::miString key);
 
-  int sizex(const QString& key);
-  int sizey(const QString& key);
+  int sizex(miutil::miString key);
+  int sizey(miutil::miString key);
 
-  QString token(const QString& key) const;
-  bool booleanToken(const QString& key) const;
-  int intToken(const QString& key) const;
+  miutil::miString token(miutil::miString key) const;
+  bool booleanToken(miutil::miString key) const;
+  int intToken(miutil::miString key) const;
 
-  bool hasSize(const QString& key) const;
-  bool hasPos(const QString& key) const;
-  bool hasToken(const QString& key) const
+  bool hasSize(miutil::miString key) const;
+  bool hasPos(miutil::miString key) const;
+  bool hasToken(miutil::miString key) const
   {
     return bool(tokens.count(key));
   }
-  bool hasBooleanToken(const QString& key) const;
-  bool hasIntToken(const QString& key) const;
+  bool hasBooleanToken(miutil::miString key) const;
+  bool hasIntToken(miutil::miString key) const;
 
-  void addPos(const QString& key, int x, int y);
-  void addSize(const QString& key, int x, int y);
-  void addToken(const QString& key, const QString& token);
-  void addToken(const QString& key, bool token);
-  void addToken(const QString& key, int token);
+  void addPos(miutil::miString key, int x, int y);
+  void addSize(miutil::miString key, int x, int y);
+  void addToken(miutil::miString key, miutil::miString token);
+  void addToken(miutil::miString key, bool token);
+  void addToken(miutil::miString key, int token);
 
-  bool readStrings(vector<QString> lines, const QString& section = QString());
-  QString writeString(const QString& section = QString());
+  bool readStrings(vector<miutil::miString> lines, miutil::miString section =
+      "");
+  miutil::miString writeString(miutil::miString section = "");
 
-  bool read(const QString& fname = QString()); /// none == filenname
-  bool write(const QString& fname = QString()); /// none == filenname
+  bool read(miutil::miString fname = ""); /// none == filenname
+  bool write(miutil::miString fname = ""); /// none == filenname
 
   void setMaxXY(int xm, int ym);
 
-  void logSizeAndPos(QWidget* w, QString name = QString()); // if name ="" w->name() is used
-  void restoreSizeAndPos(QWidget* w, QString name = QString());
-  void logVisibility(QWidget* w, QString name = QString());
-  void restoreVisibility(QWidget* w, QString name = QString());
+  void logSizeAndPos(QWidget* w, miutil::miString name = ""); // if name ="" w->name() is used
+  void restoreSizeAndPos(QWidget* w, miutil::miString name = "");
+  void logVisibility(QWidget* w, miutil::miString name = "");
+  void restoreVisibility(QWidget* w, miutil::miString name = "");
 
 };
 

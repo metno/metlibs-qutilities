@@ -53,20 +53,20 @@ qbLoginDialog::qbLoginDialog(puSQLgate* g, QWidget* parent)
 }
 
 qbLoginDialog::qbLoginDialog(puSQLgate* g,
-                             const QString& title,
-			                 const QString& h,
-                             const QString& u,
-                             const QString& b,
-                             const unsigned int p,
-                             const QString& th,
-                             const QString& tu,
-                             const QString& tb,
-                             const unsigned int tp,
-                             QWidget* parent,
-                             const QString& oplabel,
-                             const QString& testlabel,
-                             bool     hastest,
-                             bool hasoffline)
+			     const miString title,
+			     const miString h,
+			     const miString u,
+			     const miString b,
+			     const unsigned int p,
+			     const miString th,
+			     const miString tu,
+			     const miString tb,
+			     const unsigned int tp,
+			     QWidget* parent,
+			     miString oplabel,
+			     miString testlabel,
+			     bool     hastest,
+			     bool hasoffline)
   : QDialog(parent), gate(g),title_(title),
     host(h), user(u), base(b), port(p),
     oper_host(h), oper_user(u), oper_base(b), oper_port(p),
@@ -106,7 +106,7 @@ void qbLoginDialog::makeWidget()
   // Create a layout manager for the label
   h_hlayout = new QHBoxLayout(topframe);
   h_hlayout->setObjectName("h_hlayout");
-  label= new QLabel(title_, topframe);
+  label= new QLabel(title_.cStr(), topframe);
   label->setObjectName("label");
   label->setFont(QFont( "Helvetica", 14, QFont::Normal, true ));
   label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
@@ -117,8 +117,8 @@ void qbLoginDialog::makeWidget()
   gtestoper->setExclusive(true);
   connect(gtestoper,SIGNAL(buttonClicked(int)),this,SLOT(testoperChanged(int)));
 
-  b_oper= new QPushButton(oper_label);
-  b_test= new QPushButton(test_label);
+  b_oper= new QPushButton(oper_label.cStr());
+  b_test= new QPushButton(test_label.cStr());
   gtestoper->addButton(b_oper, 0);
   gtestoper->addButton(b_test, 1);
 
@@ -150,7 +150,7 @@ void qbLoginDialog::makeWidget()
   dbserver->setObjectName("dbserver");
   dbserver->setMinimumWidth(100);
   if (host.length()>0){
-    dbserver->setText(host);
+    dbserver->setText(host.c_str());
     startwidget=1;
   }
   portnumber  = new QLineEdit(ff);
@@ -162,7 +162,7 @@ void qbLoginDialog::makeWidget()
   username  = new QLineEdit(ff);
   username->setObjectName("username");
   if (user.length()>0){
-    username->setText(user);
+    username->setText(user.c_str());
     startwidget= 2;
   }
   passwd  = new QLineEdit(ff);
@@ -250,10 +250,10 @@ void qbLoginDialog::testoperChanged(int b)
   }
 }
 
-void qbLoginDialog::setInfo(const QString& h,
-			                const QString& u,
-			                const QString& b,
-			                const unsigned int p)
+void qbLoginDialog::setInfo(const miString h,
+			    const miString u,
+			    const miString b,
+			    const unsigned int p)
 {
   host= h;
   user= u;
@@ -263,8 +263,8 @@ void qbLoginDialog::setInfo(const QString& h,
   QString tmp;
   portnumber->setText(tmp.setNum(port));
 
-  dbserver->setText(host);
-  username->setText(user);
+  dbserver->setText(host.cStr());
+  username->setText(user.cStr());
 }
 
 
@@ -274,17 +274,15 @@ void qbLoginDialog::okPushed()
     cerr << tr("qbLoginDialog WARNING: NO GATE!").toStdString() << endl;
     return;
   }
-  host= dbserver->text();
-  user= username->text();
-  pass= passwd->text();
-  port= portnumber->text().toInt();
+  host= dbserver->text().toStdString();
+  user= username->text().toStdString();
+  pass= passwd->text().toStdString();
+  port= atoi(portnumber->text().toStdString().c_str());
 
   puSQLwarning w;
   isoffline= false;
 
-  if (gate->open(base.toLocal8Bit().data(), host.toLocal8Bit().data(),
-		         user.toLocal8Bit().data(), pass.toLocal8Bit().data(),
-		         w,port)){
+  if (gate->open(base,host,user,pass,w,port)){
     loggedin= true;
     warnings->clear();
     emit loginReport();

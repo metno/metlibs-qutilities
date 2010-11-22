@@ -32,43 +32,47 @@
 #endif
 
 #include <qbLoginInfo.h>
+#include <qpixmap.h>
 
-#include <QPixmap>
 #include <QLabel>
 #include <QHBoxLayout>
 
 #include <circle_green.xpm>
 #include <circle_red.xpm>
 
+using namespace miutil;
+
 qbLoginInfo::qbLoginInfo(QWidget* parent)
   : QWidget(parent)
 {
 	setObjectName("LoginInfo");
-    top_hlayout= new QHBoxLayout(this);
+  top_hlayout= new QHBoxLayout(this);
 
-    databaselabel= new QLabel(this);
-    userlabel    = new QLabel(this);
+  databaselabel= new QLabel(this);
+  userlabel    = new QLabel(this);
 
-    QLabel* atl= new QLabel("@",this);
-    hostlabel  = new QLabel(this);
-    connlabel  = new QLabel(this);
+  QLabel* atl= new QLabel("@",this);
+  hostlabel  = new QLabel(this);
+  connlabel  = new QLabel(this);
 
-    top_hlayout->addWidget(databaselabel);
-    top_hlayout->addWidget(connlabel);
-    top_hlayout->addWidget(userlabel);
-    top_hlayout->addWidget(atl);
-    top_hlayout->addWidget(hostlabel);
+  top_hlayout->addWidget(databaselabel);
+  top_hlayout->addWidget(connlabel);
+  top_hlayout->addWidget(userlabel);
+  top_hlayout->addWidget(atl);
+  top_hlayout->addWidget(hostlabel);
 
-    top_hlayout->activate();
+  top_hlayout->activate();
 }
 
-void qbLoginInfo::setInfo(const QString& host,
-			              const QString& user,
-			              bool loggedin,
-			              bool testbase)
+void qbLoginInfo::setInfo(const miString host,
+			  const miString user,
+			  bool loggedin,
+			  bool testbase)
 {
-  hostlabel->setText(host);
-  userlabel->setText(user);
+  miString h= host;
+  miString u= user;
+  hostlabel->setText(h.cStr());
+  userlabel->setText(u.cStr());
 
   if (loggedin){
     connlabel->setPixmap(circle_green_xpm);
@@ -82,3 +86,5 @@ void qbLoginInfo::setInfo(const QString& host,
     databaselabel->clear();
   }
 }
+
+

@@ -10,7 +10,6 @@ SUBDIRS = lang
 lib_LTLIBRARIES = libqUtilities.la
 
 qt_sources = \
-    qtHelpers.cc \
 	ClientButton.cc \
 	CoClient.cc \
 	miLogFile.cc \
@@ -68,7 +67,6 @@ languages:
 pkg_includedir = ${includedir}/qUtilities
 
 pkg_include_HEADERS = \
-    qtHelpers.h \
 	ClientButton.h \
 	CoClient.h \
 	QLetterCommands.h \

@@ -4,19 +4,19 @@
 
 #include <miSliderWidget.h>
 
-#include <cmath>
-#include <sstream>
-
 #include <QLayout>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QDoubleValidator>
 #include <QShortcut>
 
+using namespace miutil;
+
+
 miSliderWidget::miSliderWidget(float minV, float maxV,
 			       float stepV,float Val,
 			       Qt::Orientation orientation,
-			       const QString& descript, const QString& unit,
+			       miString descript,miString unit,
 			       bool usetracking,
 			       QWidget* p, const char * name,
 			       bool editf, bool btns)
@@ -43,7 +43,7 @@ miSliderWidget::miSliderWidget(float minV, float maxV,
   //hl->setSpacing(1);
 
   parname=descript;
-  desclabel= new QLabel(descript,this);
+  desclabel= new QLabel(descript.c_str(),this);
   hl->addWidget(desclabel);
 
   nsteps = static_cast<int>((maxValue - minValue)/stepValue);
@@ -114,8 +114,7 @@ void miSliderWidget::editingFinished()
     float v = valedit->text().toFloat();
     setValue(v);
     emit valueChanged(Value);
-    emit valueChangedForPar(Value, parname);
-    emit valueChangedForPar(Value, miutil::miString(parname.toLocal8Bit().data()));
+    emit valueChangedForPar(Value,parname);
   }
 }
 

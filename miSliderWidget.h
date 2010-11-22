@@ -35,7 +35,7 @@ private:
   float stepValue;
   float Value;
   bool tracking;
-  QString parname;
+  miutil::miString parname;
   bool editfield;
   bool buttons;
 
@@ -44,9 +44,9 @@ private:
 
 public:
   miSliderWidget(float minV,  float maxV, float stepV, float Val,
-                 Qt::Orientation orientation, const QString& descript,
-                 const QString& unit, bool usetracking, QWidget* p, const char * name = 0,
-                 bool editf=false, bool btns=false);
+		 Qt::Orientation orientation, miutil::miString descript,
+		 miutil::miString unit, bool usetracking, QWidget* p, const char * name = 0,
+		 bool editf=false, bool btns=false);
 
   float value();
   void  setValue(float v);
@@ -58,7 +58,6 @@ public slots:
 
 signals:
   void valueChanged(float);
-  void valueChangedForPar(float, QString);
   void valueChangedForPar(float,miutil::miString);
   void sliderReleased();
 };

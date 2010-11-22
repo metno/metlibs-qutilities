@@ -14,13 +14,17 @@
 
 //#include <pomSetup.h>
 
-#include <QLayout>
-#include <QLabel>
-#include <QPushButton>
+#include <qlayout.h>
+#include <qlabel.h>
+#include <qpushbutton.h>
 
-#include <QApplication>
-#include <QPainter>
-#include <QPrinter>
+#include <qmime.h>
+#include <qapplication.h>
+#include <qpainter.h>
+#include <qprinter.h>
+
+
+#include <puTools/miString.h>
 
 #include <iostream>
 
@@ -28,6 +32,8 @@
 #include <tb_right_arrow.xpm>
 #include <tb_left_arrow.xpm>
 #include <tb_print.xpm>
+
+using namespace miutil;
 
 HelpDialog::HelpDialog( QWidget* parent, const Info& hdi )
   : QDialog(parent), info(hdi), closebutton(0)
@@ -38,7 +44,7 @@ HelpDialog::HelpDialog( QWidget* parent, const Info& hdi )
 
   tb = new QTextBrowser( this );
 
-  QString source = QString();
+  miString source = "";
   if (info.src.size()!=0) source= info.src[0].source;
   setSource( source );
 
@@ -213,39 +219,39 @@ void HelpDialog::printHelp(){
 // }
 
 
-void HelpDialog::setSource( const QString& source ){
-  QDir dir( helpPath() );
+void HelpDialog::setSource( const miString& source ){
+  QDir dir( helpPath().c_str() );
   QStringList paths( dir.absolutePath() );
   tb->setSearchPaths( paths );
-  tb->setSource( source );
+  tb->setSource( QString(source.c_str()) );
   tb->update();
 
   return;
 }
 
 
-void HelpDialog::showsource( const QString& source, const QString& tag ){
+void HelpDialog::showsource( const miString& source, const miString tag ){
 
   setSource(source);
 
-  if(!tag.isEmpty())
-    tb->scrollToAnchor( tag );
+  if(tag.exists())
+    tb->scrollToAnchor( QString(tag.cStr()) );
 
   show();
 
 }
 
 
-void HelpDialog::showdoc(const int doc, const QString& tag ){
+void HelpDialog::showdoc(const int doc, const miString tag ){
   if (info.src.size() <= doc) return;
 
-  setWindowTitle( info.src[doc].name );
+  setWindowTitle( QString(info.src[doc].name.cStr()) );
   setSource( info.src[doc].source );
 
-  if(!tag.isEmpty())
-    tb->scrollToAnchor( tag );
+  if(tag.exists())
+    tb->scrollToAnchor( QString(tag.cStr()) );
   else
-    tb->scrollToAnchor( info.src[doc].defaultlink );
+    tb->scrollToAnchor( QString(info.src[doc].defaultlink.cStr()) );
 
   show();
 }
