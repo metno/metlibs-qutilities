@@ -175,7 +175,8 @@ private slots:
   	 */
   	void printBytesWritten(qint64 written);
 
-
+private:
+  	void startCoServer_();
 
 
 };

@@ -417,7 +417,7 @@ bool CoClient::sendMessage(miMessage &msg, const char* sep) {
     out << (quint32)(block.size() - sizeof(quint32));
 
     tcpSocket->write(block);
-    tcpSocket->waitForBytesWritten();
+    tcpSocket->waitForBytesWritten(250);
     return true;
   } else {
     LOG4CXX_ERROR(logger, "Error sending message");
@@ -470,7 +470,24 @@ void CoClient::slotWriteCheckStandardError() {
   }
 }
 
-void CoClient::socketError(QAbstractSocket::SocketError e) {
+void CoClient::socketError(QAbstractSocket::SocketError e)
+{
+	if ( QAbstractSocket::ConnectionRefusedError == e )
+	{
+		qDebug() << "Found no running coserver";
+		startCoServer_();
+	}
+	else if ( QAbstractSocket::RemoteHostClosedError == e )
+	{
+		qDebug() << "Coserver unexpected shutdown or crash";
+		startCoServer_();
+	}
+	else
+		qDebug() << "Error when contacting coserver: " << e;
+}
+
+void CoClient::startCoServer_()
+{
   /// try this only once
   if(noCoserver4) return;
 
