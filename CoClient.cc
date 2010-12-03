@@ -330,7 +330,7 @@ void CoClient::readNew() {
 
 void CoClient::editClients(miMessage msg) {
   vector<miString> common = msg.common.split(":");
-  if (common.size()!=2)
+  if (common.size() < 2)
     return;
 
   int id = atoi(common[0].cStr());
