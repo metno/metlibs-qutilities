@@ -1,6 +1,6 @@
 /**
  * coclient - coserver client file
- * @author Martin Lilleeng Sætra <martinls@met.no>
+ * @author Martin Lilleeng Sï¿½tra <martinls@met.no>
  *
  * $Id$
  *
@@ -184,7 +184,13 @@ int CoClient::readPortFromFile() {
 #endif
     return 1;
   } else {
-    fgets(fileContent, 10, pfile);
+    if (fgets(fileContent, 10, pfile) == NULL){
+      fclose(pfile);
+#ifdef _DEBUG
+    cerr << "Could not read port number from file " << endl;
+#endif
+      return 1;
+    }
     puts(fileContent);
     fclose(pfile);
     port = miString(fileContent).toInt(0);
