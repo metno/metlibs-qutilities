@@ -79,6 +79,8 @@ namespace qmstrings{
   const miutil::miString printclicked        = "printclicked";
   const miutil::miString getcurrentplotcommand = "getcurrentplotcommand";
   const miutil::miString currentplotcommand  = "currentplotcommand";
+  const miutil::miString getproj4maparea     = "getproj4maparea";
+  const miutil::miString proj4maparea        = "proj4maparea";
   const miutil::miString getmaparea          = "getmaparea";
   const miutil::miString maparea             = "maparea";
   const miutil::miString directory_changed   = "directory_changed";
