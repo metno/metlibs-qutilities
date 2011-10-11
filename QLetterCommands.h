@@ -35,6 +35,7 @@
 
 namespace qmstrings{
   const miutil::miString vprof               = "vprof";
+  const miutil::miString vcross              = "vcross";
   const miutil::miString addimage            = "addimage";
   const miutil::miString positions           = "positions";
   const miutil::miString showpositions       = "showpositions";
