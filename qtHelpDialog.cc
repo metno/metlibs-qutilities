@@ -4,6 +4,8 @@
 
 #include <qtHelpDialog.h>
 
+#include <QAction>
+#include <QLineEdit>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QPixmap>
@@ -49,7 +51,7 @@ HelpDialog::HelpDialog( QWidget* parent, const Info& hdi )
   setSource( source );
 
   pushbackward= new QPushButton( QPixmap(tb_left_arrow_xpm),
-				 tr("Previous"), this );
+                                 tr("Previous"), this );
   connect(pushbackward, SIGNAL( clicked()), tb, SLOT( backward()));
 
   pushforward= new QPushButton( QPixmap(tb_right_arrow_xpm),
@@ -64,6 +66,32 @@ HelpDialog::HelpDialog( QWidget* parent, const Info& hdi )
 				tr("Print.."), this );
   connect( printbutton, SIGNAL( clicked()), this, SLOT( printHelp()) );
 
+  QAction *searchAction = new QAction(tr("&Search..."), this);
+  searchAction->setShortcut(QKeySequence::Find);
+  connect(searchAction, SIGNAL(triggered()), this, SLOT(showSearchBar()));
+  addAction(searchAction);
+
+  searchBar = new QWidget();
+  QPushButton* searchCloseButton = new QPushButton();
+  searchCloseButton->setIcon(QPixmap(tb_close_xpm));
+  QLabel* searchLabel = new QLabel(tr("Find:"));
+  searchEdit = new QLineEdit();
+  searchLabel->setBuddy(searchEdit);
+  QPushButton* searchButton = new QPushButton(tr("Find"));
+
+  connect(searchCloseButton, SIGNAL(clicked()), searchBar, SLOT(hide()));
+  connect(searchEdit, SIGNAL(returnPressed()), searchButton, SLOT(animateClick()));
+  connect(searchButton, SIGNAL(clicked()), this, SLOT(searchDocument()));
+
+  QHBoxLayout* searchLayout = new QHBoxLayout();
+  searchLayout->addWidget(searchCloseButton);
+  searchLayout->addWidget(searchLabel);
+  searchLayout->addWidget(searchEdit);
+  searchLayout->addWidget(searchButton);
+  searchLayout->setContentsMargins(2, 2, 2, 2);
+  searchBar->setLayout(searchLayout);
+  searchBar->hide();
+
   hlayout = new QHBoxLayout();
   hlayout->addWidget( pushbackward );
   hlayout->addWidget( pushforward );
@@ -74,6 +102,7 @@ HelpDialog::HelpDialog( QWidget* parent, const Info& hdi )
   vlayout = new QVBoxLayout( this );
   vlayout->addLayout( hlayout );
   vlayout->addWidget( tb );
+  vlayout->addWidget(searchBar);
 
   resize( 800, 600 );
 }
@@ -257,3 +286,16 @@ void HelpDialog::showdoc(const int doc, const miString tag ){
 }
 
 
+void HelpDialog::showSearchBar()
+{
+  searchBar->show();
+  searchEdit->setFocus(Qt::OtherFocusReason);
+}
+
+
+void HelpDialog::searchDocument()
+{
+  if (!tb->find(searchEdit->text())) {
+    tb->find(searchEdit->text());
+  }
+}

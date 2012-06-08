@@ -20,6 +20,7 @@ class QHBoxLayout;
 class QPushButton;
 class QTextBrowser;
 class QLabel;
+class QLineEdit;
 
 
 class HelpDialog: public QDialog {
@@ -44,6 +45,8 @@ public:
 public slots:
   void showdoc(const int doc, const miutil::miString tag ="");
   void showsource( const miutil::miString& source, const miutil::miString tag ="");
+  void showSearchBar();
+  void searchDocument();
 
 private slots:
   void hideHelp();
@@ -58,6 +61,8 @@ private:
   QPushButton* closebutton;
   QPushButton* printbutton;
   QLabel* plabel;
+  QWidget* searchBar;
+  QLineEdit* searchEdit;
 
   QVBoxLayout* vlayout;
   QHBoxLayout* hlayout;
