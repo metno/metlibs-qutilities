@@ -38,20 +38,19 @@ libqUtilities_la_CPPFLAGS = \
 	${MYSQL_CPPFLAGS} \
 	${QT4_CPPFLAGS}
 
-libqUtilities_la_LDFLAGS = \
-	${VERSION_INFO} \
-	${LOG4CXX_LDFLAGS} \
-	${MILOGGER_LDFLAGS} \
-	${PUCTOOLS_CPPFLAGS} \
-	${PUTOOLS_LDFLAGS} \
-	${MYSQL_LDFLAGS} \
-	${QT4_LDFLAGS}
+libqUtilities_la_LDFLAGS = ${VERSION_INFO}
+#	${LOG4CXX_LDFLAGS} \
+#	${MILOGGER_LDFLAGS} \
+#	${PUCTOOLS_CPPFLAGS} \
+#	${PUTOOLS_LDFLAGS} \
+#	${MYSQL_LDFLAGS} \
+#	${QT4_LDFLAGS}
 
 if ENABLE_PUSQL
 libqUtilities_la_CPPFLAGS += \
 	${PUSQL_CPPFLAGS}
-libqUtilities_la_LDFLAGS += \
-	${PUSQL_LDFLAGS}
+#libqUtilities_la_LDFLAGS += \
+#	${PUSQL_LDFLAGS}
 endif
 
 # Do we really want to do this?  Wouldn't it be better to include the
