@@ -64,20 +64,12 @@ void miLogFile::setMaxXY(int xm, int ym)
 
 bool miLogFile::hasSize(miString key) const
 {
-  if(!size.count(key))
-    return false;
-
-  xy s = size[key];
-  return (s.x<=xmax && s.y<=ymax);
+  return size.count(key);
 }
 
 bool miLogFile::hasPos(miString key) const
 {
-  if(!pos.count(key))
-    return false;
-
-  xy p = pos[key];
-  return (p.x<xmax-20 && p.y<ymax-20);
+  return pos.count(key);
 }
 
 
