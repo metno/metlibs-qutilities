@@ -106,6 +106,7 @@ public slots:
   	 * when connected.
   	 */
   	void connected();
+  	void disconnected();
 
   	void unableToConnect();
 

@@ -91,8 +91,9 @@ CoClient::CoClient(const char *name, const char *h,
 		port = qmstrings::port;
 	}
    */
+  port = p;
 
-  if ((readPortFromFile() > 0) || (port == 0)) {
+  if ((readPortFromFile() > 0) && (port == 0)) {
     port = qmstrings::port;
   }
 
@@ -249,6 +250,8 @@ bool CoClient::notConnected() {
 
 void CoClient::connectionClosed() {
   LOG4CXX_INFO(logger, "Disconnected from server");
+  emit disconnected();
+
 }
 
 void CoClient::connectToServer() {

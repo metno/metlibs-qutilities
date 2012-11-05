@@ -67,12 +67,12 @@ qbLoginDialog::qbLoginDialog(puSQLgate* g,
 			     miString testlabel,
 			     bool     hastest,
 			     bool hasoffline)
-  : QDialog(parent), gate(g),title_(title),
+  : QDialog(parent), title_(title), gate(g),
     host(h), user(u), base(b), port(p),
-    oper_host(h), oper_user(u), oper_base(b), oper_port(p),
-    test_host(th), test_user(tu), test_base(tb), test_port(tp),
-    loggedin(false), inTest(false), oper_label(oplabel),
-    test_label(testlabel), hasTest(hastest), hasOffline(hasoffline),
+    oper_label(oplabel), oper_host(h), oper_user(u), oper_base(b), oper_port(p),
+    test_label(testlabel), test_host(th), test_user(tu), test_base(tb), test_port(tp),
+    loggedin(false), inTest(false),
+    hasTest(hastest), hasOffline(hasoffline),
     isoffline(false)
 {
 	setObjectName("login");

@@ -65,8 +65,11 @@ ClientButton::ClientButton(const QString & name, const QString & server,
 	connect(coclient, SIGNAL(newClient(miutil::miString)), SLOT(setLabel(miutil::miString)));
 	connect(coclient, SIGNAL(connected()), SLOT(connected()));
 	connect(coclient, SIGNAL(unableToConnect()), SLOT(unableToConnect()));
+	connect(coclient, SIGNAL(disconnected()), SLOT(disconnected()));
 	connect(coclient, SIGNAL(receivedMessage(miMessage&)), SIGNAL(receivedMessage(miMessage&)));
 	connect(coclient, SIGNAL(addressListChanged()), SIGNAL(addressListChanged()));
+	connect(coclient, SIGNAL(addressListChanged()), SIGNAL(addressListChanged()));
+
 }
 
 void ClientButton::connectToServer() {
@@ -75,6 +78,7 @@ void ClientButton::connectToServer() {
 
 	if (coclient->notConnected()) {
 		cerr << "ClientButton::connectToServer(): notConnected" << endl;
+		setIcon(QPixmap(disconn_xpm));
 		setToolTip("Connecting...");
 		coclient->connectToServer();
 
@@ -90,6 +94,13 @@ void ClientButton::connectToServer() {
 void ClientButton::connected() {
 	setIcon(QPixmap(conn_xpm));
 	setToolTip("Connected");
+}
+
+void ClientButton::disconnected() {
+	cerr << "ClientButton::disconnected()" << endl;
+	setIcon(QPixmap(unconn_xpm));
+	setToolTip("Disconnected from CoServer");
+	emit connectionClosed();
 }
 
 void ClientButton::unableToConnect() {

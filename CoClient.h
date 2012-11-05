@@ -132,6 +132,7 @@ signals:
   	void connected();
   	void newClient(miutil::miString);
   	void unableToConnect();
+  	void disconnected();
 
 private slots:
 	/**
