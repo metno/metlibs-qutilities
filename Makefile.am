@@ -12,6 +12,7 @@ lib_LTLIBRARIES = libqUtilities.la
 qt_sources = \
 	ClientButton.cc \
 	CoClient.cc \
+	QLetterCommands.cc \
 	miLogFile.cc \
 	miMessage.cc \
 	miSliderWidget.cc \

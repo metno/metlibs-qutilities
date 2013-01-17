@@ -1,9 +1,8 @@
+// -*- c++ -*-
 /*
   libqUtilities - Diverse Qt-classes and coserver base
 
-  $Id$
-
-  Copyright (C) 2006 met.no
+  Copyright (C) 2013 met.no
 
   Contact information:
   Norwegian Meteorological Institute
@@ -27,15 +26,13 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef _miMessage_h
 #define _miMessage_h
-
 
 /* Created by DNMI/FoU/PU: k.roysland@dnmi.no
    at Tue Mar  5 10:20:47 2002 */
 
-#include <puTools/miString.h>
+#include <string>
 #include <vector>
 
 class miMessage {
@@ -45,11 +42,10 @@ public:
             const char *description);
 
   int to,from;
-  miutil::miString command,description,commondesc,common,clientType,co;
-  std::vector <miutil::miString> data;
+  std::string command,description,commondesc,common,clientType,co;
+  std::vector <std::string> data;
 
-  miutil::miString content();
-
+  std::string content() const;
 };
 
 #endif

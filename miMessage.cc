@@ -31,14 +31,10 @@
 #include "config.h"
 #endif
 
+#include "miMessage.h"
+#include "QLetterCommands.h"
+
 #include <sstream>
-#include <miMessage.h>
-#include <QLetterCommands.h>
-#include <iostream>
-
-using namespace std;
-using namespace miutil;
-
 
 miMessage::miMessage()
 {
@@ -56,20 +52,19 @@ miMessage::miMessage(int t, int f, const char * c, const char *d)
 
 
 
-miString miMessage::content()
+std::string miMessage::content() const
 {
-  int i;
-  ostringstream os;
-  os << "======================================" << endl
-     << "from:        " << from                  << endl
-     << "to:          " << to                    << endl
-     << "commondesc:  " << commondesc            << endl
-     << "common:      " << common                << endl
-     << "description: " << description           << endl
-     << "command:     " << command               << endl
-     << (data.size() ? "DATA:"  : "NO DATA")     << endl;
-  for (i = 0; i < data.size(); i++)
-    os << i  << " > " << data[i] << endl;
-  os << "======================================" << endl;
+  std::ostringstream os;
+  os << "======================================" << std::endl
+     << "from:        " << from                  << std::endl
+     << "to:          " << to                    << std::endl
+     << "commondesc:  " << commondesc            << std::endl
+     << "common:      " << common                << std::endl
+     << "description: " << description           << std::endl
+     << "command:     " << command               << std::endl
+     << (data.size() ? "DATA:"  : "NO DATA")     << std::endl;
+  for (unsigned int i = 0; i < data.size(); i++)
+    os << i  << " > " << data[i] << std::endl;
+  os << "======================================" << std::endl;
   return os.str();
 }

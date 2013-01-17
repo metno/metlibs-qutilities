@@ -34,42 +34,39 @@
 #include "config.h"
 #endif
 
-#include <qpushbutton.h>
+#include "ClientButton.h"
+#include "CoClient.h"
+#include "miMessage.h"
+
 #include <QPixmap>
 #include <qtooltip.h>
 
 #include <conn.xpm>
 #include <disconn.xpm>
 #include <unconn.xpm>
-#include <miMessage.h>
-#include <ClientButton.h>
 
+#include <iostream>
 
 using namespace std;
 
-ClientButton::ClientButton(const QString & name, const QString & server,
-		QWidget * parent) :
-	QPushButton(name, parent) {
-
-	uselabel = false;
+ClientButton::ClientButton(const QString & name, const QString & server, QWidget * parent)
+    : QPushButton(name, parent)
+    , coclient(new CoClient(name.toAscii(), "localhost", server.toAscii()))
+    , uselabel(false)
+{
 	setIcon(QPixmap(disconn_xpm));
 	setToolTip("Disconnected");
 	setText("");
 
-	string sc = server.toStdString();
-	string n = name.toStdString();
-	coclient = new CoClient(n.c_str(), "localhost", sc.c_str());
-
 	connect(this, SIGNAL(clicked()), SLOT(connectToServer()));
 
-	connect(coclient, SIGNAL(newClient(miutil::miString)), SLOT(setLabel(miutil::miString)));
-	connect(coclient, SIGNAL(connected()), SLOT(connected()));
-	connect(coclient, SIGNAL(unableToConnect()), SLOT(unableToConnect()));
-	connect(coclient, SIGNAL(disconnected()), SLOT(disconnected()));
-	connect(coclient, SIGNAL(receivedMessage(miMessage&)), SIGNAL(receivedMessage(miMessage&)));
-	connect(coclient, SIGNAL(addressListChanged()), SIGNAL(addressListChanged()));
-	connect(coclient, SIGNAL(addressListChanged()), SIGNAL(addressListChanged()));
-
+	connect(coclient.get(), SIGNAL(newClient(const std::string&)), SLOT(setLabel(const std::string&)));
+	connect(coclient.get(), SIGNAL(connected()), SLOT(connected()));
+	connect(coclient.get(), SIGNAL(unableToConnect()), SLOT(unableToConnect()));
+	connect(coclient.get(), SIGNAL(disconnected()), SLOT(disconnected()));
+	connect(coclient.get(), SIGNAL(receivedMessage(const miMessage&)), SIGNAL(receivedMessage(const miMessage&)));
+	connect(coclient.get(), SIGNAL(addressListChanged()), SIGNAL(addressListChanged()));
+	connect(coclient.get(), SIGNAL(addressListChanged()), SIGNAL(addressListChanged()));
 }
 
 void ClientButton::connectToServer() {
@@ -109,7 +106,7 @@ void ClientButton::unableToConnect() {
 	setToolTip("Unable to connect");
 }
 
-void ClientButton::setLabel(miutil::miString name) {
+void ClientButton::setLabel(const std::string& name) {
 	if (name == "noClient") {
 		setIcon(QPixmap(disconn_xpm));
 		setText("");
@@ -132,11 +129,11 @@ void ClientButton::sendMessage(miMessage& msg) {
 	coclient->sendMessage(msg);
 }
 
-miutil::miString ClientButton::getClientName(int id) {
+const std::string& ClientButton::getClientName(int id) {
 	return coclient->getClientName(id);
 }
 
-bool ClientButton::clientTypeExist(const string& type) {
+bool ClientButton::clientTypeExist(const std::string& type) {
 	return coclient->clientTypeExist(type);
 }
 

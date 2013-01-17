@@ -1,9 +1,8 @@
+// -*- c++ -*-
 /*
   libqUtilities - Diverse Qt-classes and coserver base
 
-  $Id$
-
-  Copyright (C) 2006 met.no
+  Copyright (C) 2013 met.no
 
   Contact information:
   Norwegian Meteorological Institute
@@ -27,70 +26,65 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef _QLetterCommands_h
 #define _QLetterCommands_h
 
-#include <puTools/miString.h>
-
 namespace qmstrings{
-  const miutil::miString vprof               = "vprof";
-  const miutil::miString vcross              = "vcross";
-  const miutil::miString addimage            = "addimage";
-  const miutil::miString positions           = "positions";
-  const miutil::miString showpositions       = "showpositions";
-  const miutil::miString hidepositions       = "hidepositions";
-  const miutil::miString changeimage         = "changeimage";
-  const miutil::miString showpositionname    = "showpositionname";
-  const miutil::miString showpositiontext    = "showpositiontext";
-  const miutil::miString enableposclick      = "enableposclick";
-  const miutil::miString enableposmove       = "enableposmove";
-  const miutil::miString showtext            = "showtext";
-  const miutil::miString enableshowtext      = "enableshowtext";
-  const miutil::miString textrequest         = "textrequest";
-  const miutil::miString selectposition      = "selectposition";
-  const miutil::miString settime             = "settime";
-  const miutil::miString remove              = "remove";
-  const miutil::miString removeclient        = "removeclient";
-  const miutil::miString newclient           = "newclient";
-  const miutil::miString allclients          = "allclients";
-  const miutil::miString timechanged         = "timechanged";
-  const miutil::miString init_HQC_params     = "init_HQC_params";
-  const miutil::miString update_HQC_params   = "update_HQC_params";
-  const miutil::miString select_HQC_param    = "select_HQC_param";
-  const miutil::miString apply_quickmenu     = "apply_quickmenu";
-  const miutil::miString station             = "station";
-  const miutil::miString changeimageandtext  = "change_image_and_text";
-  const miutil::miString changeimageandimage = "change_image_and_image";
-  const miutil::miString seteditpositions    = "seteditpositions";
-  const miutil::miString editposition        = "editposition";
-  const miutil::miString copyvalue           = "copyvalue";
-  const miutil::miString areas               = "areas";
-  const miutil::miString selectarea          = "selectarea";
-  const miutil::miString areacommand         = "areacommand";
-  const miutil::miString showarea            = "showarea";
-  const miutil::miString changearea          = "changearea";
-  const miutil::miString deletearea          = "deletearea";
-  const miutil::miString annotation          = "annotation";
-  const miutil::miString changetype          = "changetype";
-  const miutil::miString autoredraw          = "autoredraw";
-  const miutil::miString redraw              = "redraw";
-  const miutil::miString sendkey             = "sendkey";
-  const miutil::miString editmode            = "editmode";
-  const miutil::miString printclicked        = "printclicked";
-  const miutil::miString getcurrentplotcommand = "getcurrentplotcommand";
-  const miutil::miString currentplotcommand  = "currentplotcommand";
-  const miutil::miString getproj4maparea     = "getproj4maparea";
-  const miutil::miString proj4maparea        = "proj4maparea";
-  const miutil::miString getmaparea          = "getmaparea";
-  const miutil::miString maparea             = "maparea";
-  const miutil::miString directory_changed   = "directory_changed";
-  const miutil::miString file_changed        = "file_changed";
+extern const char vprof[];
+extern const char vcross[];
+extern const char addimage[];
+extern const char positions[];
+extern const char showpositions[];
+extern const char hidepositions[];
+extern const char changeimage[];
+extern const char showpositionname[];
+extern const char showpositiontext[];
+extern const char enableposclick[];
+extern const char enableposmove[];
+extern const char showtext[];
+extern const char enableshowtext[];
+extern const char textrequest[];
+extern const char selectposition[];
+extern const char settime[];
+extern const char remove[];
+extern const char removeclient[];
+extern const char newclient[];
+extern const char allclients[];
+extern const char timechanged[];
+extern const char init_HQC_params[];
+extern const char update_HQC_params[];
+extern const char select_HQC_param[];
+extern const char apply_quickmenu[];
+extern const char station[];
+extern const char changeimageandtext[];
+extern const char changeimageandimage[];
+extern const char seteditpositions[];
+extern const char editposition[];
+extern const char copyvalue[];
+extern const char areas[];
+extern const char selectarea[];
+extern const char areacommand[];
+extern const char showarea[];
+extern const char changearea[];
+extern const char deletearea[];
+extern const char annotation[];
+extern const char changetype[];
+extern const char autoredraw[];
+extern const char redraw[];
+extern const char sendkey[];
+extern const char editmode[];
+extern const char printclicked[];
+extern const char getcurrentplotcommand[];
+extern const char currentplotcommand[];
+extern const char getproj4maparea[];
+extern const char proj4maparea[];
+extern const char getmaparea[];
+extern const char maparea[];
+extern const char directory_changed[];
+extern const char file_changed[];
 
-  const int default_id = -1000;
-  const int all = -1;
-  const int port = 19444;
-};
+extern const int default_id;
+extern const int all;
+extern const int port;
+}
 #endif
-
-

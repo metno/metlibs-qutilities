@@ -1,9 +1,8 @@
+// -*- c++ -*-
 /** @mainpage qUtilities - coserver client file
  * @author Martin Lilleeng Sætra <martinls@met.no>
  *
- * $Id$
- *
- * Copyright (C) 2007 met.no
+ * Copyright (C) 2013 met.no
  *
  * Contact information:
  * Norwegian Meteorological Institute
@@ -30,156 +29,144 @@
 #ifndef _COCLIENT
 #define _COCLIENT
 
+#include "miMessage.h"
 
-// Qt-includes
-#include <qapplication.h>
-#include <qstring.h>
-#include <QTcpSocket>
+#include <QAbstractSocket>
 #include <QProcess>
-#include <QDialog>
 
 #include <vector>
 #include <map>
 
-#include "miMessage.h"
+QT_BEGIN_NAMESPACE
+class QTcpSocket;
+QT_END_NAMESPACE
 
 class CoClient : public QObject {
-	Q_OBJECT
+    Q_OBJECT
+    public:
+    /**
+     * CoClient.
+     */
+    CoClient(	const char * name,
+                const char * h,
+                const char * sc,
+                const char * lf = "/tmp/.serverlock",
+                quint16 p = 0);
 
-protected:
+    /**
+     * Send message to all CoServer client
+     */
+    void setBroadcastClient();
 
-public:
-	/**
-	 * CoClient.
-	 */
-	CoClient(
-			const char * name,
-			const char * h,
-			const char * sc,
-			const char * lf = "/tmp/.serverlock",
-			quint16 p = 0);
+    /**
+     * Connects to the server.
+     */
+    void connectToServer(void);
 
-        /**
-         * Send message to all CoServer client
-         */
-        void setBroadcastClient();
+    /**
+     * Disconnects from the server.
+     */
+    void disconnectFromServer(void);
 
-	/**
-	 * Connects to the server.
-	 */
-	void connectToServer(void);
+    /**
+     * Sends a message to the server.
+     * @param msg The message
+     * @param sep Seperator character
+     * @return Returns true upon successful sending, false otherwise
+     */
+    bool sendMessage(miMessage &msg, const char *sep = "|");
 
-	/**
-	 * Disconnects from the server.
-	 */
-	void disconnectFromServer(void);
-
-	/**
-	 * Sends a message to the server.
-	 * @param msg The message
-	 * @param sep Seperator character
-	 * @return Returns true upon successful sending, false otherwise
-	 */
-	bool sendMessage(miMessage &msg, const char *sep = "|");
-
-	bool notConnected(void);
-        std::string getClientName(int);
-        bool clientTypeExist(const std::string &type);
+    bool notConnected(void);
+    const std::string& getClientName(int);
+    bool clientTypeExist(const std::string &type);
 
 private:
-	QTcpSocket *tcpSocket;
+    QTcpSocket *tcpSocket;
 
-	miutil::miString clientType;
-	miutil::miString lockFile, serverCommand, host;
+    std::string clientType;
+    std::string lockFile, serverCommand, host;
 
-	quint32 blockSize;
-	quint16 port;
-	QProcess *server;
-	QProcess *shell;
-	bool coserverStarted;
-	miutil::miString shellresult;
-	miutil::miString userid;
+    quint32 blockSize;
+    quint16 port;
+    QProcess *server;
+    bool coserverStarted;
+    std::string userid;
 
-        bool noCoserver4;
+    bool noCoserver4;
 
-	int nrOfAttempts;
+    int nrOfAttempts;
 
     std::vector<miMessage> inbox;
     std::map<int, std::string> clients;
 
-	/**
-	 * Adds or removes entries in the list of clients as clients
-	 * connects and disconnects.
-	 * @param msg Message containing client info
-	 */
-	void editClients(miMessage msg);
+    /**
+     * Adds or removes entries in the list of clients as clients
+     * connects and disconnects.
+     * @param msg Message containing client info
+     */
+    void editClients(const miMessage& msg);
 
-  	/**
-  	 * Read port from file. File has to be located in ~/.diana/diana.port and only contain the port number.
-  	 */
-  	int readPortFromFile();
+    /**
+     * Read port from file. File has to be located in ~/.diana/diana.port and only contain the port number.
+     */
+    int readPortFromFile();
 
-  	/**
-  	 * Parses /etc/services and extracts portnumber based on username. (env variable USER)
-  	 * Format in /etc/services
-  	 * diana-<username>    <port>/tcp    # comment
-  	 */
-  	int readPortFromFile_Services();
+    /**
+     * Parses /etc/services and extracts portnumber based on username. (env variable USER)
+     * Format in /etc/services
+     * diana-<username>    <port>/tcp    # comment
+     */
+    int readPortFromFile_Services();
 
-signals:
-  	void receivedMessage(miMessage &);
-  	void addressListChanged();
-  	void connected();
-  	void newClient(miutil::miString);
-  	void unableToConnect();
-  	void disconnected();
+Q_SIGNALS:
+    void receivedMessage(const miMessage&);
+    void addressListChanged();
+    void connected();
+    void newClient(const std::string&);
+    void unableToConnect();
+    void disconnected();
 
-private slots:
-	/**
- 	* Read new incoming message.
- 	*/
-  	void readNew();
+private Q_SLOTS:
+    /**
+     * Read new incoming message.
+     */
+    void readNew();
 
-  	/**
-  	 * Identifies which type of client this is to the server (by sending a message).
-  	 */
-  	void sendType();
+    /**
+     * Identifies which type of client this is to the server (by sending a message).
+     */
+    void sendType();
 
-  	/**
-  	 * Starts new session if coserver outputs "Started".
-  	 */
-  	void checkServer();
-	void checkServerRunning();
-	void shellFinished( int exitCode, QProcess::ExitStatus exitStatus );
+    /**
+     * Starts new session if coserver outputs "Started".
+     */
+    void checkServer();
 
-  	/**
-  	 * Called when disconnected from server.
-  	 */
-  	void connectionClosed();
+    /**
+     * Called when disconnected from server.
+     */
+    void connectionClosed();
 
-  	/**
-  	 * Logs new errors when they are available on coserver's stderr. (DEPRECATED?)
-  	 */
-  	void slotWriteStandardError();
-	void slotWriteCheckStandardError();
+    /**
+     * Logs new errors when they are available on coserver's stderr. (DEPRECATED?)
+     */
+    void slotWriteStandardError();
 
-  	/**
-  	 * Starts coserver if not already running.
-  	 * @param e Error signal (not used)
-  	 */
-  	void socketError(QAbstractSocket::SocketError e);
+    /**
+     * Starts coserver if not already running.
+     * @param e Error signal (not used)
+     */
+    void socketError(QAbstractSocket::SocketError e);
 
-  	/**
-  	 * Debugging function.
-  	 * Only used if _DEBUG is defined.
-  	 * @param written The number of bytes written to socket
-  	 */
-  	void printBytesWritten(qint64 written);
+    /**
+     * Debugging function.
+     * Only used if _DEBUG is defined.
+     * @param written The number of bytes written to socket
+     */
+    void printBytesWritten(qint64 written);
 
 private:
-  	void startCoServer_();
-
-
+    void startCoServer_();
 };
 
 #endif
