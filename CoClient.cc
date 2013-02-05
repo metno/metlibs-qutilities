@@ -2,9 +2,7 @@
  * coclient - coserver client file
  * @author Martin Lilleeng S�tra <martinls@met.no>
  *
- * $Id$
- *
- * Copyright (C) 2007 met.no
+ * Copyright (C) 2013 met.no
  *
  * Contact information:
  * Norwegian Meteorological Institute
@@ -38,8 +36,6 @@
 #include "CoClient.h"
 #include "QLetterCommands.h"
 
-#include <puCtools/sleep.h>
-
 #ifdef __WIN32__
 // GetUserName()
 #include <windows.h>
@@ -51,11 +47,11 @@
 #endif
 
 // Qt-includes
-#include <QtGui>
-#include <QtNetwork>
-#include <QTcpSocket>
-#include <qstring.h>
-#include <qfile.h>
+//#include <QtNetwork>
+#include <QtCore/QProcess>
+#include <QtCore/QStringList>
+#include <QtCore/QTimer>
+#include <QtNetwork/QTcpSocket>
 
 #ifdef HAVE_LOG4CXX   /* Defined in config.h */
 #include <log4cxx/logger.h>
@@ -67,11 +63,16 @@ static log4cxx::LoggerPtr logger = log4cxx::Logger::getLogger("coclient.CoClient
 #include <boost/algorithm/string.hpp>
 
 #include <fstream>
-#include <iostream>
 #include <sstream>
 #include <unistd.h>
 
 //#define _DEBUG
+#ifdef _DEBUG
+#include <iostream>
+#define DEBUG_MSG(x) std::cerr << x << std::endl
+#else
+#define DEBUG_MSG(x)
+#endif
 
 namespace /* anonymous */ {
 std::string safe_getenv(const char* var)
@@ -81,146 +82,135 @@ std::string safe_getenv(const char* var)
         return std::string();
     return v;
 }
+
+const int SERVER_START_RETRY_DELAY = 2;
 } // namespace anonymous
 
-CoClient::CoClient(const char *name, const char *h, const char *sc, const char *lf, quint16 p)
+CoClient::CoClient(const char *name, const char *h, const char *sc, quint16 p)
     : tcpSocket(new QTcpSocket(this))
-    , server(0)
+    , clientType(name)
+    , serverCommand(QString::fromStdString(sc))
+    , host(h)
+    , blockSize(0)
+    , port(p)
+    , mNextAttemptToStartServer(QDateTime::currentDateTime().addSecs(-30))
 {
-  nrOfAttempts = 0;
-  coserverStarted = false;
-
-  /*
-   * Uncomment this and comment the one below to read from etc/services instead of ~/.diana/diana.port
-
-	if ((readPortFromFile_Services() > 0) || (port == 0)) {
-		port = qmstrings::port;
-	}
-   */
-  port = p;
-
-  if ((readPortFromFile() > 0) && (port == 0)) {
-    port = qmstrings::port;
-  }
-
-  clientType = name;
-
-  lockFile = lf;
-  serverCommand = sc ;
-  host = h;
-  if (getenv("COSERVER_HOST") != NULL) {
-    host = getenv("COSERVER_HOST");
-  }
-  if (getenv("USER") != NULL) {
-    userid = getenv("USER");
-  } else {
-    userid = safe_getenv("USERNAME");
-  }
-  if (getenv("HOSTNAME") != NULL) {
-      userid += "@" + safe_getenv("HOSTNAME");
-  } else {
-      userid += "@" + safe_getenv("COMPUTERNAME");
-  }
-#ifdef __WIN32__
-  {
-    DWORD size = UNLEN + 1;
-    CHAR name[size];
-    if (!GetUserNameA(name, &size)) {
-      cerr << "GetUserNameA() failed" << endl;
-      userid = "UnknownWin32User";
-    } else {
-      userid = name;
-    }
-  }
+#if 0
+    if (port == 0)
+        port = readPortFromFile_Services();
 #else
-  {
-    uid_t uid = getuid();
-    struct passwd *pw = getpwuid(uid);
-    if (pw) {
-      userid = pw->pw_name;
-    } else {
-        std::stringstream ss;
-        ss << "UnknownUser" << uid;
-        userid = ss.str();
+    if (port == 0)
+        port = readPortFromFile();
+#endif
+    if (port == 0)
+        port = qmstrings::port;
+
+    if (getenv("COSERVER_HOST") != NULL) {
+        host = getenv("COSERVER_HOST");
     }
-  }
+
+    if (getenv("USER") != NULL) {
+        userid = getenv("USER");
+    } else {
+        userid = safe_getenv("USERNAME");
+    }
+    if (getenv("HOSTNAME") != NULL) {
+        userid += "@" + safe_getenv("HOSTNAME");
+    } else {
+        userid += "@" + safe_getenv("COMPUTERNAME");
+    }
+#ifdef __WIN32__
+    {
+        DWORD size = UNLEN + 1;
+        CHAR name[size];
+        if (!GetUserNameA(name, &size)) {
+            std::cerr << "GetUserNameA() failed" << std::endl;
+            userid = "UnknownWin32User";
+        } else {
+            userid = name;
+        }
+    }
+#else
+    {
+        uid_t uid = getuid();
+        struct passwd *pw = getpwuid(uid);
+        if (pw) {
+            userid = pw->pw_name;
+        } else {
+            std::stringstream ss;
+            ss << "UnknownUser" << uid;
+            userid = ss.str();
+        }
+    }
 #endif
-
-  blockSize = 0;
-
-
-  noCoserver4 = false;
-
-  // connected to coserver
-  connect(tcpSocket, SIGNAL(connected()), this, SLOT(sendType()));
-  // anything new to read?
-  connect(tcpSocket, SIGNAL(readyRead()), this, SLOT(readNew()));
-  // connection to server closed
-  connect(tcpSocket, SIGNAL(disconnected()), this, SLOT(connectionClosed()));
-  // socket error
-  connect(tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(socketError(QAbstractSocket::SocketError)));
-
+    
+    // connected to coserver
+    connect(tcpSocket, SIGNAL(connected()), this, SLOT(connectionEstablished()));
+    // anything new to read?
+    connect(tcpSocket, SIGNAL(readyRead()), this, SLOT(readNew()));
+    // connection to server closed
+    connect(tcpSocket, SIGNAL(disconnected()), this, SLOT(connectionClosed()));
+    // socket error
+    connect(tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(socketError(QAbstractSocket::SocketError)));
+    
 #ifdef _DEBUG
-  connect(tcpSocket, SIGNAL(bytesWritten(qint64)), this, SLOT(printBytesWritten(qint64)));
+    connect(tcpSocket, SIGNAL(bytesWritten(qint64)), this, SLOT(printBytesWritten(qint64)));
 #endif
 }
 
-void CoClient::setBroadcastClient() {
-  userid = "";
+CoClient::~CoClient()
+{
+    DEBUG_MSG("CoClient::~CoClient()");
 }
 
-int CoClient::readPortFromFile() {
-#ifdef _DEBUG
-  cerr << "CoClient::readPortFromFile()" << endl;
-#endif
+void CoClient::setBroadcastClient()
+{
+    userid = "";
+}
 
-  const std::string homePath = safe_getenv("HOME");
+int CoClient::readPortFromFile()
+{
+    DEBUG_MSG("CoClient::readPortFromFile()");
+    
+    const std::string homePath = safe_getenv("HOME");
+    DEBUG_MSG("homePath: " << homePath);
+    
+    std::ifstream pfile((homePath + "/.coserver.port").c_str());
+    if (not pfile.is_open()) {
+        DEBUG_MSG("Could not read coserver.port from file");
+        return 0;
+    }
 
-#ifdef _DEBUG
-  cerr << "homePath: " << homePath << endl;
-#endif
-
-  std::ifstream pfile((homePath + "/.coserver.port").c_str());
-  if (not pfile.is_open()) {
-#ifdef _DEBUG
-      std::cerr << "Could not read coserver.port from file" << std::endl;
-#endif
-      return 1;
-  }
-  pfile >> port;
-  if (not pfile) {
-#ifdef _DEBUG
-      std::cerr << "Could not read port number from file" << std::endl;
-#endif
-      return 1;
-  }
-
-#ifdef _DEBUG
-  std::cerr << "Port: " << port << " read from file." << std::endl;
-#endif
-  return 0;
+    int filePort = 0;
+    pfile >> filePort;
+    if (not pfile) {
+        DEBUG_MSG("Could not read port number from file");
+        return 0;
+    }
+    
+    DEBUG_MSG("Port: " << filePort << " read from file.");
+    return filePort;
 }
 
 // etc/services: diana-<username>		<port>/tcp		# comment
-int CoClient::readPortFromFile_Services() {
-
-#ifdef _DEBUG
-    std::cerr << "CoClient::readPortFromFile_Services()" << std::endl;
-#endif
-
+int CoClient::readPortFromFile_Services()
+{
+    DEBUG_MSG("CoClient::readPortFromFile_Services()");
+    
     const char filename[] = "/etc/services";
     std::ifstream file(filename);
-    if (!file.is_open()) {
-        std::cerr << "Could not open file: " << filename << std::endl;
-        return 1;
+    if (not file.is_open()) {
+        DEBUG_MSG("Could not open file '" << filename << "'");
+        return 0;
     }
     
     const char* user = getenv("USER");
-    if (!user) {
-        std::cerr << "Environment variable 'USER' not set." << std::endl;
-        return 1;
+    if (not user) {
+        DEBUG_MSG("Environment variable 'USER' not set.");
+        return 0;
     }
 
+    int filePort = 0;
     std::string line;
     while(std::getline(file, line)) {
         if (line.empty() or line.at(0) == '#' or line.at(0) == '\n' or line.at(0) == ' ')
@@ -238,109 +228,109 @@ int CoClient::readPortFromFile_Services() {
             continue;
         if (tokens2[1] != user)
             continue;
-        port = std::atoi(tokens2[1].c_str());
+        filePort = std::atoi(tokens2[1].c_str());
     }
-#ifdef _DEBUG
-    std::cerr << "Port: " << port << " read from '" << filename << "'" << std::endl;
-#endif
-    return 0;
+    LOG4CXX_DEBUG(logger, "Port: " << filePort << " read from '" << filename << "'");
+    return filePort;
 }
 
-void CoClient::printBytesWritten(qint64 written) {
-    std::cout << "Written "<< written << " bytes to socket" << std::endl;
+void CoClient::printBytesWritten(qint64 written)
+{
+    (void)written;
+    LOG4CXX_DEBUG(logger, "Written " << written << " bytes to socket");
 }
 
-bool CoClient::notConnected() {
-  return (QAbstractSocket::UnconnectedState == tcpSocket->state());
+bool CoClient::notConnected()
+{
+    return (QAbstractSocket::UnconnectedState == tcpSocket->state());
 }
 
-void CoClient::connectionClosed() {
-  LOG4CXX_INFO(logger, "Disconnected from server");
-  emit disconnected();
-
+void CoClient::connectionClosed()
+{
+    LOG4CXX_DEBUG(logger, "CoClient disconnected from server");
+    /*emit*/ disconnected();
 }
 
-void CoClient::connectToServer() {
-  noCoserver4 = false;
-
-#ifdef _DEBUG
-  std::cerr << "connectToServer(): Connecting to port: " << port << std::endl;
-#endif
-
-  tcpSocket->connectToHost(QString::fromStdString(host), port);
-
+void CoClient::connectToServer()
+{
+    if (port > 0) {
+        LOG4CXX_INFO(logger, "CoClient::connectToServer(): connecting to port " << port);
+        tcpSocket->connectToHost(host, port);
+    } else {
+        LOG4CXX_ERROR(logger, "CoClient::connectToServer(): bad port " << port);
+    }
 }
 
-void CoClient::disconnectFromServer() {
-  tcpSocket->disconnectFromHost();
+void CoClient::disconnectFromServer()
+{
+    tcpSocket->disconnectFromHost();
 }
 
-void CoClient::readNew() {
-  QDataStream in(tcpSocket);
-  in.setVersion(QDataStream::Qt_4_0);
+void CoClient::readNew()
+{
+    QDataStream in(tcpSocket);
+    in.setVersion(QDataStream::Qt_4_0);
+    
+    // make sure that the whole message has been written
+    if (blockSize == 0) {
+        if (tcpSocket->bytesAvailable() < (int)sizeof(quint16))
+            return;
+        
+        in >> blockSize;
+    }
 
-  // make sure that the whole message has been written
-  if (blockSize == 0) {
-    if (tcpSocket->bytesAvailable() < (int)sizeof(quint16))
-      return;
+    if (tcpSocket->bytesAvailable() < blockSize)
+        return;
+    
+    // read incoming message
+    miMessage msg;
+    QString tmpcommand, tmpdescription, tmpcommondesc, tmpcommon,
+        tmpclientType, tmpco, tmpdata;
+    int size = 0;
+    
+    in >> msg.to;
+    in >> msg.from;
+    in >> tmpcommand;
+    msg.command = tmpcommand.toStdString();
+    in >> tmpdescription;
+    msg.description = tmpdescription.toStdString();
+    in >> tmpcommondesc;
+    msg.commondesc = tmpcommondesc.toStdString();
+    in >> tmpcommon;
+    msg.common = tmpcommon.toStdString();
+    in >> tmpclientType;
+    msg.clientType = tmpclientType.toStdString();
+    in >> tmpco;
+    msg.co = tmpco.toStdString();
+    in >> size; // NOT A FIELD IN MIMESSAGE (METADATA ONLY)
+    for (int i = 0; i < size; i++) {
+        in >> tmpdata;
+        msg.data.push_back(tmpdata.toStdString());
+    }
+    
+    DEBUG_MSG("miMessage in CoClient::readNew() (RECV)" << std::endl << msg.content());
+   
+    // if origin is the server itself, then it will always be a request to
+    // change (add/delete) entries in the list of clients
+    if (msg.from == 0)
+        editClients(msg);
+    
+    /*emit*/ receivedMessage(msg);
 
-    in >> blockSize;
-  }
-
-  if (tcpSocket->bytesAvailable() < blockSize)
-    return;
-
-  // read incoming message
-  miMessage msg;
-  QString tmpcommand, tmpdescription, tmpcommondesc, tmpcommon,
-  tmpclientType, tmpco, tmpdata;
-  int size = 0;
-
-  in >> msg.to;
-  in >> msg.from;
-  in >> tmpcommand;
-  msg.command = tmpcommand.toStdString();
-  in >> tmpdescription;
-  msg.description = tmpdescription.toStdString();
-  in >> tmpcommondesc;
-  msg.commondesc = tmpcommondesc.toStdString();
-  in >> tmpcommon;
-  msg.common = tmpcommon.toStdString();
-  in >> tmpclientType;
-  msg.clientType = tmpclientType.toStdString();
-  in >> tmpco;
-  msg.co = tmpco.toStdString();
-  in >> size; // NOT A FIELD IN MIMESSAGE (METADATA ONLY)
-  for (int i = 0; i < size; i++) {
-    in >> tmpdata;
-    msg.data.push_back(tmpdata.toStdString());
-  }
-
-#ifdef _DEBUG
-  cout << "miMessage in CoClient::readNew() (RECV)"<< endl;
-  cout << msg.content() << endl;
-#endif
-
-  // if origin is the server itself, then it will always be a request to
-  // change (add/delete) entries in the list of clients
-  if (msg.from == 0)
-    editClients(msg);
-
-  emit receivedMessage(msg);
-
-  blockSize = 0;
-
-  // more unread messages on socket?
-  if (tcpSocket->bytesAvailable() > 0)
-    readNew();
+    blockSize = 0;
+    
+    // more unread messages on socket?
+    if (tcpSocket->bytesAvailable() > 0)
+        readNew();
 }
 
-void CoClient::editClients(const miMessage& msg) {
+void CoClient::editClients(const miMessage& msg)
+{
     std::vector<std::string> common;
     boost::split(common, msg.common, boost::is_any_of(":"));
     if (common.size() < 2)
         return;
-
+    
     const int id = atoi(common[0].c_str());
     const std::string& type = common[1];
 
@@ -349,32 +339,34 @@ void CoClient::editClients(const miMessage& msg) {
         clients[id] = type;
         LOG4CXX_INFO(logger, "Added new client of type " << type << " and id " << id << " to the list of clients");
         
-        emit newClient(type);
-        emit addressListChanged();
+        /*emit*/ newClient(type);
+        /*emit*/ addressListChanged();
     } else if (msg.command == qmstrings::removeclient) {
         clients.erase(id);
         LOG4CXX_INFO(logger, "Removed client of type " << type << " and id " << id << " from the list of clients");
         
-        emit newClient("myself");
-        emit addressListChanged();
+        /*emit*/ newClient("myself");
+        /*emit*/ addressListChanged();
     } else {
         LOG4CXX_ERROR(logger, "Error editing client list");
     }
 }
 
-void CoClient::sendType() {
-    LOG4CXX_INFO(logger, "Connected to server"); ///< sendType() triggered by connected()-signal
+void CoClient::connectionEstablished()
+{
+    LOG4CXX_INFO(logger, "CoClient connected to server");
     
     miMessage msg(0, 0, "SETTYPE", "INTERNAL");
     msg.data.push_back(clientType);
     msg.commondesc = "userId";
     msg.common = userid;
     sendMessage(msg);
-    emit connected();
+    /*emit*/ connected();
 }
 
-bool CoClient::sendMessage(miMessage &msg, const char* sep) {
-    bool hasReciever = false;
+bool CoClient::sendMessage(miMessage &msg)
+{
+    bool hasReceiver = false;
     
     if (tcpSocket->state() == QTcpSocket::ConnectedState) {
         std::map<int, std::string>::iterator it;
@@ -382,20 +374,17 @@ bool CoClient::sendMessage(miMessage &msg, const char* sep) {
             
             for(it = clients.begin(); it != clients.end(); ++it) {
                 if((int)it->first == msg.to) {
-                    hasReciever = true;
+                    hasReceiver = true;
                     break;
                 }
             }
         }
         
         /// if msg does not contain a valid receiver address, broadcast it to all clients
-        if(!hasReciever)
+        if(not hasReceiver)
             msg.to = -1;
         
-#ifdef _DEBUG
-        std::cout << "miMessage in CoClient::sendMessage() (SEND)"<< std::endl;
-        std::cout << msg.content() << std::endl;
-#endif
+        DEBUG_MSG("miMessage in CoClient::sendMessage() (SEND)" << std::endl << msg.content());
 
         QByteArray block;
         QDataStream out(&block, QIODevice::WriteOnly);
@@ -413,9 +402,7 @@ bool CoClient::sendMessage(miMessage &msg, const char* sep) {
         out << QString::fromStdString(msg.clientType);
         out << QString::fromStdString(msg.co);
         out << quint32(msg.data.size()); // NOT A FIELD IN MIMESSAGE (TEMP ONLY)
-#ifdef _DEBUG
-        std::cout << "Size of data in last sent msg: " << msg.data.size() << std::endl;
-#endif
+        DEBUG_MSG("Size of data in last sent msg: " << msg.data.size());
         for (unsigned int i = 0; i < msg.data.size(); i++) {
             out << QString::fromStdString(msg.data[i]);
         }
@@ -432,7 +419,8 @@ bool CoClient::sendMessage(miMessage &msg, const char* sep) {
     }
 }
 
-const std::string& CoClient::getClientName(int id) {
+const std::string& CoClient::getClientName(int id)
+{
     std::map<int,std::string>::const_iterator it = clients.find(id);
     if (it == clients.end()) {
         static const std::string empty;
@@ -441,7 +429,8 @@ const std::string& CoClient::getClientName(int id) {
     return it->second;
 }
 
-bool CoClient::clientTypeExist(const std::string& type) {
+bool CoClient::clientTypeExist(const std::string& type)
+{
     std::map<int, std::string>::iterator it;
     for (it = clients.begin(); it != clients.end(); it++)
         if ((*it).second == type)
@@ -449,100 +438,39 @@ bool CoClient::clientTypeExist(const std::string& type) {
     return false;
 }
 
-void CoClient::checkServer() {
-    if (server->readAllStandardOutput() == "Started")
-        connectToServer();
-}
-
-void CoClient::slotWriteStandardError() {
-#ifdef _DEBUG
-    std::cerr << "slotWriteStandardError()" << std::endl;
-#endif
-    if (server)
-        LOG4CXX_ERROR(logger, server->readAllStandardError().data());
-}
-
 void CoClient::socketError(QAbstractSocket::SocketError e)
 {
     if (QAbstractSocket::ConnectionRefusedError == e) {
-        qDebug() << "Found no running coserver";
-        startCoServer_();
+        LOG4CXX_INFO(logger, "CoClient: could not connect to coserver, trying to start");
+        tryToStartCoServer();
     } else if (QAbstractSocket::RemoteHostClosedError == e) {
-        qDebug() << "Coserver unexpected shutdown or crash";
-        startCoServer_();
+        LOG4CXX_INFO(logger, "CoClient: connection to coserver closed unexpectedly, trying to restart");
+        tryToStartCoServer();
     } else {
-        qDebug() << "Error when contacting coserver: " << e;
+        LOG4CXX_INFO(logger, "CoClient: error when contacting coserver: " << e);
     }
 }
 
-void CoClient::startCoServer_()
+void CoClient::tryToStartCoServer()
 {
-    /// try this only once
-    if(noCoserver4)
+    const QDateTime now = QDateTime::currentDateTime();
+    if (now < mNextAttemptToStartServer)
         return;
 
-  if (nrOfAttempts < 2) {
-#ifdef _DEBUG
-      std::cerr << "Starting coserver..." << std::endl;
-#endif
+    mNextAttemptToStartServer = now.addSecs(SERVER_START_RETRY_DELAY);
 
-      LOG4CXX_INFO(logger, "Starting coserver...");
-      
-      server = new QProcess(this);
-      QString cmd = QString::fromStdString(serverCommand);
-
-      QStringList args = QStringList("-d"); ///< -d for dynamicMode
+    LOG4CXX_INFO(logger, "CoClient: starting coserver...");
+    QStringList args = QStringList("-d"); ///< -d for dynamicMode
+    if (port > 0)
+        args << "-p" << QString::number(port);
     
-      if (readPortFromFile() == 0) {
-          args << "-p" << QString::number(port);
-      } else {
-          std::cerr << "Could not read port from file." << std::endl;
-      }
-
-      connect(server, SIGNAL(readyReadStandardOutput()), SLOT(checkServer()));
-      connect(server, SIGNAL(readyReadStandardError()), SLOT(slotWriteStandardError()));
-      
-      server->start(cmd, args);
-
-      // make sure that coserver has time to start before checking its state
-      server->waitForStarted();
-      pu_sleep(1);
-
-      if (server->state() != QProcess::Running) {
-          LOG4CXX_ERROR(logger, "Couldn't start server. Make sure the path of coserver4"
-                        " is correctly set in the setup of your client, and try again.");
-          
-#ifdef _DEBUG
-          std::cerr << "Couldn't start coserver4. Make sure the path of coserver4"
-              " is correctly set in the setup of your client, and try again." << std::endl;;
-#endif
-          
-          server->kill();
-          noCoserver4 = true;
-          return;
-      }
-
-      LOG4CXX_INFO(logger, "coserver started");
-      
-#ifdef _DEBUG
-      std::cerr << "Connect to host with port " << port << std::endl;
-#endif
-      
-      tcpSocket->connectToHost(QString::fromStdString(host), port);
-      nrOfAttempts++;
-      
-  } else  {
-      
-      connect(server, SIGNAL(readyReadStandardOutput()), SLOT(checkServer()));
-      
-      std::cerr << "Connection attempt limit reached. Disconnecting..." << std::endl;
-      tcpSocket->disconnectFromHost();
-      server->kill();
-      
-      emit unableToConnect();
-      
-      noCoserver4 = true;
-      return;
-  }
-
+    if (not QProcess::startDetached(serverCommand, args)) {
+        LOG4CXX_ERROR(logger, "CoClient: could not start server. Make sure the path of coserver4"
+                      " is correctly set in the setup of your client, and try again.");
+        /*emit*/ unableToConnect();
+        return;
+    }
+    
+    LOG4CXX_INFO(logger, "CoClient: coserver probably started, will try to connect soon...");
+    QTimer::singleShot(500, this, SLOT(connectToServer()));
 }

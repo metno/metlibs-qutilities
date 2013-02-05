@@ -32,36 +32,24 @@
 #include "miMessage.h"
 
 #include <QAbstractSocket>
-#include <QProcess>
+#include <QDateTime>
 
-#include <vector>
 #include <map>
 
 QT_BEGIN_NAMESPACE
 class QTcpSocket;
 QT_END_NAMESPACE
 
-class CoClient : public QObject {
-    Q_OBJECT
-    public:
-    /**
-     * CoClient.
-     */
-    CoClient(	const char * name,
-                const char * h,
-                const char * sc,
-                const char * lf = "/tmp/.serverlock",
-                quint16 p = 0);
+class CoClient : public QObject
+{ Q_OBJECT
+public:
+    CoClient(const char* clientType, const char* host, const char* serverCommand, quint16 port = 0);
+    ~CoClient();
 
     /**
      * Send message to all CoServer client
      */
     void setBroadcastClient();
-
-    /**
-     * Connects to the server.
-     */
-    void connectToServer(void);
 
     /**
      * Disconnects from the server.
@@ -71,32 +59,33 @@ class CoClient : public QObject {
     /**
      * Sends a message to the server.
      * @param msg The message
-     * @param sep Seperator character
      * @return Returns true upon successful sending, false otherwise
      */
-    bool sendMessage(miMessage &msg, const char *sep = "|");
+    bool sendMessage(miMessage &msg);
 
     bool notConnected(void);
     const std::string& getClientName(int);
     bool clientTypeExist(const std::string &type);
 
+public Q_SLOTS:
+    /**
+     * Connects to the server.
+     */
+    void connectToServer(void);
+
 private:
     QTcpSocket *tcpSocket;
 
     std::string clientType;
-    std::string lockFile, serverCommand, host;
+    QString serverCommand;
+    QString host;
 
     quint32 blockSize;
     quint16 port;
-    QProcess *server;
-    bool coserverStarted;
     std::string userid;
 
-    bool noCoserver4;
+    QDateTime mNextAttemptToStartServer;
 
-    int nrOfAttempts;
-
-    std::vector<miMessage> inbox;
     std::map<int, std::string> clients;
 
     /**
@@ -132,15 +121,7 @@ private Q_SLOTS:
      */
     void readNew();
 
-    /**
-     * Identifies which type of client this is to the server (by sending a message).
-     */
-    void sendType();
-
-    /**
-     * Starts new session if coserver outputs "Started".
-     */
-    void checkServer();
+    void connectionEstablished();
 
     /**
      * Called when disconnected from server.
@@ -148,13 +129,8 @@ private Q_SLOTS:
     void connectionClosed();
 
     /**
-     * Logs new errors when they are available on coserver's stderr. (DEPRECATED?)
-     */
-    void slotWriteStandardError();
-
-    /**
      * Starts coserver if not already running.
-     * @param e Error signal (not used)
+     * @param e Error type
      */
     void socketError(QAbstractSocket::SocketError e);
 
@@ -166,7 +142,7 @@ private Q_SLOTS:
     void printBytesWritten(qint64 written);
 
 private:
-    void startCoServer_();
+    void tryToStartCoServer();
 };
 
 #endif

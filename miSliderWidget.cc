@@ -4,31 +4,38 @@
 
 #include <miSliderWidget.h>
 
-#include <QLayout>
+#include <QDoubleValidator>
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QDoubleValidator>
+#include <QLayout>
+#include <QLineEdit>
 #include <QShortcut>
+#include <QSlider>
 
-using namespace miutil;
-
+#include <cmath>
+#include <sstream>
 
 miSliderWidget::miSliderWidget(float minV, float maxV,
 			       float stepV,float Val,
 			       Qt::Orientation orientation,
-			       miString descript,miString unit,
+			       const std::string& descript, const std::string& unit,
 			       bool usetracking,
 			       QWidget* p, const char * name,
 			       bool editf, bool btns)
-  : QWidget(p),
-    minValue(minV), maxValue(maxV), stepValue(stepV), Value(Val), tracking(usetracking),
-    editfield(editf), buttons(btns), valedit(0), vallabel(0)
+    : QWidget(p)
+    , vallabel(0)
+    , valedit(0)
+    , minValue(minV)
+    , maxValue(maxV)
+    , stepValue(stepV)
+    , Value(Val)
+    , tracking(usetracking)
+    , parname(descript)
+    , editfield(true)
+    , buttons(btns)
 {
-
-  editfield=true;
-
-  setObjectName(name);
-
+    setObjectName(name);
+    
   if ( stepValue <= 0.0 )
     stepValue = 0.1;
 
@@ -42,8 +49,7 @@ miSliderWidget::miSliderWidget(float minV, float maxV,
   hl->setObjectName("hl");
   //hl->setSpacing(1);
 
-  parname=descript;
-  desclabel= new QLabel(descript.c_str(),this);
+  desclabel= new QLabel(QString::fromStdString(descript),this);
   hl->addWidget(desclabel);
 
   nsteps = static_cast<int>((maxValue - minValue)/stepValue);
@@ -113,8 +119,8 @@ void miSliderWidget::editingFinished()
   if ( valedit && valedit->hasAcceptableInput()){
     float v = valedit->text().toFloat();
     setValue(v);
-    emit valueChanged(Value);
-    emit valueChangedForPar(Value,parname);
+    /*emit*/ valueChanged(Value);
+    /*emit*/ valueChangedForPar(Value,parname);
   }
 }
 
@@ -140,7 +146,7 @@ void miSliderWidget::setValue(float v)
 void miSliderWidget::writeValue(float V)
 {
   if ( editfield ){
-    ostringstream ost;
+    std::ostringstream ost;
     ost << V;
     if (valedit) valedit->setText(ost.str().c_str());
   } else {

@@ -37,11 +37,10 @@
 class CoClient;
 class miMessage;
 
-class ClientButton : public QPushButton {
-    Q_OBJECT
-        public:
+class ClientButton : public QPushButton
+{ Q_OBJECT
+public:
     /**
-     * Constructor.
      * This button starts a new client and connects to the running coserver.
      * It will start a new coserver if one is not already running.
      * Changes in interface:\n
@@ -53,6 +52,7 @@ class ClientButton : public QPushButton {
      * @param parent Parent widget
      */
     ClientButton(const QString & text, const QString & server, QWidget * parent);
+    ~ClientButton();
 
     /**
      * Sends a message.

@@ -1,3 +1,4 @@
+// -*- c++ -*-
 #ifndef _miSliderWidget_h
 #define _miSliderWidget_h
 
@@ -13,13 +14,13 @@
 */
 
 #include <QWidget>
-#include <QSlider>
-#include <QLabel>
-#include <QLineEdit>
+#include <string>
 
-#include <puTools/miString.h>
-
-using namespace std;
+QT_BEGIN_NAMESPACE
+class QSlider;
+class QLabel;
+class QLineEdit;
+QT_END_NAMESPACE
 
 class miSliderWidget : public QWidget {
   Q_OBJECT
@@ -35,7 +36,7 @@ private:
   float stepValue;
   float Value;
   bool tracking;
-  miutil::miString parname;
+  std::string parname;
   bool editfield;
   bool buttons;
 
@@ -44,21 +45,21 @@ private:
 
 public:
   miSliderWidget(float minV,  float maxV, float stepV, float Val,
-		 Qt::Orientation orientation, miutil::miString descript,
-		 miutil::miString unit, bool usetracking, QWidget* p, const char * name = 0,
+		 Qt::Orientation orientation, const std::string& descript,
+		 const std::string& unit, bool usetracking, QWidget* p, const char * name = 0,
 		 bool editf=false, bool btns=false);
 
   float value();
   void  setValue(float v);
 
-public slots:
+public Q_SLOTS:
   void valueChanged(int v);
   void sliderMoved(int v);
   void editingFinished();
 
-signals:
+Q_SIGNALS:
   void valueChanged(float);
-  void valueChangedForPar(float,miutil::miString);
+  void valueChangedForPar(float, const std::string&);
   void sliderReleased();
 };
 

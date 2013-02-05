@@ -39,7 +39,7 @@ libqUtilities_la_CPPFLAGS = \
 	${MYSQL_CPPFLAGS} \
 	${QT4_CPPFLAGS}
 
-libqUtilities_la_LDFLAGS = ${VERSION_INFO}
+libqUtilities_la_LDFLAGS = ${qUtilities_VERSION_INFO}
 libqUtilities_la_LIBADD =
 if ENABLE_SHARED_LIBRARY
 libqUtilities_la_LDFLAGS += \
