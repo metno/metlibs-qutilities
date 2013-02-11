@@ -1,3 +1,4 @@
+// -*- c++ -*-
 /*
   libqUtilities - Diverse Qt-classes and coserver base
 
@@ -42,8 +43,6 @@
 #include <QHBoxLayout>
 
 #include <puTools/miString.h>
-
-using namespace std;
 
 /**
    @brief Login details info in statusbar

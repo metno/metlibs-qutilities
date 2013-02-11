@@ -1,6 +1,7 @@
+// -*- c++ -*-
+
 #ifndef _helpdialog_h
 #define _helpdialog_h
-
 
 #include <qdialog.h>
 #include <qfont.h>
@@ -12,8 +13,6 @@
 #include <puTools/miString.h>
 
 #include <vector>
-
-using namespace std;
 
 class QVBoxLayout;
 class QHBoxLayout;
@@ -34,7 +33,7 @@ public:
       miutil::miString defaultlink;
     };
     miutil::miString path;
-    vector<Source> src;
+    std::vector<Source> src;
   };
 
   HelpDialog( QWidget* parent, const Info& hdi );

@@ -1,3 +1,4 @@
+// -*- c++ -*-
 /*
   libqUtilities - Diverse Qt-classes and coserver base
 
@@ -50,9 +51,6 @@
 
 #include <puSQL/puSQLgate.h>
 #include <puTools/miString.h>
-
-
-using namespace std;
 
 /**
    @brief Login dialog

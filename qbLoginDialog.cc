@@ -41,6 +41,7 @@
 #include <QVBoxLayout>
 #include <QGroupBox>
 
+using namespace std;
 using namespace miutil;
 
 qbLoginDialog::qbLoginDialog(puSQLgate* g, QWidget* parent)
