@@ -1,6 +1,6 @@
 // -*- c++ -*-
 /** @file ClientButton.h
- * @author Martin Lilleeng Sætra <martinls@met.no>
+ * @author Martin Lilleeng Sï¿½tra <martinls@met.no>
  *
  * qUtilities - coserver client file
  *
@@ -103,6 +103,7 @@ Q_SIGNALS:
     void receivedMessage(const miMessage&);
     void addressListChanged();
     void connectionClosed();
+    void connectedToServer();
 
 private:
     std::auto_ptr<CoClient> coclient;

@@ -1,6 +1,6 @@
 /**
  * coclient - coserver client file
- * @author Martin Lilleeng Sætra <martinls@met.no>
+ * @author Martin Lilleeng Sï¿½tra <martinls@met.no>
  *
  * Copyright (C) 2013 met.no
  *
@@ -94,6 +94,7 @@ void ClientButton::connected()
     cerr << "ClientButton::connected()" << endl;
     setIcon(QPixmap(conn_xpm));
     setToolTip("Connected");
+    /*emit*/ connectedToServer();
 }
 
 void ClientButton::disconnected() {
