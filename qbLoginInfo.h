@@ -61,7 +61,7 @@ private:
 public:
   qbLoginInfo(QWidget* parent);
 
-public slots:
+public Q_SLOTS:
   void setInfo(const miutil::miString host,
 	       const miutil::miString user,
 	       bool loggedin,

@@ -48,10 +48,10 @@ using namespace std;
 using namespace miutil;
 
 
-map<miString,miLogFile::xy >  miLogFile::pos;
-map<miString,miLogFile::xy >  miLogFile::size;
-map<miString,miString >       miLogFile::tokens;
-map<miString,miString>        miLogFile::sections;
+std::map<miString,miLogFile::xy >  miLogFile::pos;
+std::map<miString,miLogFile::xy >  miLogFile::size;
+std::map<miString,miString >       miLogFile::tokens;
+std::map<miString,miString>        miLogFile::sections;
 miString                      miLogFile::filename="unnamed.log";
 int                           miLogFile::xmax    = 1280;
 int                           miLogFile::ymax    = 1024;
@@ -191,7 +191,7 @@ bool miLogFile::read( miString f )
   }
 
   miString         line;
-  vector<miString> lines;
+  std::vector<miString> lines;
 
   while(log) {
     getline(log,line);
@@ -200,11 +200,11 @@ bool miLogFile::read( miString f )
   return readStrings(lines);
 }
 
-bool miLogFile::readStrings(vector<miString> lines,miString section)
+bool miLogFile::readStrings(std::vector<miString> lines,miString section)
 {
   miString         line;
   miString         key,tok;
-  vector<miString> words;
+  std::vector<miString> words;
 
   for (int i = 0; i < lines.size(); ++i) {
     line=lines[i];
@@ -303,9 +303,9 @@ miString  miLogFile::writeString(miString section)
 {
   ostringstream log;
   miString key;
-  map<miString,xy>::iterator       ipos  = pos.begin();
-  map<miString,xy>::iterator       isize = size.begin();
-  map<miString,miString>::iterator itok  = tokens.begin();
+  std::map<miString,xy>::iterator       ipos  = pos.begin();
+  std::map<miString,xy>::iterator       isize = size.begin();
+  std::map<miString,miString>::iterator itok  = tokens.begin();
 
 
   for (;isize!=size.end();isize++) {

@@ -1,9 +1,8 @@
+// -*- c++ -*-
 /*
   libqUtilities - Diverse Qt-classes and coserver base
 
-  $Id$
-
-  Copyright (C) 2006 met.no
+  Copyright (C) 2013 met.no
 
   Contact information:
   Norwegian Meteorological Institute
@@ -109,7 +108,7 @@ public:
   bool checkMin();
 
 
-public slots:
+public Q_SLOTS:
   void setTime(const miutil::miTime&);
   void setDate(const miutil::miDate&);
   void changeTime();
@@ -124,7 +123,7 @@ public slots:
   void setMax(const miutil::miTime&);
   void setMin(const miutil::miTime&);
 
-signals:
+Q_SIGNALS:
   void valueChanged( const miutil::miTime& );
   void valueChanged( const miutil::miDate& );
 };

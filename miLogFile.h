@@ -1,9 +1,8 @@
+// -*- c++ -*-
 /*
  libqUtilities - Diverse Qt-classes and coserver base
 
- $Id$
-
- Copyright (C) 2006 met.no
+ Copyright (C) 2013 met.no
 
  Contact information:
  Norwegian Meteorological Institute
@@ -44,8 +43,6 @@
 #include <qwidget.h>
 #include <map>
 #include <fstream>
-
-using namespace std;
 
 class miLogFile {
 private:
@@ -111,7 +108,7 @@ public:
   void addToken(miutil::miString key, bool token);
   void addToken(miutil::miString key, int token);
 
-  bool readStrings(vector<miutil::miString> lines, miutil::miString section =
+  bool readStrings(std::vector<miutil::miString> lines, miutil::miString section =
       "");
   miutil::miString writeString(miutil::miString section = "");
 

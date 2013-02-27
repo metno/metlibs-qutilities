@@ -41,13 +41,13 @@ public:
   void setSource( const miutil::miString& source );
   miutil::miString helpPath() const {return info.path;}
 
-public slots:
+public Q_SLOTS:
   void showdoc(const int doc, const miutil::miString tag ="");
   void showsource( const miutil::miString& source, const miutil::miString tag ="");
   void showSearchBar();
   void searchDocument();
 
-private slots:
+private Q_SLOTS:
   void hideHelp();
   void printHelp();
 

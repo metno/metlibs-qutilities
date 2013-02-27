@@ -123,13 +123,13 @@ private:
 	       const unsigned int p);
 
 
-private slots:
+private Q_SLOTS:
   void okPushed();
   void offlinePushed();
   void cancelPushed();
   void testoperChanged(int b);
 
-protected slots:
+protected Q_SLOTS:
   void reject();
 
 public:
@@ -161,7 +161,7 @@ public:
   bool Offline() const { return isoffline;}
   void setOffline(const bool b) { isoffline= b;}
 
-signals:
+Q_SIGNALS:
   void loginReport();
 };
 
