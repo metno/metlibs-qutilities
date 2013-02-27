@@ -2,7 +2,7 @@
 #include "config.h"
 #endif
 
-#include <miSliderWidget.h>
+#include "miSliderWidget.h"
 
 #include <QDoubleValidator>
 #include <QHBoxLayout>

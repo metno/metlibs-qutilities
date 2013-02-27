@@ -1,101 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="sv">
+<TS version="2.0" language="nb">
 <context>
     <name>HelpDialog</name>
     <message>
-        <location filename="../qtHelpDialog.cc" line="+43"/>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation>Hjelp</translation>
     </message>
     <message>
-        <location line="+11"/>
         <source>Back</source>
-        <translation type="unfinished"></translation>
+        <translation>Tilbake</translation>
     </message>
     <message>
-        <location line="+5"/>
         <source>Forward</source>
-        <translation type="unfinished"></translation>
+        <translation>Fremover</translation>
     </message>
     <message>
-        <location line="+5"/>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Lukk</translation>
     </message>
     <message>
-        <location line="+4"/>
-        <source>Print...</source>
-        <translation type="unfinished"></translation>
+        <source>Print..</source>
+        <translation type="obsolete">Utskrift..</translation>
     </message>
     <message>
-        <location line="+3"/>
         <source>&amp;Search...</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Søk...</translation>
     </message>
     <message>
-        <location line="+8"/>
         <source>Find:</source>
-        <translation type="unfinished"></translation>
+        <translation>Søk:</translation>
     </message>
     <message>
-        <location line="+3"/>
         <source>Find</source>
-        <translation type="unfinished"></translation>
+        <translation>Søk</translation>
     </message>
     <message>
-        <location line="+46"/>
         <source>Print Document</source>
-        <translation type="unfinished"></translation>
+        <translation>Skriv ut dokumentet</translation>
+    </message>
+    <message>
+        <source>Print...</source>
+        <translation>Utskrift...</translation>
     </message>
 </context>
 <context>
     <name>miSliderWidget</name>
     <message>
-        <location filename="../miSliderWidget.cc" line="+100"/>
         <source>Ctrl+A</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+A</translation>
     </message>
 </context>
 <context>
     <name>qbLoginDialog</name>
     <message>
-        <location filename="../qbLoginDialog.cc" line="+140"/>
         <source>Database server:</source>
-        <translation>Databasserver:</translation>
+        <translation>Database-server:</translation>
     </message>
     <message>
-        <location line="+2"/>
         <source>Database port:</source>
-        <translation>Databas-port:</translation>
+        <translation>Database-port:</translation>
     </message>
     <message>
-        <location line="+2"/>
         <source>Username:</source>
-        <translation>Användare:</translation>
+        <translation>Brukernavn:</translation>
     </message>
     <message>
-        <location line="+2"/>
         <source>Password:</source>
-        <translation>Lösenord:</translation>
+        <translation>Passord:</translation>
     </message>
     <message>
-        <location line="+43"/>
         <source>Log in</source>
-        <translation>Logga in</translation>
+        <translation>Logg inn</translation>
     </message>
     <message>
-        <location line="+4"/>
         <source>Cancel</source>
         <translation>Avbryt</translation>
     </message>
     <message>
-        <location line="+80"/>
         <source>qbLoginDialog WARNING: NO GATE!</source>
-        <translation>qbLoginDialog VARNING: Ingen GATE!</translation>
+        <translation>qbLoginDialog ADVARSEL: Ingen GATE!</translation>
     </message>
     <message>
-        <location line="-76"/>
         <source>Offline</source>
         <translation>Offline</translation>
     </message>
@@ -107,12 +93,10 @@
         <translation type="obsolete">Test-database</translation>
     </message>
     <message>
-        <location filename="../qbLoginInfo.cc" line="+80"/>
         <source>Operational</source>
-        <translation>Produktion</translation>
+        <translation>Operasjonell</translation>
     </message>
     <message>
-        <location line="-2"/>
         <source>Testing</source>
         <translation>Test</translation>
     </message>

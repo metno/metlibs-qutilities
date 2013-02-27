@@ -1,9 +1,7 @@
 /*
   libqUtilities - Diverse Qt-classes and coserver base
 
-  $Id$
-
-  Copyright (C) 2006 met.no
+  Copyright (C) 2013 met.no
 
   Contact information:
   Norwegian Meteorological Institute
@@ -31,11 +29,11 @@
 #include "config.h"
 #endif
 
-#include <qbLoginInfo.h>
-#include <qpixmap.h>
+#include "qbLoginInfo.h"
 
-#include <QLabel>
 #include <QHBoxLayout>
+#include <QLabel>
+#include <QPixmap>
 
 #include <circle_green.xpm>
 #include <circle_red.xpm>

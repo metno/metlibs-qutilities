@@ -74,10 +74,10 @@ endif
 CLEANFILES = $(qt_sources:.cc=.moc.cc)
 
 # I have not yet found a good way to do this:
-LANGUAGES = $(srcdir)/lang/qUtilities_no.ts $(srcdir)/lang/qUtilities_sv.ts
+LANGUAGES = $(srcdir)/lang/qUtilities_nb.ts $(srcdir)/lang/qUtilities_sv.ts
 
 languages:
-	${QT4_LUPDATE} -verbose $(qt_sources) -ts $(LANGUAGES)
+	${LUPDATE4} -verbose $(qt_sources) -ts $(LANGUAGES)
 
 pkg_includedir = ${includedir}/qUtilities
 

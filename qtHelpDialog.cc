@@ -2,7 +2,7 @@
 #include "config.h"
 #endif
 
-#include <qtHelpDialog.h>
+#include "qtHelpDialog.h"
 
 #include <QAction>
 #include <QLineEdit>
@@ -51,19 +51,21 @@ HelpDialog::HelpDialog( QWidget* parent, const Info& hdi )
   setSource( source );
 
   pushbackward= new QPushButton( QPixmap(tb_left_arrow_xpm),
-                                 tr("Previous"), this );
+                                 tr("Back"), this );
   connect(pushbackward, SIGNAL( clicked()), tb, SLOT( backward()));
+  connect(tb, SIGNAL(backwardAvailable(bool)), pushbackward, SLOT(setEnabled(bool)));
 
   pushforward= new QPushButton( QPixmap(tb_right_arrow_xpm),
-				tr("Next"), this );
+				tr("Forward"), this );
   connect(pushforward, SIGNAL( clicked()), tb, SLOT( forward()));
+  connect(tb, SIGNAL(forwardAvailable(bool)), pushforward, SLOT(setEnabled(bool)));
 
   closebutton= new QPushButton( QPixmap(tb_close_xpm),
 				tr("Close"), this );
   connect( closebutton, SIGNAL( clicked()), this, SLOT( hideHelp()) );
 
   printbutton= new QPushButton( QPixmap(tb_print_xpm),
-				tr("Print.."), this );
+				tr("Print..."), this );
   connect( printbutton, SIGNAL( clicked()), this, SLOT( printHelp()) );
 
   QAction *searchAction = new QAction(tr("&Search..."), this);

@@ -1,9 +1,7 @@
 /*
   libqUtilities - Diverse Qt-classes and coserver base
 
-  $Id$
-
-  Copyright (C) 2006 met.no
+  Copyright (C) 2013 met.no
 
   Contact information:
   Norwegian Meteorological Institute
@@ -31,7 +29,7 @@
 #include "config.h"
 #endif
 
-#include <qbLoginDialog.h>
+#include "qbLoginDialog.h"
 
 #include <QRadioButton>
 #include <QHBoxLayout>
