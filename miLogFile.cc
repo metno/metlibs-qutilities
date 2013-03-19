@@ -43,6 +43,7 @@
 #endif
 
 #include <miLogFile.h>
+#include <iostream>
 
 using namespace std;
 using namespace miutil;
