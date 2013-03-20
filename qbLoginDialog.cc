@@ -105,7 +105,7 @@ void qbLoginDialog::makeWidget()
   // Create a layout manager for the label
   h_hlayout = new QHBoxLayout(topframe);
   h_hlayout->setObjectName("h_hlayout");
-  label= new QLabel(title_.cStr(), topframe);
+  label= new QLabel(title_.c_str(), topframe);
   label->setObjectName("label");
   label->setFont(QFont( "Helvetica", 14, QFont::Normal, true ));
   label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
@@ -116,8 +116,8 @@ void qbLoginDialog::makeWidget()
   gtestoper->setExclusive(true);
   connect(gtestoper,SIGNAL(buttonClicked(int)),this,SLOT(testoperChanged(int)));
 
-  b_oper= new QPushButton(oper_label.cStr());
-  b_test= new QPushButton(test_label.cStr());
+  b_oper= new QPushButton(oper_label.c_str());
+  b_test= new QPushButton(test_label.c_str());
   gtestoper->addButton(b_oper, 0);
   gtestoper->addButton(b_test, 1);
 
@@ -262,8 +262,8 @@ void qbLoginDialog::setInfo(const miString h,
   QString tmp;
   portnumber->setText(tmp.setNum(port));
 
-  dbserver->setText(host.cStr());
-  username->setText(user.cStr());
+  dbserver->setText(host.c_str());
+  username->setText(user.c_str());
 }
 
 
@@ -288,7 +288,7 @@ void qbLoginDialog::okPushed()
     setVisible(false);
   } else {
     loggedin= false;
-    warnings->setText(w.w2str().cStr());
+    warnings->setText(w.w2str().c_str());
   }
 }
 

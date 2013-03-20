@@ -69,8 +69,8 @@ void qbLoginInfo::setInfo(const miString host,
 {
   miString h= host;
   miString u= user;
-  hostlabel->setText(h.cStr());
-  userlabel->setText(u.cStr());
+  hostlabel->setText(h.c_str());
+  userlabel->setText(u.c_str());
 
   if (loggedin){
     connlabel->setPixmap(circle_green_xpm);

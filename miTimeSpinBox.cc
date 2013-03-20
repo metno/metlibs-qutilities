@@ -88,7 +88,7 @@ miTimeSpinBox::miTimeSpinBox( const char* name,QWidget* parent,
 
 
   if(title.exists()) {
-    tit = new QLabel(title.cStr(),frame);
+    tit = new QLabel(title.c_str(),frame);
     tit->setObjectName("name");
     hlayout->addWidget(tit, 4);
   }
@@ -409,7 +409,7 @@ void miTimeSpinBox::resetWeekdayName()
   weekday=tmp;
 
   miutil::miString t = ref.format("%a ",daynamelang );
-  dayname->setText(t.cStr());
+  dayname->setText(t.c_str());
 
   if(weekday == 0 || weekday == 6) {
   	QPalette qp;

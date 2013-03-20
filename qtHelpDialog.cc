@@ -147,7 +147,7 @@ void HelpDialog::printHelp(){
 //   QFont font;
 //   miString fontname= setup.gui.helpprintfont;
 //   if (fontname.exists())
-//     font.fromString( QString(fontname.cStr()) );
+//     font.fromString( QString(fontname.c_str()) );
 
 
 //   // Split source for proper page-breaks
@@ -266,7 +266,7 @@ void HelpDialog::showsource( const miString& source, const miString tag ){
   setSource(source);
 
   if(tag.exists())
-    tb->scrollToAnchor( QString(tag.cStr()) );
+    tb->scrollToAnchor( QString(tag.c_str()) );
 
   show();
 
@@ -276,13 +276,13 @@ void HelpDialog::showsource( const miString& source, const miString tag ){
 void HelpDialog::showdoc(const int doc, const miString tag ){
   if (info.src.size() <= doc) return;
 
-  setWindowTitle( QString(info.src[doc].name.cStr()) );
+  setWindowTitle( QString(info.src[doc].name.c_str()) );
   setSource( info.src[doc].source );
 
   if(tag.exists())
-    tb->scrollToAnchor( QString(tag.cStr()) );
+    tb->scrollToAnchor( QString(tag.c_str()) );
   else
-    tb->scrollToAnchor( QString(info.src[doc].defaultlink.cStr()) );
+    tb->scrollToAnchor( QString(info.src[doc].defaultlink.c_str()) );
 
   show();
 }

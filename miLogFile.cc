@@ -184,7 +184,7 @@ bool miLogFile::read( miString f )
   if(f.exists())
     filename=f;
 
-  ifstream log(filename.cStr());
+  ifstream log(filename.c_str());
 
   if(!log) {
     cerr << "could not open log file: " << filename << endl;
@@ -245,8 +245,8 @@ bool miLogFile::readStrings(std::vector<miString> lines,miString section)
       if ( !words[0].isNumber() || !words[1].isNumber() )
         continue;
 
-      int sx = atoi(words[0].cStr());
-      int sy = atoi(words[1].cStr());
+      int sx = atoi(words[0].c_str());
+      int sy = atoi(words[1].c_str());
 
       if( sx > 20 && sy > 20 )
         size[key] = xy(sx,sy);
@@ -265,8 +265,8 @@ bool miLogFile::readStrings(std::vector<miString> lines,miString section)
       if ( !words[0].isNumber() || !words[1].isNumber() )
         continue;
 
-      int px = atoi(words[0].cStr());
-      int py = atoi(words[1].cStr());
+      int px = atoi(words[0].c_str());
+      int py = atoi(words[1].c_str());
 
       if(px > 0 && py > 0 )
         pos[key] = xy(px,py);
@@ -288,7 +288,7 @@ bool miLogFile::write( miString f )
   if(f.exists())
     filename=f;
 
-  ofstream log(filename.cStr());
+  ofstream log(filename.c_str());
 
   if(!log) {
     cerr << "could not open log file: " << filename << endl;
