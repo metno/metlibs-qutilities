@@ -10,8 +10,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 
-#include <puTools/miString.h>
-
+#include <string>
 #include <vector>
 
 class QVBoxLayout;
@@ -28,22 +27,22 @@ public:
 
   struct Info {
     struct Source {
-      miutil::miString source;
-      miutil::miString name;
-      miutil::miString defaultlink;
+      std::string source;
+      std::string name;
+      std::string defaultlink;
     };
-    miutil::miString path;
+    std::string path;
     std::vector<Source> src;
   };
 
-  HelpDialog( QWidget* parent, const Info& hdi );
+  HelpDialog(QWidget* parent, const Info& hdi);
 
-  void setSource( const miutil::miString& source );
-  miutil::miString helpPath() const {return info.path;}
+  void setSource( const std::string& source );
+  std::string helpPath() const {return info.path;}
 
 public Q_SLOTS:
-  void showdoc(const int doc, const miutil::miString tag ="");
-  void showsource( const miutil::miString& source, const miutil::miString tag ="");
+  void showdoc(const int doc, const std::string& tag = "");
+  void showsource(const std::string& source, const std::string& tag = "");
   void showSearchBar();
   void searchDocument();
 

@@ -37,7 +37,7 @@
 
 using namespace miutil;
 
-HelpDialog::HelpDialog( QWidget* parent, const Info& hdi )
+HelpDialog::HelpDialog(QWidget* parent, const Info& hdi)
   : QDialog(parent), info(hdi), closebutton(0)
 {
   setWindowTitle( tr("Help") );
@@ -46,9 +46,9 @@ HelpDialog::HelpDialog( QWidget* parent, const Info& hdi )
 
   tb = new QTextBrowser( this );
 
-  miString source = "";
+  std::string source = "";
   if (info.src.size()!=0) source= info.src[0].source;
-  setSource( source );
+  setSource(source);
 
   pushbackward= new QPushButton( QPixmap(tb_left_arrow_xpm),
                                  tr("Back"), this );
@@ -250,39 +250,40 @@ void HelpDialog::printHelp(){
 // }
 
 
-void HelpDialog::setSource( const miString& source ){
-  QDir dir( helpPath().c_str() );
+void HelpDialog::setSource(const std::string& source)
+{
+  QDir dir(QString::fromStdString(helpPath()));
   QStringList paths( dir.absolutePath() );
   tb->setSearchPaths( paths );
-  tb->setSource( QString(source.c_str()) );
+  tb->setSource(QString::fromStdString(source));
   tb->update();
 
   return;
 }
 
 
-void HelpDialog::showsource( const miString& source, const miString tag ){
-
+void HelpDialog::showsource(const std::string& source, const std::string& tag)
+{
   setSource(source);
 
-  if(tag.exists())
-    tb->scrollToAnchor( QString(tag.c_str()) );
+  if(not tag.empty())
+      tb->scrollToAnchor(QString::fromStdString(tag));
 
   show();
-
 }
 
 
-void HelpDialog::showdoc(const int doc, const miString tag ){
+void HelpDialog::showdoc(const int doc, const std::string& tag)
+{
   if (info.src.size() <= doc) return;
 
-  setWindowTitle( QString(info.src[doc].name.c_str()) );
-  setSource( info.src[doc].source );
+  setWindowTitle(QString::fromStdString(info.src[doc].name));
+  setSource(info.src[doc].source);
 
-  if(tag.exists())
-    tb->scrollToAnchor( QString(tag.c_str()) );
+  if (not tag.empty())
+      tb->scrollToAnchor(QString::fromStdString(tag));
   else
-    tb->scrollToAnchor( QString(info.src[doc].defaultlink.c_str()) );
+      tb->scrollToAnchor(QString::fromStdString(info.src[doc].defaultlink));
 
   show();
 }
