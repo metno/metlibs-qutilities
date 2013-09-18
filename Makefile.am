@@ -69,6 +69,16 @@ libqUtilities_la_LIBADD += \
 endif
 endif
 
+if WITH_FIMEX
+libqUtilities_la_CPPFLAGS += \
+	-DFIMEX \
+	${FIMEX_CPPFLAGS}
+libqUtilities_la_LDFLAGS += \
+	${FIMEX_LDFLAGS}
+libqUtilities_la_LIBADD += \
+	${FIMEX_LIBS}
+endif
+
 # Do we really want to do this?  Wouldn't it be better to include the
 # generated files in the dist tarball, like we do with configure etc.?
 CLEANFILES = $(qt_sources:.cc=.moc.cc)
