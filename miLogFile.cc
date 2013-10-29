@@ -191,8 +191,8 @@ bool miLogFile::read( miString f )
     return false;
   }
 
-  miString         line;
-  std::vector<miString> lines;
+  string line;
+  std::vector<string> lines;
 
   while(log) {
     getline(log,line);
@@ -201,7 +201,7 @@ bool miLogFile::read( miString f )
   return readStrings(lines);
 }
 
-bool miLogFile::readStrings(std::vector<miString> lines,miString section)
+bool miLogFile::readStrings(const std::vector<string>& lines, const string& section)
 {
   miString         line;
   miString         key,tok;
@@ -230,7 +230,7 @@ bool miLogFile::readStrings(std::vector<miString> lines,miString section)
     if(!tok.exists())
       continue;
 
-    if(section.exists())
+    if (not section.empty())
       sections[key]=section;
 
 

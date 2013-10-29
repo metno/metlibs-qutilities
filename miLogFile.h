@@ -108,8 +108,7 @@ public:
   void addToken(miutil::miString key, bool token);
   void addToken(miutil::miString key, int token);
 
-  bool readStrings(std::vector<miutil::miString> lines, miutil::miString section =
-      "");
+  bool readStrings(const std::vector<std::string>& lines, const std::string& section = "");
   miutil::miString writeString(miutil::miString section = "");
 
   bool read(miutil::miString fname = ""); /// none == filenname
