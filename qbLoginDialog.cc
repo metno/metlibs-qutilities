@@ -39,6 +39,8 @@
 #include <QVBoxLayout>
 #include <QGroupBox>
 
+#include <iostream>
+
 using namespace std;
 using namespace miutil;
 
