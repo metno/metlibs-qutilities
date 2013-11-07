@@ -9,12 +9,14 @@ SUBDIRS = lang
 
 lib_LTLIBRARIES = libqUtilities.la
 
+noqt_sources = \
+	QLetterCommands.cc \
+	miLogFile.cc \
+	miMessage.cc
+
 qt_sources = \
 	ClientButton.cc \
 	CoClient.cc \
-	QLetterCommands.cc \
-	miLogFile.cc \
-	miMessage.cc \
 	miSliderWidget.cc \
 	miTimeSpinBox.cc \
 	qtHelpDialog.cc \
@@ -29,7 +31,7 @@ nodist_libqUtilities_la_SOURCES = \
 	$(qt_sources:.cc=.moc.cc)
 
 libqUtilities_la_SOURCES = \
-	$(qt_sources)
+	$(noqt_sources) $(qt_sources)
 
 libqUtilities_la_CPPFLAGS = \
 	${LOG4CXX_CPPFLAGS} \
