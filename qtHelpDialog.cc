@@ -25,17 +25,10 @@
 #include <qpainter.h>
 #include <qprinter.h>
 
-
-#include <puTools/miString.h>
-
-#include <iostream>
-
 #include <tb_close.xpm>
 #include <tb_right_arrow.xpm>
 #include <tb_left_arrow.xpm>
 #include <tb_print.xpm>
-
-using namespace miutil;
 
 HelpDialog::HelpDialog(QWidget* parent, const Info& hdi)
   : QDialog(parent), info(hdi), closebutton(0)
