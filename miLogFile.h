@@ -39,10 +39,8 @@
  ------------------------------------
  */
 
-#include <puTools/miString.h>
 #include <qwidget.h>
 #include <map>
-#include <fstream>
 
 class miLogFile {
 private:
@@ -60,66 +58,67 @@ private:
     }
   } xy;
 
-  static std::map<miutil::miString, xy> pos;
-  static std::map<miutil::miString, xy> size;
-  static std::map<miutil::miString, miutil::miString> tokens;
-  static std::map<miutil::miString, miutil::miString> sections; // which section for each key
-  static miutil::miString filename;
+  static std::map<std::string, xy> pos;
+  static std::map<std::string, xy> size;
+  typedef std::map<std::string, std::string> tokens_t;
+  static tokens_t tokens;
+  static std::map<std::string, std::string> sections; // which section for each key
+  static std::string filename;
   static int xmax;
   static int ymax;
 
-  miutil::miString section; // current section of a single instance
+  std::string section; // current section of a single instance
 public:
   miLogFile()
   {
   }
-  miLogFile(miutil::miString f)
+  miLogFile(std::string f)
   {
     read(f);
   }
 
-  void setSection(miutil::miString s)
+  void setSection(std::string s)
   {
     section = s;
   }
 
-  int posx(miutil::miString key);
-  int posy(miutil::miString key);
+  int posx(std::string key);
+  int posy(std::string key);
 
-  int sizex(miutil::miString key);
-  int sizey(miutil::miString key);
+  int sizex(std::string key);
+  int sizey(std::string key);
 
-  miutil::miString token(miutil::miString key) const;
-  bool booleanToken(miutil::miString key) const;
-  int intToken(miutil::miString key) const;
+  std::string token(std::string key) const;
+  bool booleanToken(std::string key) const;
+  int intToken(std::string key) const;
 
-  bool hasSize(miutil::miString key) const;
-  bool hasPos(miutil::miString key) const;
-  bool hasToken(miutil::miString key) const
+  bool hasSize(std::string key) const;
+  bool hasPos(std::string key) const;
+  bool hasToken(std::string key) const
   {
     return bool(tokens.count(key));
   }
-  bool hasBooleanToken(miutil::miString key) const;
-  bool hasIntToken(miutil::miString key) const;
+  bool hasBooleanToken(std::string key) const;
+  bool hasIntToken(std::string key) const;
 
-  void addPos(miutil::miString key, int x, int y);
-  void addSize(miutil::miString key, int x, int y);
-  void addToken(miutil::miString key, miutil::miString token);
-  void addToken(miutil::miString key, bool token);
-  void addToken(miutil::miString key, int token);
+  void addPos(std::string key, int x, int y);
+  void addSize(std::string key, int x, int y);
+  void addToken(std::string key, std::string token);
+  void addToken(std::string key, bool token);
+  void addToken(std::string key, int token);
 
   bool readStrings(const std::vector<std::string>& lines, const std::string& section = "");
-  miutil::miString writeString(miutil::miString section = "");
+  std::string writeString(std::string section = "");
 
-  bool read(miutil::miString fname = ""); /// none == filenname
-  bool write(miutil::miString fname = ""); /// none == filenname
+  bool read(std::string fname = ""); /// none == filenname
+  bool write(std::string fname = ""); /// none == filenname
 
   void setMaxXY(int xm, int ym);
 
-  void logSizeAndPos(QWidget* w, miutil::miString name = ""); // if name ="" w->name() is used
-  void restoreSizeAndPos(QWidget* w, miutil::miString name = "");
-  void logVisibility(QWidget* w, miutil::miString name = "");
-  void restoreVisibility(QWidget* w, miutil::miString name = "");
+  void logSizeAndPos(QWidget* w, std::string name = ""); // if name ="" w->name() is used
+  void restoreSizeAndPos(QWidget* w, std::string name = "");
+  void logVisibility(QWidget* w, std::string name = "");
+  void restoreVisibility(QWidget* w, std::string name = "");
 
 };
 

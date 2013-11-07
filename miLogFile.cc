@@ -1,9 +1,7 @@
 /*
   libqUtilities - Diverse Qt-classes and coserver base
 
-  $Id$
-
-  Copyright (C) 2006 met.no
+  Copyright (C) 2006-2013 met.no
 
   Contact information:
   Norwegian Meteorological Institute
@@ -43,17 +41,22 @@
 #endif
 
 #include <miLogFile.h>
+
+#include <puTools/miStringFunctions.h>
+
+#include <fstream>
 #include <iostream>
+#include <sstream>
 
 using namespace std;
 using namespace miutil;
 
 
-std::map<miString,miLogFile::xy >  miLogFile::pos;
-std::map<miString,miLogFile::xy >  miLogFile::size;
-std::map<miString,miString >       miLogFile::tokens;
-std::map<miString,miString>        miLogFile::sections;
-miString                      miLogFile::filename="unnamed.log";
+std::map<std::string,miLogFile::xy >  miLogFile::pos;
+std::map<std::string,miLogFile::xy >  miLogFile::size;
+std::map<std::string,std::string >       miLogFile::tokens;
+std::map<std::string,std::string>        miLogFile::sections;
+std::string                      miLogFile::filename="unnamed.log";
 int                           miLogFile::xmax    = 1280;
 int                           miLogFile::ymax    = 1024;
 
@@ -63,7 +66,7 @@ void miLogFile::setMaxXY(int xm, int ym)
   ymax = ym;
 }
 
-bool miLogFile::hasSize(miString key) const
+bool miLogFile::hasSize(std::string key) const
 {
   if(!size.count(key))
     return false;
@@ -72,7 +75,7 @@ bool miLogFile::hasSize(miString key) const
   return (s.x<=xmax && s.y<=ymax);
 }
 
-bool miLogFile::hasPos(miString key) const
+bool miLogFile::hasPos(std::string key) const
 {
   if(!pos.count(key))
     return false;
@@ -82,78 +85,78 @@ bool miLogFile::hasPos(miString key) const
 }
 
 
-int miLogFile::posx(miString key)
+int miLogFile::posx(std::string key)
 {
   return ( pos.count(key) ? pos[key].x : 0 );
 }
 
-int miLogFile::posy(miString key)
+int miLogFile::posy(std::string key)
 {
   return ( pos.count(key) ? pos[key].y : 0 );
 }
 
-int miLogFile::sizex(miString key)
+int miLogFile::sizex(std::string key)
 {
   return ( size.count(key) ? size[key].x : 0 );
 }
 
-int miLogFile::sizey(miString key)
+int miLogFile::sizey(std::string key)
 {
   return ( size.count(key) ? size[key].y : 0 );
 }
 
-void miLogFile::addPos( miString key,int x,int y)
+void miLogFile::addPos( std::string key,int x,int y)
 {
   if(x > 0 && y > 0 )
     pos[key] = xy(x,y);
-  if(section.exists())
+  if((not section.empty()))
     sections[key+".pos"] = section;
 }
 
-void miLogFile::addSize(miString key,int x,int y)
+void miLogFile::addSize(std::string key,int x,int y)
 {
   if (x>20 && y>20 )
     size[key] = xy(x,y);
-  if(section.exists())
+  if((not section.empty()))
     sections[key+".size"] = section;
 }
 
-void miLogFile::addToken(miString key,miString tok )
+void miLogFile::addToken(std::string key,std::string tok )
 {
   tokens[key] = tok;
-  if(section.exists())
+  if((not section.empty()))
       sections[key] = section;
 }
 
-void miLogFile::addToken(miString key,bool tok )
+void miLogFile::addToken(std::string key,bool tok )
 {
   tokens[key] = (tok ? "TRUE" : "FALSE");
-  if(section.exists())
+  if((not section.empty()))
       sections[key] = section;
 }
 
-void miLogFile::addToken(miString key,int token )
+void miLogFile::addToken(std::string key, int token)
 {
-  tokens[key] = miString(token);
-  if(section.exists())
+  tokens[key] = miutil::from_number(token);
+  if((not section.empty()))
        sections[key] = section;
 }
 
 
 
-miString miLogFile::token(miString key) const
+std::string miLogFile::token(std::string key) const
 {
   return ( tokens.count(key) ? tokens[key] : "" );
 }
 
-bool miLogFile::booleanToken(miString key) const
+bool miLogFile::booleanToken(std::string key) const
 {
   if(tokens.count(key))
     if(tokens[key] == "TRUE") return true;
   return false;
 }
 
-bool miLogFile::hasBooleanToken(miString key) const
+bool miLogFile::hasBooleanToken(std::string key) const
 {
   if(tokens.count(key))
     if(tokens[key] == "TRUE" || tokens[key] == "FALSE" )
@@ -162,26 +165,26 @@ bool miLogFile::hasBooleanToken(miString key) const
   return false;
 }
 
-bool miLogFile::hasIntToken(miString key) const
+bool miLogFile::hasIntToken(std::string key) const
 {
-  if(tokens.count(key))
-    if(tokens[key].isInt())
-      return true;
+  tokens_t::const_iterator it = tokens.find(key);
+  return (it != tokens.end() and miutil::is_int(it->second));
 }
 
-int miLogFile::intToken(miString key) const
+int miLogFile::intToken(std::string key) const
 {
-  if(tokens.count(key))
-    return  tokens[key].toInt(0);
+  tokens_t::const_iterator it = tokens.find(key);
+  if (it != tokens.end())
+    return  miutil::to_int(it->second, 0);
   return 0;
 }
 
 
 
 
-bool miLogFile::read( miString f )
+bool miLogFile::read( std::string f )
 {
-  if(f.exists())
+  if((not f.empty()))
     filename=f;
 
   ifstream log(filename.c_str());
@@ -203,46 +206,46 @@ bool miLogFile::read( miString f )
 
 bool miLogFile::readStrings(const std::vector<string>& lines, const string& section)
 {
-  miString         line;
-  miString         key,tok;
-  std::vector<miString> words;
+  std::string         line;
+  std::string         key,tok;
+  std::vector<std::string> words;
 
-  for (int i = 0; i < lines.size(); ++i) {
+  for (size_t i = 0; i < lines.size(); ++i) {
     line=lines[i];
-    if(line.contains("#"))
+    if(miutil::contains(line, "#"))
       continue;
-    if(line.contains("==="))
-      continue;
-
-    line.trim();
-    if(!line.exists())
+    if(miutil::contains(line, "==="))
       continue;
 
-    int c = line.find_first_of(" ",0);
-    if(c > line.size())
+    miutil::trim(line);
+    if((not !line.empty()))
+      continue;
+
+    size_t c = line.find_first_of(" ", 0);
+    if (c == string::npos)
       continue;
     int k = line.length() -  c;
 
     key =  line.substr(0,c);
     tok =  line.substr(c,k);
-    tok.trim();
+    miutil::trim(tok);
 
-    if(!tok.exists())
+    if((not !tok.empty()))
       continue;
 
     if (not section.empty())
       sections[key]=section;
 
 
-    if(key.contains(".size")) {
-      key.replace(".size","");
+    if(miutil::contains(key, ".size")) {
+      miutil::replace(key, ".size","");
 
-      words = tok.split();
+      words = miutil::split(tok);
 
       if(words.size() < 2)
         continue;
 
-      if ( !words[0].isNumber() || !words[1].isNumber() )
+      if (not miutil::is_number(words[0]) or not miutil::is_number(words[1]))
         continue;
 
       int sx = atoi(words[0].c_str());
@@ -255,14 +258,14 @@ bool miLogFile::readStrings(const std::vector<string>& lines, const string& sect
     }
 
 
-    if(key.contains(".pos")) {
-      key.replace(".pos","");
-      words = tok.split();
+    if(miutil::contains(key, ".pos")) {
+      miutil::replace(key, ".pos","");
+      words = miutil::split(tok);
 
       if(words.size() < 2)
         continue;
 
-      if ( !words[0].isNumber() || !words[1].isNumber() )
+      if (not miutil::is_number(words[0]) or not miutil::is_number(words[1]))
         continue;
 
       int px = atoi(words[0].c_str());
@@ -283,9 +286,9 @@ bool miLogFile::readStrings(const std::vector<string>& lines, const string& sect
 
 
 
-bool miLogFile::write( miString f )
+bool miLogFile::write( std::string f )
 {
-  if(f.exists())
+  if((not f.empty()))
     filename=f;
 
   ofstream log(filename.c_str());
@@ -300,18 +303,18 @@ bool miLogFile::write( miString f )
 }
 
 
-miString  miLogFile::writeString(miString section)
+std::string  miLogFile::writeString(std::string section)
 {
   ostringstream log;
-  miString key;
-  std::map<miString,xy>::iterator       ipos  = pos.begin();
-  std::map<miString,xy>::iterator       isize = size.begin();
-  std::map<miString,miString>::iterator itok  = tokens.begin();
+  std::string key;
+  std::map<std::string,xy>::iterator       ipos  = pos.begin();
+  std::map<std::string,xy>::iterator       isize = size.begin();
+  std::map<std::string,std::string>::iterator itok  = tokens.begin();
 
 
   for (;isize!=size.end();isize++) {
     key=isize->first + ".size";
-    if(section.exists() && sections[key] != section)
+    if((not section.empty()) && sections[key] != section)
         continue;
     log <<  key << " " << isize->second.x << " " << isize->second.y << endl;
   }
@@ -320,7 +323,7 @@ miString  miLogFile::writeString(miString section)
 
   for (;ipos!=pos.end();ipos++) {
     key=ipos->first + ".pos";
-    if(section.exists() && sections[key] != section)
+    if((not section.empty()) && sections[key] != section)
       continue;
     log << key << " "  << ipos->second.x << " " << ipos->second.y << endl;
   }
@@ -329,18 +332,18 @@ miString  miLogFile::writeString(miString section)
 
   for (;itok!=tokens.end();itok++) {
     key=itok->first;
-    if(section.exists() && sections[key] != section)
+    if((not section.empty()) && sections[key] != section)
       continue;
     log << key  << " " << itok->second << endl;
   }
   return log.str();
 }
 
-void miLogFile::logSizeAndPos(QWidget* w,miString name)
+void miLogFile::logSizeAndPos(QWidget* w,std::string name)
 {
   if(!w)             return;
-  if(!name.exists()) name=w->objectName().toStdString();
-  if(!name.exists()) return;
+  if((not !name.empty())) name=w->objectName().toStdString();
+  if((not !name.empty())) return;
 
 
   addSize(name, w->width(), w->height());
@@ -348,11 +351,11 @@ void miLogFile::logSizeAndPos(QWidget* w,miString name)
 
 }
 
-void miLogFile::restoreSizeAndPos(QWidget* w,miString name)
+void miLogFile::restoreSizeAndPos(QWidget* w,std::string name)
 {
   if(!w)             return;
-  if(!name.exists()) name=w->objectName().toStdString();
-  if(!name.exists()) return;
+  if((not !name.empty())) name=w->objectName().toStdString();
+  if((not !name.empty())) return;
 
   if(hasSize(name))
     w->resize(sizex(name),sizey(name));
@@ -360,22 +363,22 @@ void miLogFile::restoreSizeAndPos(QWidget* w,miString name)
     w->move(posx(name),posy(name));
 }
 
-void miLogFile::logVisibility(QWidget* w,miString name)
+void miLogFile::logVisibility(QWidget* w,std::string name)
 {
   if(!w)             return;
-  if(!name.exists()) name=w->objectName().toStdString();
-  if(!name.exists()) return;
+  if((not !name.empty())) name=w->objectName().toStdString();
+  if((not !name.empty())) return;
 
   name+="IsVisible";
   addToken(name,w->isVisible());
 
 }
 
-void miLogFile::restoreVisibility(QWidget* w,miString name)
+void miLogFile::restoreVisibility(QWidget* w,std::string name)
 {
   if(!w)             return;
-  if(!name.exists()) name=w->objectName().toStdString();
-  if(!name.exists()) return;
+  if((not !name.empty())) name=w->objectName().toStdString();
+  if((not !name.empty())) return;
   name+="IsVisible";
 
   if(hasBooleanToken(name)) {
