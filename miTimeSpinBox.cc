@@ -39,21 +39,19 @@
 #include <QVBoxLayout>
 #include <QLabel>
 
-using namespace miutil;
-
 miSpinBox::miSpinBox( int mi, int ma, int st, QWidget* p, const char* n )
     : QSpinBox(p)
 {
-	setRange(mi, ma);
-	setSingleStep(st);
-	lineEdit()->setReadOnly(true);
+  setRange(mi, ma);
+  setSingleStep(st);
+  lineEdit()->setReadOnly(true);
 }
 
 // MITIMESPINBOX
 
 
 miTimeSpinBox::miTimeSpinBox( const char* name,QWidget* parent,
-			      miutil::miString title,
+			      std::string title,
 			      miTimeSpinBox::Dayname dname,
 			      miTimeSpinBox::DisplayUntil displayuntil)
   : QWidget(parent)
@@ -87,7 +85,7 @@ miTimeSpinBox::miTimeSpinBox( const char* name,QWidget* parent,
 
 
 
-  if(title.exists()) {
+  if (not title.empty()) {
     tit = new QLabel(title.c_str(),frame);
     tit->setObjectName("name");
     hlayout->addWidget(tit, 4);
@@ -251,7 +249,7 @@ bool miTimeSpinBox::checkMin()
 
 void miTimeSpinBox::changeSecond(QString v)
 {
-	bool ok;
+  bool ok;
   newSecond(v.toInt(&ok, 10));
   changeTime();
 }
@@ -274,7 +272,7 @@ void miTimeSpinBox::newSecond(int v )
 
 void miTimeSpinBox::changeMinute(QString v)
 {
-	bool ok;
+  bool ok;
   newMinute(v.toInt(&ok, 10));
   changeTime();
 }
@@ -297,7 +295,7 @@ void miTimeSpinBox::newMinute(int v )
 
 void miTimeSpinBox::changeHour(QString v)
 {
-	bool ok;
+  bool ok;
   newHour(v.toInt(&ok, 10));
   changeTime();
 }
@@ -320,7 +318,7 @@ void miTimeSpinBox::newHour(int v )
 
 void miTimeSpinBox::changeDay(QString v)
 {
-	bool ok;
+  bool ok;
   newDay(v.toInt(&ok, 10));
   changeTime();
 }
@@ -408,7 +406,7 @@ void miTimeSpinBox::resetWeekdayName()
 
   weekday=tmp;
 
-  miutil::miString t = ref.format("%a ",daynamelang );
+  std::string t = ref.format("%a ",daynamelang );
   dayname->setText(t.c_str());
 
   if(weekday == 0 || weekday == 6) {

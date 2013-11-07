@@ -35,7 +35,6 @@
 
 #include <puTools/miTime.h>
 #include <puTools/miDate.h>
-#include <puTools/miString.h>
 
 #include <QSpinBox>
 #include <QLayout>
@@ -94,14 +93,14 @@ public:
 	 * Constructor.
 	 * @deprecated title is no longer in use.
 	 */
-  miTimeSpinBox(const char *name,QWidget *parent, miutil::miString title="",
+  miTimeSpinBox(const char *name,QWidget *parent, std::string title="",
 		miTimeSpinBox::Dayname      = miTimeSpinBox::NONAME,
 		miTimeSpinBox::DisplayUntil = miTimeSpinBox::MINUTE );
 
-  miutil::miTime   time()    const { return ref;          }
-  miutil::miString isoTime() const { return ref.isoTime();}
-  miutil::miDate   date()    const { return ref.date();   }
-  miutil::miString isoDate() const { return ref.isoDate();}
+  const miutil::miTime& time() const { return ref; }
+  std::string isoTime() const { return ref.isoTime(); }
+  miutil::miDate date() const { return ref.date(); }
+  std::string isoDate() const { return ref.isoDate(); }
 
 
   bool checkMax();
