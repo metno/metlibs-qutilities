@@ -39,7 +39,7 @@
  ------------------------------------
  */
 
-#include <qwidget.h>
+#include <QWidget>
 #include <map>
 
 class miLogFile {

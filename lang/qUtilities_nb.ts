@@ -55,35 +55,35 @@
     <name>qbLoginDialog</name>
     <message>
         <source>Database server:</source>
-        <translation>Database-server:</translation>
+        <translation type="obsolete">Database-server:</translation>
     </message>
     <message>
         <source>Database port:</source>
-        <translation>Database-port:</translation>
+        <translation type="obsolete">Database-port:</translation>
     </message>
     <message>
         <source>Username:</source>
-        <translation>Brukernavn:</translation>
+        <translation type="obsolete">Brukernavn:</translation>
     </message>
     <message>
         <source>Password:</source>
-        <translation>Passord:</translation>
+        <translation type="obsolete">Passord:</translation>
     </message>
     <message>
         <source>Log in</source>
-        <translation>Logg inn</translation>
+        <translation type="obsolete">Logg inn</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation>Avbryt</translation>
+        <translation type="obsolete">Avbryt</translation>
     </message>
     <message>
         <source>qbLoginDialog WARNING: NO GATE!</source>
-        <translation>qbLoginDialog ADVARSEL: Ingen GATE!</translation>
+        <translation type="obsolete">qbLoginDialog ADVARSEL: Ingen GATE!</translation>
     </message>
     <message>
         <source>Offline</source>
-        <translation>Offline</translation>
+        <translation type="obsolete">Offline</translation>
     </message>
 </context>
 <context>
@@ -94,11 +94,11 @@
     </message>
     <message>
         <source>Operational</source>
-        <translation>Operasjonell</translation>
+        <translation type="obsolete">Operasjonell</translation>
     </message>
     <message>
         <source>Testing</source>
-        <translation>Test</translation>
+        <translation type="obsolete">Test</translation>
     </message>
 </context>
 </TS>

@@ -6,6 +6,6 @@ includedir=@includedir@
 Name: qUtilities
 Description: The qUtilities Library
 Version: @VERSION@
-Requires: @qUtilities_pc_requires@
+Requires: miLogger >= 4.0.0
 Libs: -L${libdir} -lqUtilities
 Cflags: -I${includedir}

@@ -4,7 +4,7 @@
 <context>
     <name>HelpDialog</name>
     <message>
-        <location filename="../qtHelpDialog.cc" line="+43"/>
+        <location filename="../src/qtHelpDialog.cc" line="+36"/>
         <source>Help</source>
         <translation type="unfinished"></translation>
     </message>
@@ -52,7 +52,7 @@
 <context>
     <name>miSliderWidget</name>
     <message>
-        <location filename="../miSliderWidget.cc" line="+100"/>
+        <location filename="../src/miSliderWidget.cc" line="+100"/>
         <source>Ctrl+A</source>
         <translation type="unfinished"></translation>
     </message>
@@ -60,44 +60,36 @@
 <context>
     <name>qbLoginDialog</name>
     <message>
-        <location filename="../qbLoginDialog.cc" line="+140"/>
         <source>Database server:</source>
-        <translation>Databasserver:</translation>
+        <translation type="obsolete">Databasserver:</translation>
     </message>
     <message>
-        <location line="+2"/>
         <source>Database port:</source>
-        <translation>Databas-port:</translation>
+        <translation type="obsolete">Databas-port:</translation>
     </message>
     <message>
-        <location line="+2"/>
         <source>Username:</source>
-        <translation>Användare:</translation>
+        <translation type="obsolete">Användare:</translation>
     </message>
     <message>
-        <location line="+2"/>
         <source>Password:</source>
-        <translation>Lösenord:</translation>
+        <translation type="obsolete">Lösenord:</translation>
     </message>
     <message>
-        <location line="+43"/>
         <source>Log in</source>
-        <translation>Logga in</translation>
+        <translation type="obsolete">Logga in</translation>
     </message>
     <message>
-        <location line="+4"/>
         <source>Cancel</source>
-        <translation>Avbryt</translation>
+        <translation type="obsolete">Avbryt</translation>
     </message>
     <message>
-        <location line="+80"/>
         <source>qbLoginDialog WARNING: NO GATE!</source>
-        <translation>qbLoginDialog VARNING: Ingen GATE!</translation>
+        <translation type="obsolete">qbLoginDialog VARNING: Ingen GATE!</translation>
     </message>
     <message>
-        <location line="-76"/>
         <source>Offline</source>
-        <translation>Offline</translation>
+        <translation type="obsolete">Offline</translation>
     </message>
 </context>
 <context>
@@ -107,14 +99,12 @@
         <translation type="obsolete">Test-database</translation>
     </message>
     <message>
-        <location filename="../qbLoginInfo.cc" line="+80"/>
         <source>Operational</source>
-        <translation>Produktion</translation>
+        <translation type="obsolete">Produktion</translation>
     </message>
     <message>
-        <location line="-2"/>
         <source>Testing</source>
-        <translation>Test</translation>
+        <translation type="obsolete">Test</translation>
     </message>
 </context>
 </TS>

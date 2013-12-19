@@ -41,15 +41,14 @@
 #endif
 
 #include <miLogFile.h>
-
-#include <puTools/miStringFunctions.h>
-
 #include <fstream>
 #include <iostream>
 #include <sstream>
 
+#include <boost/lexical_cast.hpp>
+#include <boost/algorithm/string.hpp>
+
 using namespace std;
-using namespace miutil;
 
 
 std::map<std::string,miLogFile::xy >  miLogFile::pos;
@@ -137,7 +136,9 @@ void miLogFile::addToken(std::string key,bool tok )
 
 void miLogFile::addToken(std::string key, int token)
 {
-  tokens[key] = miutil::from_number(token);
+  ostringstream ost;
+  ost << token;
+  tokens[key] = ost.str();
   if((not section.empty()))
        sections[key] = section;
 }
@@ -168,15 +169,30 @@ bool miLogFile::hasBooleanToken(std::string key) const
 bool miLogFile::hasIntToken(std::string key) const
 {
   tokens_t::const_iterator it = tokens.find(key);
-  return (it != tokens.end() and miutil::is_int(it->second));
+  if (it == tokens.end())
+    return false;
+
+  try  {
+    int  number = boost::lexical_cast<int>(it->second);
+  } catch(boost::bad_lexical_cast& e) {
+    return false;
+  }
+  return true;
 }
 
 int miLogFile::intToken(std::string key) const
 {
   tokens_t::const_iterator it = tokens.find(key);
-  if (it != tokens.end())
-    return  miutil::to_int(it->second, 0);
-  return 0;
+  int number = 0;
+  if (it != tokens.end()) {
+    try  {
+      int number = boost::lexical_cast<int>(it->second);
+      return number;
+    } catch(boost::bad_lexical_cast& e) {
+      number = 0;
+    }
+  }
+  return number;
 }
 
 
@@ -212,12 +228,12 @@ bool miLogFile::readStrings(const std::vector<string>& lines, const string& sect
 
   for (size_t i = 0; i < lines.size(); ++i) {
     line=lines[i];
-    if(miutil::contains(line, "#"))
+    if(boost::find_first(line,"#"))
       continue;
-    if(miutil::contains(line, "==="))
+    if(boost::find_first(line,"==="))
       continue;
 
-    miutil::trim(line);
+    boost::trim(line);
     if((not !line.empty()))
       continue;
 
@@ -228,7 +244,7 @@ bool miLogFile::readStrings(const std::vector<string>& lines, const string& sect
 
     key =  line.substr(0,c);
     tok =  line.substr(c,k);
-    miutil::trim(tok);
+    boost::trim(tok);
 
     if((not !tok.empty()))
       continue;
@@ -236,45 +252,50 @@ bool miLogFile::readStrings(const std::vector<string>& lines, const string& sect
     if (not section.empty())
       sections[key]=section;
 
-
-    if(miutil::contains(key, ".size")) {
-      miutil::replace(key, ".size","");
-
-      words = miutil::split(tok);
+   
+    if(boost::find_first(key, ".size")) {
+     
+      boost::erase_all(key,".size");
+      
+      boost::split(words, tok, boost::algorithm::is_any_of(" "));
 
       if(words.size() < 2)
         continue;
 
-      if (not miutil::is_number(words[0]) or not miutil::is_number(words[1]))
-        continue;
+      try  {
+	int sx = boost::lexical_cast<int>(words[0]);
+	int sy = boost::lexical_cast<int>(words[1]);
 
-      int sx = atoi(words[0].c_str());
-      int sy = atoi(words[1].c_str());
+	if( sx > 20 && sy > 20 )
+	  size[key] = xy(sx,sy);
 
-      if( sx > 20 && sy > 20 )
-        size[key] = xy(sx,sy);
-
+      }  catch(boost::bad_lexical_cast& e) {
+	// this one went bad - we just ignore it - using default values
+      }
       continue;
     }
 
 
-    if(miutil::contains(key, ".pos")) {
-      miutil::replace(key, ".pos","");
-      words = miutil::split(tok);
+    if(boost::find_first(key, ".pos")) {
+        boost::erase_all(key,".pos");
+      boost::split(words, tok, boost::algorithm::is_any_of(" "));
 
       if(words.size() < 2)
         continue;
 
-      if (not miutil::is_number(words[0]) or not miutil::is_number(words[1]))
-        continue;
+      
+      
+      try  {
+	int px = boost::lexical_cast<int>(words[0]);
+	int py = boost::lexical_cast<int>(words[1]);
 
-      int px = atoi(words[0].c_str());
-      int py = atoi(words[1].c_str());
+	if(px > 0 && py > 0 )
+	  pos[key] = xy(px,py);
 
-      if(px > 0 && py > 0 )
-        pos[key] = xy(px,py);
+      }  catch(boost::bad_lexical_cast& e) {
+	// this one went bad - we just ignore it - using default values
+      }
       continue;
-
     }
 
     tokens[key] = tok;
