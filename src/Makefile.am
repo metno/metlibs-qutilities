@@ -20,12 +20,6 @@ qt_sources = \
 	miSliderWidget.cc \
 	miTimeSpinBox.cc \
 	qtHelpDialog.cc \
-	qbLoginInfo.cc
-
-if ENABLE_PUSQL
-qt_sources += \
-	qbLoginDialog.cc
-endif
 
 nodist_libqUtilities_la_SOURCES = \
 	$(qt_sources:.cc=.moc.cc)
@@ -34,40 +28,21 @@ libqUtilities_la_SOURCES = \
 	$(noqt_sources) $(qt_sources)
 
 libqUtilities_la_CPPFLAGS = \
-	${LOG4CXX_CPPFLAGS} \
 	${MILOGGER_CPPFLAGS} \
-	${PUCTOOLS_CPPFLAGS} \
-	${PUTOOLS_CPPFLAGS} \
-	${MYSQL_CPPFLAGS} \
 	${QT4_CPPFLAGS}
 
 libqUtilities_la_LDFLAGS = ${qUtilities_VERSION_INFO}
 libqUtilities_la_LIBADD =
 if ENABLE_SHARED_LIBRARY
 libqUtilities_la_LDFLAGS += \
-	${LOG4CXX_LDFLAGS} \
 	${MILOGGER_LDFLAGS} \
-	${PUCTOOLS_LDFLAGS} \
-	${PUTOOLS_LDFLAGS} \
-	${MYSQL_LDFLAGS} \
 	${QT4_LDFLAGS}
 libqUtilities_la_LIBADD += \
-	${LOG4CXX_LIBS} \
 	${MILOGGER_LIBS} \
-	${PUCTOOLS_LIBS} \
-	${PUTOOLS_LIBS} \
-	${MYSQL_LIBS} \
 	${QT4_LIBS}
 endif
 
-if ENABLE_PUSQL
-libqUtilities_la_CPPFLAGS += \
-	${PUSQL_CPPFLAGS}
-if ENABLE_SHARED_LIBRARY
-libqUtilities_la_LDFLAGS += \
-	${PUSQL_LDFLAGS}
-libqUtilities_la_LIBADD += \
-	${PUSQL_LIBS}
+
 endif
 endif
 
