@@ -6,7 +6,7 @@ AC_PREREQ(2.59)
 AC_INIT([qUtilities], [5.0.0], [diana@met.no])
 AM_INIT_AUTOMAKE([foreign])
 
-AC_CONFIG_SRCDIR([src/miMessage.h])
+AC_CONFIG_SRCDIR([src/qtHelpDialog.cc])
 AC_CONFIG_MACRO_DIR([m4])
 
 METNO_SET_VERSION_INFO(6.0.0)

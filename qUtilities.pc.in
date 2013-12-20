@@ -7,5 +7,5 @@ Name: qUtilities
 Description: The qUtilities Library
 Version: @VERSION@
 Requires: 
-Libs: -L${libdir} -lqUtilities @QT_LDFLAGS@ @QT_LIBS@
+Libs: -L${libdir} -lqUtilities @QT4_LDFLAGS@ @QT4_LIBS@
 Cflags: -I${includedir}
