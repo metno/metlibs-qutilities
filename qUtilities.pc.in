@@ -8,4 +8,4 @@ Description: The qUtilities Library
 Version: @VERSION@
 Requires: 
 Libs: -L${libdir} -lqUtilities @QT4_LDFLAGS@ @QT4_LIBS@
-Cflags: -I${includedir}
+Cflags: -I${includedir}  @QT4_CPPFLAGS@ @BOOST_CPPFLAGS@
