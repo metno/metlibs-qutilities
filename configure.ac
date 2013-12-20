@@ -1,5 +1,5 @@
 #
-# configure.ac for puTools
+# configure.ac for qUtilities
 #
 
 AC_PREREQ(2.59)
@@ -31,9 +31,8 @@ AC_LANG_POP([C++])
 
 METNO_ENABLE_CONDITIONAL([SHARED_LIBRARY], [shared])
 
-METNO_REQUIRE_PKG([MILOGGER],[miLogger])
 METNO_REQUIRE_BOOST_MT
-METNO_REQUIRE_QT4([Core Gui Network])
+METNO_REQUIRE_QT4([Core Gui])
 
 AC_CONFIG_FILES([
 	qUtilities.pc

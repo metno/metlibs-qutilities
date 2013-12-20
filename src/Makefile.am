@@ -1,17 +1,17 @@
 # $Id$
+# NB! coserver stuff has been moved into the coserver library
+#
+#
 
 pkgname = qUtilities
 
 lib_LTLIBRARIES = libqUtilities.la
 
 cc_sources= \
-	QLetterCommands.cc \
-	miLogFile.cc \
-	miMessage.cc
+	miLogFile.cc 
+
 
 qt_sources = \
-	ClientButton.cc \
-	CoClient.cc \
 	miSliderWidget.cc \
 	qtHelpDialog.cc 
 
@@ -19,13 +19,10 @@ img_sources=\
 	circle_green.xpm \
 	circle_red.xpm \
 	circle_yellow.xpm \
-	conn.xpm \
-	disconn.xpm \
 	tb_close.xpm \
 	tb_left_arrow.xpm \
 	tb_print.xpm \
-	tb_right_arrow.xpm \
-	unconn.xpm
+	tb_right_arrow.xpm 
 
 
 
@@ -46,14 +43,14 @@ pkg_include_HEADERS = \
 	$(img_sources)
 
 
-libqUtilities_la_CPPFLAGS = ${MILOGGER_CPPFLAGS} ${QT4_CPPFLAGS}
+libqUtilities_la_CPPFLAGS = ${QT4_CPPFLAGS}
 libqUtilities_la_LDFLAGS  = ${VERSION_INFO}
 
 
 if ENABLE_SHARED_LIBRARY
 
-libqUtilities_la_LDFLAGS += ${MILOGGER_LDFLAGS} ${QT4_LDFLAGS}
-libqUtilities_la_LIBADD   = ${MILOGGER_LIBS}    ${QT4_LIBS}
+libqUtilities_la_LDFLAGS +=  ${QT4_LDFLAGS}
+libqUtilities_la_LIBADD   =  ${QT4_LIBS}
 
 endif
 
