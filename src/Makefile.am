@@ -43,7 +43,7 @@ pkg_include_HEADERS = \
 	$(img_sources)
 
 
-libqUtilities_la_CPPFLAGS = ${QT4_CPPFLAGS}
+libqUtilities_la_CPPFLAGS = ${QT4_CPPFLAGS} ${BOOST_CPPFLAGS}
 libqUtilities_la_LDFLAGS  = ${VERSION_INFO}
 
 
