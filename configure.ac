@@ -19,6 +19,8 @@ AC_PROG_CXX
 AC_PROG_CC
 AC_PROG_LIBTOOL
 
+# Add extra C++ flags.
+CXXFLAGS="$CXXFLAGS ${OPT_FLAGS} -Wall -fPIC "
 
 # Language stack
 AC_LANG_PUSH(C++)
