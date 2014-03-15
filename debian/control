@@ -10,6 +10,6 @@ Section: libs
 Package: metlibs-qutilities-dev
 Section: libdevel
 Architecture: any
-Depends:libboost-dev, libqt4-dev, ${misc:Depends}
+Depends: libqt4-dev, ${misc:Depends}
 Description: qUtilities.
  metlibs qUtilities.

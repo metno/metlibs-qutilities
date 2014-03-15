@@ -5,6 +5,7 @@
 AC_PREREQ(2.59)
 AC_INIT([qUtilities], [5.0.0], [diana@met.no])
 AM_INIT_AUTOMAKE([foreign])
+m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
 AC_CONFIG_SRCDIR([src/qtHelpDialog.cc])
 AC_CONFIG_MACRO_DIR([m4])
@@ -12,20 +13,15 @@ AC_CONFIG_MACRO_DIR([m4])
 METNO_SET_VERSION_INFO(6.0.0)
 METNO_PROG_PKG_CONFIG
 
+AC_PROG_LIBTOOL
 AC_SUBST([LIBTOOL_DEPS]) 
 
-# Checks for programs.
 AC_PROG_CXX
-AC_PROG_CC
-AC_PROG_LIBTOOL
 
 # Add extra C++ flags.
 CXXFLAGS="$CXXFLAGS ${OPT_FLAGS} -Wall -fPIC "
 
-# Language stack
 AC_LANG_PUSH(C++)
-
-# Checks for libraries.
 AC_CXX_HAVE_STD
 AC_CXX_HAVE_STL
 AC_LANG_POP([C++])
