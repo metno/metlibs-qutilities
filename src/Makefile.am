@@ -1,7 +1,4 @@
-# $Id$
 # NB! coserver stuff has been moved into the coserver library
-#
-#
 
 pkgname = qUtilities
 
@@ -9,7 +6,6 @@ lib_LTLIBRARIES = libqUtilities.la
 
 cc_sources= \
 	miLogFile.cc 
-
 
 qt_sources = \
 	miSliderWidget.cc \
@@ -55,15 +51,13 @@ libqUtilities_la_LIBADD   =  ${QT4_LIBS}
 endif
 
 
-
-
 # Languages -------------------------
 
+qutilities_languages = nb sv de
 language_sources= \
-	$(top_srcdir)/lang/qUtilities_nb.ts \
-	$(top_srcdir)/lang/qUtilities_sv.ts 
+	$(qutilities_languages:%=$(top_srcdir)/lang/qUtilities_%.ts)
 
-languagedir= $(datarootdir)/tseries/@PVERSION@/lang
+languagedir= $(datarootdir)/metlibs/translations
 nodist_language_DATA=$(language_sources:.ts=.qm)
 
 
@@ -71,7 +65,8 @@ nodist_language_DATA=$(language_sources:.ts=.qm)
 	$(LUPDATE4)  $(qt_sources) -ts $< ; \
 	$(LRELEASE4)  $<
 
-
+lupdate: $(language_sources) $(qt_sources)
+	lupdate $(qt_sources) -ts $(language_sources)
 
 CLEANFILES = $(moc_sources)
 

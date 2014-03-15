@@ -4,7 +4,13 @@ metlibs-qt-qutilities (5.0.2-1) precise; urgency=low
 
  -- David Boddie <david.boddie@met.no>  Tue, 04 Mar 2014 18:28:02 +0100
 
-metlibs-qt-qutilities (5.0.0-2) unstable; urgency=low
+metlibs-common-qutilities (5.0.1-1) unstable; urgency=low
+
+  * build metlibs-translations package
+
+ -- Alexander Carl Friedrich Bürger <alexander.buerger@met.no>  Thu, 06 Feb 2014 12:03:23 +0100
+
+metlibs-common-qutilities (5.0.0-2) unstable; urgency=low
 
   * google tests
 

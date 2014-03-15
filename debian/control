@@ -13,3 +13,11 @@ Architecture: any
 Depends: libqt4-dev, ${misc:Depends}
 Description: qUtilities.
  metlibs qUtilities.
+
+Package: metlibs-translations
+Section: libs
+Architecture: all
+Description: Qt4 translation files for metlibs
+ Contains translations for metlibs dialogs.
+ .
+ At present, nb, sv and de are included for qUtilities.
