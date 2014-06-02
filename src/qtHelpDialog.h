@@ -3,23 +3,18 @@
 #ifndef _helpdialog_h
 #define _helpdialog_h
 
-#include <qdialog.h>
-#include <qfont.h>
-#include <qpalette.h>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
+#include <QDialog>
 #include <QLabel>
+#include <QUrl>
 
 #include <string>
 #include <vector>
 
-class QVBoxLayout;
-class QHBoxLayout;
 class QPushButton;
 class QTextBrowser;
-class QLabel;
 class QLineEdit;
-
+class QTimer;
+class QToolButton;
 
 class HelpDialog: public QDialog {
   Q_OBJECT
@@ -37,18 +32,19 @@ public:
 
   HelpDialog(QWidget* parent, const Info& hdi);
 
-  void setSource( const std::string& source );
-  std::string helpPath() const {return info.path;}
+  void setSource(const std::string& source);
+
+  const std::string& helpPath() const
+    { return info.path; }
 
 public Q_SLOTS:
   void showdoc(const int doc, const std::string& tag = "");
   void showsource(const std::string& source, const std::string& tag = "");
-  void showSearchBar();
-  void searchDocument();
 
 private Q_SLOTS:
-  void hideHelp();
+  void searchDocument();
   void printHelp();
+  void toggleSearchBar(bool);
 
 private:
   QTextBrowser* tb;
@@ -56,17 +52,12 @@ private:
 
   QPushButton* pushbackward;
   QPushButton* pushforward;
-  QPushButton* closebutton;
   QPushButton* printbutton;
-  QLabel* plabel;
+  QToolButton* startsearchbutton;
+  QPushButton* closebutton;
   QWidget* searchBar;
   QLineEdit* searchEdit;
-
-  QVBoxLayout* vlayout;
-  QHBoxLayout* hlayout;
-
-  QFont m_font;
+  QTimer* mSearchTimer;
 };
-
 
 #endif

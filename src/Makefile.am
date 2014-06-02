@@ -18,7 +18,8 @@ img_sources=\
 	tb_close.xpm \
 	tb_left_arrow.xpm \
 	tb_print.xpm \
-	tb_right_arrow.xpm 
+	tb_right_arrow.xpm \
+	tb_search.xpm 
 
 
 
