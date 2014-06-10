@@ -3,14 +3,14 @@
 #
 
 AC_PREREQ(2.59)
-AC_INIT([qUtilities], [5.0.2], [diana@met.no])
+AC_INIT([qUtilities], [5.1.0], [diana@met.no])
 AM_INIT_AUTOMAKE([foreign])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
 AC_CONFIG_SRCDIR([src/qtHelpDialog.cc])
 AC_CONFIG_MACRO_DIR([m4])
 
-METNO_SET_VERSION_INFO(6.0.2)
+METNO_SET_VERSION_INFO(7.0.0)
 METNO_PROG_PKG_CONFIG
 
 AC_PROG_LIBTOOL
