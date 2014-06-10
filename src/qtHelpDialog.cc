@@ -65,14 +65,14 @@ HelpDialog::HelpDialog(QWidget* parent, const Info& hdi)
   startsearchbutton->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Minimum, QSizePolicy::ToolButton));
 
   searchBar = new QWidget();
-  QToolButton* searchCloseButton = new QToolButton();
-  searchCloseButton->setIcon(QPixmap(tb_close_xpm));
+  QToolButton* searchClearButton = new QToolButton();
+  searchClearButton->setIcon(QPixmap(tb_close_xpm));
   searchEdit = new QLineEdit();
   QPushButton* searchButton = new QPushButton(QPixmap(tb_search), tr("Find"));
   searchButton->setAutoDefault(false);
 
   QHBoxLayout* searchLayout = new QHBoxLayout(this);
-  searchLayout->addWidget(searchCloseButton);
+  searchLayout->addWidget(searchClearButton);
   searchLayout->addWidget(searchEdit);
   searchLayout->addWidget(searchButton);
   searchLayout->setContentsMargins(0, 0, 0, 0);
@@ -97,7 +97,7 @@ HelpDialog::HelpDialog(QWidget* parent, const Info& hdi)
 
   resize(800, 600);
 
-  connect(searchCloseButton, SIGNAL(clicked()), searchAction, SLOT(toggle()));
+  connect(searchClearButton, SIGNAL(clicked()), searchEdit, SLOT(clear()));
   connect(searchEdit, SIGNAL(returnPressed()), searchButton, SLOT(animateClick()));
   connect(searchEdit, SIGNAL(textEdited(const QString&)), mSearchTimer, SLOT(start()));
   connect(searchButton, SIGNAL(clicked()), this, SLOT(searchDocument()));
