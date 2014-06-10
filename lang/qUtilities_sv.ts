@@ -4,49 +4,44 @@
 <context>
     <name>HelpDialog</name>
     <message>
-        <location filename="../src/qtHelpDialog.cc" line="+36"/>
+        <location filename="../src/qtHelpDialog.cc" line="+34"/>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation>Hjälp</translation>
     </message>
     <message>
-        <location line="+11"/>
+        <location line="+10"/>
         <source>Back</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Forward</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Tillbaka</translation>
     </message>
     <message>
         <location line="+4"/>
+        <source>Forward</source>
+        <translation>Fram</translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Close</source>
+        <translation>Stäng</translation>
+    </message>
+    <message>
+        <location line="+3"/>
         <source>Print...</source>
-        <translation type="unfinished"></translation>
+        <translation>Skriv ut…</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>&amp;Search...</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Soek…</translation>
     </message>
     <message>
-        <location line="+8"/>
-        <source>Find:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
+        <location line="+13"/>
         <source>Find</source>
-        <translation type="unfinished"></translation>
+        <translation>Soek</translation>
     </message>
     <message>
-        <location line="+46"/>
+        <location line="+55"/>
         <source>Print Document</source>
-        <translation type="unfinished"></translation>
+        <translation>Skriv ut detta dokument</translation>
     </message>
 </context>
 <context>
@@ -54,7 +49,7 @@
     <message>
         <location filename="../src/miSliderWidget.cc" line="+100"/>
         <source>Ctrl+A</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+A</translation>
     </message>
 </context>
 </TS>

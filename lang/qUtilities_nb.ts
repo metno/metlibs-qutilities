@@ -24,10 +24,6 @@
         <translation>&amp;Søk...</translation>
     </message>
     <message>
-        <source>Find:</source>
-        <translation>Søk:</translation>
-    </message>
-    <message>
         <source>Find</source>
         <translation>Søk</translation>
     </message>
