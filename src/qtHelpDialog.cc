@@ -120,7 +120,7 @@ void HelpDialog::printHelp()
 #else
   printer.setPrintProgram( QString("lp") );
 #endif
-  printer.setFullPage(TRUE);
+  printer.setFullPage(true);
 
   QPrintDialog *dialog = new QPrintDialog(&printer, this);
   dialog->setWindowTitle(tr("Print Document"));
