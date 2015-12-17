@@ -5,6 +5,7 @@ pkgname = qUtilities
 lib_LTLIBRARIES = libqUtilities.la
 
 cc_sources= \
+	miLoggingQt.cc \
 	miLogFile.cc 
 
 qt_sources = \
@@ -40,14 +41,14 @@ pkg_include_HEADERS = \
 	$(img_sources)
 
 
-libqUtilities_la_CPPFLAGS = ${QT4_CPPFLAGS} ${BOOST_CPPFLAGS}
+libqUtilities_la_CPPFLAGS = ${MILOGGER_CPPFLAGS} ${QT4_CPPFLAGS} ${BOOST_CPPFLAGS}
 libqUtilities_la_LDFLAGS  = ${VERSION_INFO}
 
 
 if ENABLE_SHARED_LIBRARY
 
-libqUtilities_la_LDFLAGS +=  ${QT4_LDFLAGS}
-libqUtilities_la_LIBADD   =  ${QT4_LIBS}
+libqUtilities_la_LDFLAGS +=  ${MILOGGER_LDFLAGS} ${QT4_LDFLAGS}
+libqUtilities_la_LIBADD   =  ${MILOGGER_LIBS}    ${QT4_LIBS}
 
 endif
 
