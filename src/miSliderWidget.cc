@@ -119,8 +119,8 @@ void miSliderWidget::editingFinished()
   if ( valedit && valedit->hasAcceptableInput()){
     float v = valedit->text().toFloat();
     setValue(v);
-    /*emit*/ valueChanged(Value);
-    /*emit*/ valueChangedForPar(Value,parname);
+    Q_EMIT valueChanged(Value);
+    Q_EMIT valueChangedForPar(Value,parname);
   }
 }
 
@@ -161,8 +161,8 @@ void miSliderWidget::valueChanged(int v)
 
   writeValue(Value);
 
-  emit valueChanged(Value);
-  emit valueChangedForPar(Value,parname);
+  Q_EMIT valueChanged(Value);
+  Q_EMIT valueChangedForPar(Value,parname);
 }
 
 void miSliderWidget::sliderMoved(int v)
@@ -171,8 +171,8 @@ void miSliderWidget::sliderMoved(int v)
   Value = fValue(v);
   writeValue(Value);
   if (tracking){
-    emit valueChanged(Value);
-    emit valueChangedForPar(Value,parname);
+    Q_EMIT valueChanged(Value);
+    Q_EMIT valueChangedForPar(Value,parname);
   }
 }
 
