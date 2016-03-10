@@ -38,7 +38,7 @@ pkg_includedir = ${includedir}/qUtilities
 pkg_include_HEADERS = \
 	$(cc_sources:.cc=.h)\
 	$(qt_sources:.cc=.h)\
-	$(img_sources)
+	qUtilitiesVersion.h
 
 
 libqUtilities_la_CPPFLAGS = ${MILOGGER_CPPFLAGS} ${QT4_CPPFLAGS} ${BOOST_CPPFLAGS}

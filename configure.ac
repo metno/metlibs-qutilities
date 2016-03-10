@@ -3,7 +3,8 @@
 #
 
 AC_PREREQ(2.59)
-AC_INIT([qUtilities], [5.1.2], [diana@met.no])
+# version number must be in sync with src/qUtilitiesVersion.h
+AC_INIT([qUtilities], [5.1.3], [diana@met.no])
 AM_INIT_AUTOMAKE([foreign])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
