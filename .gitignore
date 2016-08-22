@@ -1,4 +1,3 @@
-/m4
 /autom4te.cache
 Makefile
 Makefile.in
@@ -31,3 +30,6 @@ Makefile.in
 /src/stamp-h1
 /lang/qUtilities*.qm
 /src/*.moc.cc
+/m4/libtool.m4
+/m4/lt*.m4
+/compile
