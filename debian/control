@@ -11,7 +11,9 @@ Section: libs
 Package: metlibs-qutilities-dev
 Section: libdevel
 Architecture: any
-Depends: libqt4-dev, ${misc:Depends}
+Depends: libqt4-dev,
+ metlibs-milogger-dev (>= 5.0.1),
+ ${misc:Depends}
 Description: qUtilities.
  metlibs qUtilities.
 
