@@ -173,7 +173,7 @@ bool miLogFile::hasIntToken(std::string key) const
     return false;
 
   try  {
-    int  number = boost::lexical_cast<int>(it->second);
+    (void) boost::lexical_cast<int>(it->second);
   } catch(boost::bad_lexical_cast& e) {
     return false;
   }
