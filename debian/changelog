@@ -1,3 +1,11 @@
+metlibs-qt-qutilities (8.0.0-1) unstable; urgency=low
+
+  * CMake build
+  * using Qt5
+  * shared library, soversion 8
+
+ -- Alexander Bürger <alexander.buerger@met.no>  Fri, 03 Mar 2017 08:00:08 +0100
+
 metlibs-qt-qutilities (5.1.4-2) unstable; urgency=low
 
   * fix Depends

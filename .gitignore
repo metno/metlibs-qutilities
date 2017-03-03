@@ -1,8 +1,11 @@
 /debian/tmp
-/debian/metlibs-qutilities-dev.debhelper.log
-/debian/metlibs-qutilities-dev.substvars
-/debian/metlibs-qutilities-dev
-/debian/metlibs-translations.debhelper.log
-/debian/metlibs-translations.substvars
-/debian/metlibs-translations
 /debian/files
+/debian/.debhelper/
+/debian/debhelper-build-stamp
+/debian/*.debhelper.log
+/debian/*.substvars
+/debian/libmetlibs-qutilities-qt5-*/
+/debian/libmetlibs-qutilities-qt5-*-dbg/
+/debian/metlibs-qutilities-qt5-dev/
+/debian/metlibs-qutilities-qt5-translations/
+/obj-x86_64-linux-gnu/
