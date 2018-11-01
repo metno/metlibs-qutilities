@@ -1,3 +1,9 @@
+metlibs-qt-qutilities (8.0.0-3) unstable; urgency=low
+
+  * Build-Depends on qttools5-dev for bionic
+
+ -- Alexander Bürger <alexander.buerger@met.no>  Thu, 01 Nov 2018 08:00:08 +0100
+
 metlibs-qt-qutilities (8.0.0-2) unstable; urgency=low
 
   * version number in shlibs
