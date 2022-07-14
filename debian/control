@@ -1,7 +1,7 @@
 Source: metlibs-qt-qutilities
 Priority: optional
 Maintainer: Alexander Bürger <diana@met.no>
-Build-Depends: debhelper (>= 9),
+Build-Depends: debhelper (>= 11),
  cmake,
  pkg-config,
  metlibs-milogger-dev (>= 6.0.0),
