@@ -36,11 +36,8 @@
     ------------------------------------
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
+#include "miLogFile.h"
 
-#include <miLogFile.h>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -203,7 +200,7 @@ bool miLogFile::read( std::string f )
   if((not f.empty()))
     filename=f;
 
-  ifstream log(filename.c_str());
+  ifstream log(filename);
 
   if(!log) {
     cerr << "could not open log file: " << filename << endl;
@@ -312,7 +309,7 @@ bool miLogFile::write( std::string f )
   if((not f.empty()))
     filename=f;
 
-  ofstream log(filename.c_str());
+  ofstream log(filename);
 
   if(!log) {
     cerr << "could not open log file: " << filename << endl;

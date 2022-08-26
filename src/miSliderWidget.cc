@@ -1,7 +1,3 @@
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "miSliderWidget.h"
 
 #include <QDoubleValidator>
@@ -13,7 +9,6 @@
 #include <QSlider>
 
 #include <cmath>
-#include <sstream>
 
 miSliderWidget::miSliderWidget(float minV, float maxV,
 			       float stepV,float Val,
@@ -146,9 +141,8 @@ void miSliderWidget::setValue(float v)
 void miSliderWidget::writeValue(float V)
 {
   if ( editfield ){
-    std::ostringstream ost;
-    ost << V;
-    if (valedit) valedit->setText(ost.str().c_str());
+    if (valedit)
+      valedit->setText(QString::number(V));
   } else {
     if (vallabel) vallabel->setNum(V);
   }
